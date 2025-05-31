@@ -1,6 +1,8 @@
 "use client";
 import { addreport } from "@/actions/useractions";
-import React, { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import {
   FaUser,
   FaBirthdayCake,
@@ -16,6 +18,15 @@ import {
 } from "react-icons/fa";
 
 const AddReport = () => {
+  const { data: session, status, update } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [router, status]);
+
   const [formData, setFormData] = useState({
     patientName: "",
     mobile: "",
@@ -63,37 +74,38 @@ const AddReport = () => {
     }
   };
 
-const handleSubmit = async () => {
-  setIsSubmitting(true);
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
 
-  try {
-    // Call the server action
-    const result = await addreport(formData);
-    
-    if (result.success) {
-      // Reset form after successful submission
-      setFormData({
-        patientName: "",
-        mobile: "",
-        age: "",
-        gender: "",
-        collectedBy: "",
-        refBy: "",
-        address: "",
-        tests: [{ testName: "", testCode: "", status: "Pending", result: "" }],
-      });
-      alert("Report added successfully!");
-    } else {
-      alert(result.message || "Error adding report");
+    try {
+      // Call the server action
+      const result = await addreport(formData);
+
+      if (result.success) {
+        // Reset form after successful submission
+        setFormData({
+          patientName: "",
+          mobile: "",
+          age: "",
+          gender: "",
+          collectedBy: "",
+          refBy: "",
+          address: "",
+          tests: [
+            { testName: "", testCode: "", status: "Pending", result: "" },
+          ],
+        });
+        alert("Report added successfully!");
+      } else {
+        alert(result.message || "Error adding report");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error adding report. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-    
-  } catch (error) {
-    console.error("Error:", error);
-    alert("Error adding report. Please try again.");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
@@ -103,7 +115,7 @@ const handleSubmit = async () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 shadow-lg">
             <FaUserInjured className="text-white text-2xl" />
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold  mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             Add Patient Report
           </h1>
           <p className="text-slate-300 text-lg">

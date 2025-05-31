@@ -34,7 +34,7 @@ const Navbar = () => {
   const dropdownLinks = [
     { name: "Dashboard", href: "/dashboard", icon: FaTachometerAlt },
     { name: "Add Report", href: "/addreport", icon: FaFeatherAlt },
-    { name: "Doctors", href: "/doctors", icon: FaUserMd },
+    { name: "Add Doctor", href: "/addDoctor", icon: FaUserMd },
     { name: "Tests", href: "/tests", icon: FaFlask },
   ];
 
