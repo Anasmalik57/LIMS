@@ -1,8 +1,8 @@
 "use client";
+import { addreport } from "@/actions/useractions";
 import React, { useState } from "react";
 import {
   FaUser,
-  FaPhone,
   FaBirthdayCake,
   FaVenusMars,
   FaUserMd,
@@ -35,6 +35,7 @@ const AddReport = () => {
       ...prev,
       [name]: value,
     }));
+    console.log(`Input changed: ${name} = ${value}`);
   };
 
   const handleTestChange = (index, field, value) => {
@@ -42,6 +43,7 @@ const AddReport = () => {
       i === index ? { ...test, [field]: value } : test
     );
     setFormData((prev) => ({ ...prev, tests: updatedTests }));
+    console.log(`Input changed: ${name} = ${value}`);
   };
 
   const addTest = () => {
@@ -61,16 +63,14 @@ const AddReport = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
+const handleSubmit = async () => {
+  setIsSubmitting(true);
 
-    try {
-      // Your API call logic here
-      console.log("Form Data:", formData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
+  try {
+    // Call the server action
+    const result = await addreport(formData);
+    
+    if (result.success) {
       // Reset form after successful submission
       setFormData({
         patientName: "",
@@ -82,20 +82,22 @@ const AddReport = () => {
         address: "",
         tests: [{ testName: "", testCode: "", status: "Pending", result: "" }],
       });
-
       alert("Report added successfully!");
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error adding report. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+    } else {
+      alert(result.message || "Error adding report");
     }
-  };
+    
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error adding report. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
-    <div className="min-h-screen  bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
-     <div className="mt-20">
-         <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
+      <div className="max-w-4xl mx-auto mt-20">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 shadow-lg">
@@ -132,8 +134,9 @@ const AddReport = () => {
                     value={formData.patientName}
                     onChange={handleInputChange}
                     required
+                    minLength="2"
                     className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter patient name"
+                    placeholder="Enter patient name (min 2 chars)"
                   />
                 </div>
               </div>
@@ -151,8 +154,9 @@ const AddReport = () => {
                     value={formData.mobile}
                     onChange={handleInputChange}
                     required
+                    minLength="10"
                     className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter mobile number"
+                    placeholder="Enter mobile number (min 10 digits)"
                   />
                 </div>
               </div>
@@ -170,10 +174,10 @@ const AddReport = () => {
                     value={formData.age}
                     onChange={handleInputChange}
                     required
-                    min="0"
+                    min="1"
                     max="150"
                     className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter age"
+                    placeholder="Enter age (min 1)"
                   />
                 </div>
               </div>
@@ -220,8 +224,9 @@ const AddReport = () => {
                     name="collectedBy"
                     value={formData.collectedBy}
                     onChange={handleInputChange}
+                    minLength="2"
                     className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter collector name"
+                    placeholder="Enter collector name (min 2 chars)"
                   />
                 </div>
               </div>
@@ -238,8 +243,9 @@ const AddReport = () => {
                     name="refBy"
                     value={formData.refBy}
                     onChange={handleInputChange}
+                    minLength="2"
                     className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter referrer name"
+                    placeholder="Enter referrer name (min 2 chars)"
                   />
                 </div>
               </div>
@@ -257,8 +263,9 @@ const AddReport = () => {
                   value={formData.address}
                   onChange={handleInputChange}
                   rows="3"
+                  minLength="5"
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-none"
-                  placeholder="Enter patient address"
+                  placeholder="Enter patient address (min 5 chars)"
                 />
               </div>
             </div>
@@ -314,8 +321,9 @@ const AddReport = () => {
                           handleTestChange(index, "testName", e.target.value)
                         }
                         required
+                        minLength="2"
                         className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                        placeholder="Enter test name"
+                        placeholder="Enter test name (min 2 chars)"
                       />
                     </div>
 
@@ -330,8 +338,9 @@ const AddReport = () => {
                           handleTestChange(index, "testCode", e.target.value)
                         }
                         required
+                        minLength="2"
                         className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                        placeholder="Enter test code"
+                        placeholder="Enter test code (min 2 chars)"
                       />
                     </div>
 
@@ -365,8 +374,9 @@ const AddReport = () => {
                         onChange={(e) =>
                           handleTestChange(index, "result", e.target.value)
                         }
+                        minLength="1"
                         className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                        placeholder="Enter test result"
+                        placeholder="Enter test result (min 1 char)"
                       />
                     </div>
                   </div>
@@ -398,7 +408,6 @@ const AddReport = () => {
           </div>
         </div>
       </div>
-     </div>
     </div>
   );
 };
