@@ -42,7 +42,7 @@ const PatientSchema = new mongoose.Schema(
       minlength: [5, "Address must be at least 5 characters long"],
     },
 
-    // Tests array
+    // Tests array with pricing
     tests: [
       {
         testName: {
@@ -55,6 +55,12 @@ const PatientSchema = new mongoose.Schema(
           required: true,
           minlength: [2, "Test code must be at least 2 characters long"],
         },
+        price: {
+          type: Number,
+          required: true,
+          min: [0, "Price cannot be negative"],
+          default: 0,
+        },
         status: {
           type: String,
           enum: ["Pending", "Completed"],
@@ -66,6 +72,14 @@ const PatientSchema = new mongoose.Schema(
         },
       },
     ],
+
+    // Total price for all tests
+    totalPrice: {
+      type: Number,
+      required: true,
+      min: [0, "Total price cannot be negative"],
+      default: 0,
+    },
   },
   {
     timestamps: true, // Auto createdAt & updatedAt

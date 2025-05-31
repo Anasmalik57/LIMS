@@ -15,11 +15,32 @@ import {
   FaSave,
   FaUserInjured,
   FaPhoneAlt,
+  FaRupeeSign,
+  FaChevronDown,
 } from "react-icons/fa";
 
 const AddReport = () => {
   const { data: session, status, update } = useSession();
   const router = useRouter();
+
+  // Test data with names, codes, and prices
+  const testData = [
+    { name: "Complete Blood Count (CBC)", code: "CBC001", price: 350 },
+    { name: "Blood Sugar Fasting", code: "BSF002", price: 120 },
+    { name: "Blood Sugar Random", code: "BSR003", price: 100 },
+    { name: "HbA1c (Glycated Hemoglobin)", code: "HBA004", price: 450 },
+    { name: "Lipid Profile", code: "LIP005", price: 800 },
+    { name: "Liver Function Test (LFT)", code: "LFT006", price: 600 },
+    { name: "Kidney Function Test (KFT)", code: "KFT007", price: 500 },
+    { name: "Thyroid Function Test (TFT)", code: "TFT008", price: 650 },
+    { name: "Vitamin D", code: "VTD009", price: 1200 },
+    { name: "Vitamin B12", code: "VTB010", price: 900 },
+    { name: "Iron Studies", code: "IRN011", price: 750 },
+    { name: "Urine Routine", code: "URN012", price: 200 },
+    { name: "ECG", code: "ECG013", price: 300 },
+    { name: "Chest X-Ray", code: "CXR014", price: 400 },
+    { name: "Ultrasound Abdomen", code: "USA015", price: 1500 },
+  ];
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -35,10 +56,13 @@ const AddReport = () => {
     collectedBy: "",
     refBy: "",
     address: "",
-    tests: [{ testName: "", testCode: "", status: "Pending", result: "" }],
+    tests: [
+      { testName: "", testCode: "", price: 0, status: "Pending", result: "" },
+    ],
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +78,26 @@ const AddReport = () => {
       i === index ? { ...test, [field]: value } : test
     );
     setFormData((prev) => ({ ...prev, tests: updatedTests }));
-    console.log(`Input changed: ${name} = ${value}`);
+    console.log(`Test changed: ${field} = ${value}`);
+  };
+
+  const handleTestSelection = (index, selectedTest) => {
+    const updatedTests = formData.tests.map((test, i) =>
+      i === index
+        ? {
+            ...test,
+            testName: selectedTest.name,
+            testCode: selectedTest.code,
+            price: selectedTest.price,
+          }
+        : test
+    );
+    setFormData((prev) => ({ ...prev, tests: updatedTests }));
+    setDropdownOpen((prev) => ({ ...prev, [index]: false }));
+    console.log(`Test selected: ${selectedTest.name} at index ${index}`);
+    console.log(
+      `Test code: ${selectedTest.code}, Price: ₹${selectedTest.price}`
+    );
   };
 
   const addTest = () => {
@@ -62,7 +105,7 @@ const AddReport = () => {
       ...prev,
       tests: [
         ...prev.tests,
-        { testName: "", testCode: "", status: "Pending", result: "" },
+        { testName: "", testCode: "", price: 0, status: "Pending", result: "" },
       ],
     }));
   };
@@ -74,12 +117,61 @@ const AddReport = () => {
     }
   };
 
+  const toggleDropdown = (index) => {
+    setDropdownOpen((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
+
+  const getTotalPrice = () => {
+    return formData.tests.reduce((total, test) => total + (test.price || 0), 0);
+  };
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
     try {
+      // Validate that all tests have required fields
+      const invalidTests = formData.tests.filter(
+        (test) => !test.testName || !test.testCode || test.price <= 0
+      );
+
+      if (invalidTests.length > 0) {
+        alert(
+          "Please select valid tests for all test entries and ensure prices are greater than 0"
+        );
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Validate required patient fields
+      if (
+        !formData.patientName ||
+        !formData.mobile ||
+        !formData.age ||
+        !formData.gender
+      ) {
+        alert("Please fill in all required patient information");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Calculate total price to send to the server
+      const totalPrice = getTotalPrice();
+
+      // Prepare the formData to include totalPrice
+      const dataToSubmit = {
+        ...formData,
+        totalPrice, // Add totalPrice to the data being sent
+      };
+
+      // Debug: Log the data being sent
+      console.log(
+        "Form data being submitted:",
+        JSON.stringify(dataToSubmit, null, 2)
+      );
+      console.log("Total price calculated:", totalPrice);
+      
       // Call the server action
-      const result = await addreport(formData);
+      const result = await addreport(dataToSubmit);
 
       if (result.success) {
         // Reset form after successful submission
@@ -92,7 +184,13 @@ const AddReport = () => {
           refBy: "",
           address: "",
           tests: [
-            { testName: "", testCode: "", status: "Pending", result: "" },
+            {
+              testName: "",
+              testCode: "",
+              price: 0,
+              status: "Pending",
+              result: "",
+            },
           ],
         });
         alert("Report added successfully!");
@@ -168,7 +266,7 @@ const AddReport = () => {
                     required
                     minLength="10"
                     className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter mobile number (min 10 digits)"
+                     placeholder="Enter mobile number (min 10 digits)"
                   />
                 </div>
               </div>
@@ -290,14 +388,20 @@ const AddReport = () => {
                 <FaFlask className="text-green-400" />
                 Test Details
               </h2>
-              <button
-                type="button"
-                onClick={addTest}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                <FaPlus className="text-sm" />
-                Add Test
-              </button>
+              <div className="flex items-center gap-4">
+                <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-4 py-2 rounded-xl text-white font-semibold shadow-lg">
+                  <FaRupeeSign className="inline mr-1" />
+                  Total: ₹{getTotalPrice()}
+                </div>
+                <button
+                  type="button"
+                  onClick={addTest}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  <FaPlus className="text-sm" />
+                  Add Test
+                </button>
+              </div>
             </div>
 
             <div className="space-y-6">
@@ -322,40 +426,107 @@ const AddReport = () => {
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
+                    {/* Test Name Dropdown */}
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-slate-200">
                         Test Name *
                       </label>
-                      <input
-                        type="text"
-                        value={test.testName}
-                        onChange={(e) =>
-                          handleTestChange(index, "testName", e.target.value)
-                        }
-                        required
-                        minLength="2"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                        placeholder="Enter test name (min 2 chars)"
-                      />
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => toggleDropdown(index)}
+                          className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white text-left focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 flex items-center justify-between"
+                        >
+                          <span
+                            className={
+                              test.testName ? "text-white" : "text-slate-400"
+                            }
+                          >
+                            {test.testName || "Select a test"}
+                          </span>
+                          <FaChevronDown
+                            className={`transition-transform duration-200 ${
+                              dropdownOpen[index] ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                        {dropdownOpen[index] && (
+                          <div className="absolute z-10 w-full mt-1 bg-slate-800 border border-white/20 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
+                            {testData.map((testOption, testIndex) => (
+                              <button
+                                key={testIndex}
+                                type="button"
+                                onClick={() =>
+                                  handleTestSelection(index, testOption)
+                                }
+                                className="w-full px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 text-white border-b border-white/10 last:border-b-0"
+                              >
+                                <div className="flex justify-between items-center">
+                                  <div>
+                                    <div className="font-medium">
+                                      {testOption.name}
+                                    </div>
+                                    <div className="text-sm text-slate-400">
+                                      {testOption.code}
+                                    </div>
+                                  </div>
+                                  <div className="text-green-400 font-semibold">
+                                    ₹{testOption.price}
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
 
+                    {/* Test Code */}
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-slate-200">
-                        Test Code *
+                        Test Code
                       </label>
                       <input
                         type="text"
                         value={test.testCode}
-                        onChange={(e) =>
-                          handleTestChange(index, "testCode", e.target.value)
-                        }
-                        required
-                        minLength="2"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                        placeholder="Enter test code (min 2 chars)"
+                        readOnly
+                        className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-slate-300 cursor-not-allowed transition-all duration-300"
+                        placeholder="Auto-filled from selection"
                       />
                     </div>
 
+                    {/* Price */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-slate-200">
+                        Price (₹)
+                      </label>
+                      <div className="relative">
+                        <FaRupeeSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+                        <input
+                          type="number"
+                          value={test.price}
+                          onChange={(e) =>
+                            handleTestChange(
+                              index,
+                              "price",
+                              parseFloat(e.target.value) || 0
+                            )
+                          }
+                          min="0"
+                          disabled={!test.testName}
+                          className={`w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 ${
+                            !test.testName
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
+                          placeholder={
+                            test.testName ? "Enter price" : "Select test first"
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    {/* Status */}
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-slate-200">
                         Status
@@ -376,7 +547,8 @@ const AddReport = () => {
                       </select>
                     </div>
 
-                    <div className="space-y-2">
+                    {/* Result */}
+                    <div className="space-y-2 md:col-span-2">
                       <label className="block text-sm font-medium text-slate-200">
                         Result
                       </label>
