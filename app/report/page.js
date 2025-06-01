@@ -1,9 +1,14 @@
+import Navbar from '@/components/Navbar'
+import ReportLists from '@/components/ReportLists'
 import React from 'react'
 
-const page = () => {
+const ReportsHere = () => {
   return (
-    <div>page</div>
+    <>
+    <Navbar />
+    <ReportLists />
+    </>
   )
 }
 
-export default page
+export default ReportsHere

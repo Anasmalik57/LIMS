@@ -26,7 +26,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Tests", href: "/tests" },
+    { name: "Reports", href: "/report" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
@@ -35,7 +35,7 @@ const Navbar = () => {
     { name: "Dashboard", href: "/dashboard", icon: FaTachometerAlt },
     { name: "Add Report", href: "/addreport", icon: FaFeatherAlt },
     { name: "Add Doctor", href: "/addDoctor", icon: FaUserMd },
-    { name: "Tests", href: "/tests", icon: FaFlask },
+    { name: "Reports", href: "/report", icon: FaFlask },
   ];
 
   // Close dropdown when clicking outside
