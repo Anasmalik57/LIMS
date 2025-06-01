@@ -43,6 +43,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import Link from "next/link";
 
 const DashboardData = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("7d");
@@ -116,7 +117,7 @@ const DashboardData = () => {
       trend: "up",
       icon: FaFlask,
       gradient: "from-green-500 to-emerald-500",
-      bgGradient: "from-green-50 to-emerald-50",
+      bgGradient: "from-green-800 to-emerald-50",
       darkBgGradient: "from-green-900/20 to-emerald-900/20",
     },
     {
@@ -126,7 +127,7 @@ const DashboardData = () => {
       trend: "down",
       icon: FiClock,
       gradient: "from-orange-500 to-amber-500",
-      bgGradient: "from-orange-50 to-amber-50",
+      bgGradient: "from-orange-900 to-amber-50",
       darkBgGradient: "from-orange-900/20 to-amber-900/20",
     },
     {
@@ -136,7 +137,7 @@ const DashboardData = () => {
       trend: "up",
       icon: FiTrendingUp,
       gradient: "from-purple-500 to-pink-500",
-      bgGradient: "from-purple-50 to-pink-50",
+      bgGradient: "from-purple-800 to-pink-50",
       darkBgGradient: "from-purple-900/20 to-pink-900/20",
     },
   ];
@@ -146,26 +147,26 @@ const DashboardData = () => {
       name: "New Patient",
       icon: FiPlus,
       color: "blue",
-      action: () => window.location.href = '/addPatient',
+      action:  '/addreport',
     },
     {
       name: "Add Doctor",
       icon: FaUserMd,
       color: "green",
-      action: () => window.location.href = '/addDoctor',
+      action:'/addDoctor',
     },
     {
       name: "View Reports",
       icon: FiEye,
       color: "purple",
-      action: () => window.location.href = '/report',
+      action:'/report',
     },
-    {
-      name: "Generate Bill",
-      icon: FiDownload,
-      color: "orange",
-      action: () => console.log("Generate bill"),
-    },
+    // {
+    //   name: "Generate Bill",
+    //   icon: FiDownload,
+    //   color: "orange",
+    //   action: "Generate bill"
+    // },
   ];
 
   const getStatusColor = (status) => {
@@ -250,7 +251,7 @@ const DashboardData = () => {
               </p>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-4">
               {/* Search Bar */}
               <div className="relative">
                 <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -266,7 +267,7 @@ const DashboardData = () => {
               {/* Refresh Button */}
               <button 
                 onClick={fetchDashboardData}
-                className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
+                className="p-3 cursor-pointer bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
               >
                 <FiRefreshCw className="text-gray-600 dark:text-gray-400" />
               </button>
@@ -281,7 +282,7 @@ const DashboardData = () => {
               <select
                 value={selectedPeriod}
                 onChange={(e) => setSelectedPeriod(e.target.value)}
-                className="px-4 py-3 text-white  bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                className="px-4 py-3 cursor-pointer text-white  bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
               >
                 <option value="7d">Last 7 Days</option>
                 <option value="30d">Last 30 Days</option>
@@ -299,7 +300,7 @@ const DashboardData = () => {
             return (
               <div
                 key={index}
-                className={`bg-gradient-to-r  ${card.bgGradient} dark:${card.darkBgGradient} p-6 rounded-2xl border border-white/50 dark:border-gray-700/30 backdrop-blur-sm hover:transform hover:scale-105 transition-all duration-300 group`}
+                className={`cursor-pointer bg-gradient-to-r  ${card.bgGradient} dark:${card.darkBgGradient} p-6 rounded-2xl border border-white/50 dark:border-gray-700/30 backdrop-blur-sm hover:transform hover:scale-105 transition-all duration-300 group`}
               >
                 <div className="flex items-center justify-between mb-4">
                   <div
@@ -338,14 +339,14 @@ const DashboardData = () => {
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                 Patient & Test Analytics
               </h3>
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                   <FiFilter className="text-gray-500" />
                 </button>
                 <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                   <FiDownload className="text-gray-500" />
                 </button>
-              </div>
+              </div> */}
             </div>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
@@ -448,16 +449,16 @@ const DashboardData = () => {
               {quickActions.map((action, index) => {
                 const IconComponent = action.icon;
                 return (
-                  <button
+                  <Link
                     key={index}
-                    onClick={action.action}
-                    className="w-full flex items-center gap-3 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 group"
+                    href={action.action}
+                    className="w-full cursor-pointer flex items-center gap-3 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 group"
                   >
                     <IconComponent className="text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
                     <span className="font-medium text-gray-700 dark:text-gray-300">
                       {action.name}
                     </span>
-                  </button>
+                  </Link>
                 );
               })}
             </div>
@@ -469,12 +470,12 @@ const DashboardData = () => {
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                 Recent Patients
               </h3>
-              <button 
-                onClick={() => window.location.href = '/report'}
+              <Link 
+                href={"/report"}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 View All
-              </button>
+              </Link>
             </div>
 
             <div className="overflow-x-auto">
@@ -502,12 +503,12 @@ const DashboardData = () => {
                     <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">
                       Date
                     </th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">
+                    {/* <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">
                       Actions
-                    </th>
+                    </th> */}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="">
                   {filteredRecentPatients.map((patient, index) => {
                     const completedTests = patient.tests?.filter(test => test.status === 'Completed').length || 0;
                     const totalTests = patient.tests?.length || 0;
@@ -555,11 +556,11 @@ const DashboardData = () => {
                             {formatDate(patient.createdAt)}
                           </span>
                         </td>
-                        <td className="py-4 px-4">
+                        {/* <td className="py-4 px-4">
                           <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">
                             <FiMoreVertical className="text-gray-500" />
                           </button>
-                        </td>
+                        </td> */}
                       </tr>
                     );
                   })}
