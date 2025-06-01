@@ -161,12 +161,12 @@ const DashboardData = () => {
       color: "purple",
       action:'/report',
     },
-    // {
-    //   name: "Generate Bill",
-    //   icon: FiDownload,
-    //   color: "orange",
-    //   action: "Generate bill"
-    // },
+    {
+      name: "Doctors List",
+      icon: FaStethoscope,
+      color: "orange",
+      action: "doctorlist"
+    },
   ];
 
   const getStatusColor = (status) => {

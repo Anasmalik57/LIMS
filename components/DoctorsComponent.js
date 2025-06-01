@@ -77,14 +77,6 @@ const DoctorsComponent = () => {
     setFilteredDoctors(filtered);
   }, [doctors, searchTerm, sortBy]);
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-IN", {
       year: "numeric",
@@ -170,9 +162,9 @@ const DoctorsComponent = () => {
       </div>
 
       {/* Header Section */}
-      <div className="relative z-10 bg-black/40 backdrop-blur-2xl border-b border-gray-800/50 sticky top-0">
+      <div className="relative z-10 bg-black/40 backdrop-blur-2xl border-b border-gray-800/50 ">
         <div className="max-w-8xl mx-auto px-6 py-8">
-          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8">
+          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8 max-w-7xl mx-auto">
             {/* Epic Title */}
             <div className="flex items-center gap-6">
               <div className="relative">
@@ -183,11 +175,11 @@ const DoctorsComponent = () => {
                 <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full"></div>
               </div>
               <div>
-                <h1 className="text-5xl font-black bg-gradient-to-r from-cyan-400 via-blue-400  to-pink-400 bg-clip-text text-transparent mb-2">
+                <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-cyan-400 via-blue-400  to-pink-400 bg-clip-text text-transparent mb-2">
                   ELITE DOCTORS
                 </h1>
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 px-4 py-2 rounded-full border border-yellow-400/30">
+                  <div className="flex items-center text-xs md:text-sm gap-2 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 px-4 py-2 rounded-full border border-yellow-400/30">
                     <HiSparkles className="text-yellow-400 " />
                     <span className="text-yellow-400 font-bold">
                       {filteredDoctors.length}
@@ -196,7 +188,7 @@ const DoctorsComponent = () => {
                   </div>
                   <div className="flex items-center gap-1 text-green-400">
                     <FaShieldAlt className="animate-pulse" />
-                    <span className="text-sm font-semibold">
+                    <span className="text-xs md:text-sm font-semibold">
                       Verified & Trusted
                     </span>
                   </div>
@@ -327,8 +319,8 @@ const DoctorsComponent = () => {
                           Commission
                         </span>
                       </div>
-                      <span className="text-2xl font-black text-green-400">
-                        {formatCurrency(doctor.commission)}
+                      <span className="text- font-black text-green-400">
+                        {`${doctor.commission}%`}
                       </span>
                     </div>
                   </div>
@@ -364,67 +356,8 @@ const DoctorsComponent = () => {
         )}
       </div>
 
-      {/* Epic Footer Stats */}
-      {filteredDoctors.length > 0 && (
-        <div className="relative z-10 bg-black/60 backdrop-blur-2xl border-t border-gray-800/50 mt-16">
-          <div className="max-w-8xl mx-auto px-6 py-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Total Doctors */}
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-3xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                <div className="relative bg-gray-900/80 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 text-center">
-                  <div className="text-6xl font-black text-cyan-400 mb-4">
-                    {filteredDoctors.length}
-                  </div>
-                  <div className="text-xl text-gray-300 font-bold">
-                    Elite Doctors
-                  </div>
-                  <div className="text-sm text-gray-500 mt-2">
-                    Ready to serve you
-                  </div>
-                </div>
-              </div>
-
-              {/* Average Commission */}
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                <div className="relative bg-gray-900/80 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 text-center">
-                  <div className="text-4xl font-black text-green-400 mb-4">
-                    {formatCurrency(
-                      filteredDoctors.reduce(
-                        (sum, doc) => sum + doc.commission,
-                        0
-                      ) / filteredDoctors.length
-                    )}
-                  </div>
-                  <div className="text-xl text-gray-300 font-bold">
-                    Avg. Commission
-                  </div>
-                  <div className="text-sm text-gray-500 mt-2">
-                    Competitive rates
-                  </div>
-                </div>
-              </div>
-
-              {/* Support */}
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-600 rounded-3xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                <div className="relative bg-gray-900/80 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 text-center">
-                  <div className="text-6xl font-black text-purple-400 mb-4">
-                    24/7
-                  </div>
-                  <div className="text-xl text-gray-300 font-bold">
-                    Premium Support
-                  </div>
-                  <div className="text-sm text-gray-500 mt-2">
-                    Always available
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      
+     
     </div>
   );
 };

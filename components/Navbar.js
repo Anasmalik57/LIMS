@@ -8,12 +8,14 @@ import {
   FiSettings,
   FiChevronDown,
 } from "react-icons/fi";
+import { IoReceiptSharp } from "react-icons/io5";
 import {
   FaGithub,
   FaFlask,
   FaUserMd,
   FaTachometerAlt,
   FaFeatherAlt,
+  FaStethoscope,
 } from "react-icons/fa";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -35,7 +37,8 @@ const Navbar = () => {
     { name: "Dashboard", href: "/dashboard", icon: FaTachometerAlt },
     { name: "Add Report", href: "/addreport", icon: FaFeatherAlt },
     { name: "Add Doctor", href: "/addDoctor", icon: FaUserMd },
-    { name: "All Reports", href: "/report", icon: FaFlask },
+    { name: "All Reports", href: "/report", icon: IoReceiptSharp },
+    { name: "Doctor List", href: "/doctorlist", icon: FaStethoscope },
   ];
 
   // Close dropdown when clicking outside
