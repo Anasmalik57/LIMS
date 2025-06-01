@@ -19,6 +19,7 @@ import {
 } from "react-icons/fa";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,7 +64,9 @@ const Navbar = () => {
         <div className="relative">
           <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-blue-500/30 group-hover:ring-blue-500/60 transition-all">
             {session?.user?.image ? (
-              <img
+              <Image
+              width={500}
+              height={500}
                 src={session.user.image}
                 alt="Profile"
                 className="w-full h-full object-cover"
@@ -101,7 +104,9 @@ const Navbar = () => {
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden">
                 {session?.user?.image ? (
-                  <img
+                  <Image
+                  width={500}
+                  height={500}
                     src={session.user.image}
                     alt="Profile"
                     className="w-full h-full object-cover"
@@ -257,7 +262,9 @@ const Navbar = () => {
                   <div className="flex items-center gap-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-4">
                     <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-blue-500/30">
                       {session?.user?.image ? (
-                        <img
+                        <Image
+                        width={500}
+                        height={500}
                           src={session.user.image}
                           alt="Profile"
                           className="w-full h-full object-cover"

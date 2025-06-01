@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -26,6 +26,31 @@ const FindViaDoctor = () => {
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const router = useRouter();
 
+  const handleSearch = useCallback(async () => {
+    setSearching(true);
+    await new Promise((resolve) => setTimeout(resolve, 300)); // Smooth UX delay
+
+    const filtered = reports.filter((report) => {
+      const doctorMatch = searchTerm
+        ? report.refBy?.toLowerCase().includes(searchTerm.toLowerCase())
+        : true;
+
+      const selectedMatch = selectedDoctor
+        ? report.refBy?.toLowerCase() === selectedDoctor.toLowerCase()
+        : true;
+
+      return (
+        doctorMatch &&
+        selectedMatch &&
+        report.refBy &&
+        report.refBy.toLowerCase() !== "self"
+      );
+    });
+
+    setFilteredReports(filtered);
+    setSearching(false);
+  }, [reports, searchTerm, selectedDoctor]);
+
   useEffect(() => {
     fetchReports();
   }, []);
@@ -36,7 +61,7 @@ const FindViaDoctor = () => {
     } else {
       setFilteredReports([]);
     }
-  }, [searchTerm, selectedDoctor, reports]);
+  }, [searchTerm, selectedDoctor, handleSearch]);
 
   const fetchReports = async () => {
     try {
@@ -49,13 +74,15 @@ const FindViaDoctor = () => {
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
         setReports(sortedReports);
-        
+
         // Extract unique doctors
-        const uniqueDoctors = [...new Set(
-          sortedReports
-            .map(report => report.refBy)
-            .filter(doctor => doctor && doctor.toLowerCase() !== 'self')
-        )].sort();
+        const uniqueDoctors = [
+          ...new Set(
+            sortedReports
+              .map((report) => report.refBy)
+              .filter((doctor) => doctor && doctor.toLowerCase() !== "self")
+          ),
+        ].sort();
         setDoctors(uniqueDoctors);
       } else {
         setError(data.message || "Failed to fetch reports");
@@ -66,26 +93,6 @@ const FindViaDoctor = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSearch = async () => {
-    setSearching(true);
-    await new Promise(resolve => setTimeout(resolve, 300)); // Smooth UX delay
-    
-    const filtered = reports.filter(report => {
-      const doctorMatch = searchTerm 
-        ? report.refBy?.toLowerCase().includes(searchTerm.toLowerCase())
-        : true;
-      
-      const selectedMatch = selectedDoctor 
-        ? report.refBy?.toLowerCase() === selectedDoctor.toLowerCase()
-        : true;
-      
-      return doctorMatch && selectedMatch && report.refBy && report.refBy.toLowerCase() !== 'self';
-    });
-    
-    setFilteredReports(filtered);
-    setSearching(false);
   };
 
   const handleReportClick = (reportId) => {
@@ -124,7 +131,9 @@ const FindViaDoctor = () => {
               <FaSpinner className="text-6xl text-blue-400/30 mx-auto" />
             </div>
           </div>
-          <p className="text-white text-xl font-medium">Loading Doctor Reports...</p>
+          <p className="text-white text-xl font-medium">
+            Loading Doctor Reports...
+          </p>
           <div className="mt-4 w-32 h-1 bg-blue-400/20 rounded-full mx-auto overflow-hidden">
             <div className="w-full h-full bg-gradient-to-r from-blue-400 to-cyan-400 animate-pulse"></div>
           </div>
@@ -138,7 +147,9 @@ const FindViaDoctor = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 flex items-center justify-center">
         <div className="text-center backdrop-blur-sm bg-white/10 p-8 rounded-2xl border border-white/20">
           <FaExclamationTriangle className="text-8xl text-red-400 mx-auto mb-6 animate-pulse" />
-          <h1 className="text-3xl font-bold text-white mb-4">Error Loading Reports</h1>
+          <h1 className="text-3xl font-bold text-white mb-4">
+            Error Loading Reports
+          </h1>
           <p className="text-red-200 mb-6 text-lg">{error}</p>
           <button
             onClick={fetchReports}
@@ -157,7 +168,7 @@ const FindViaDoctor = () => {
         {/* Header */}
         <div className="backdrop-blur-xl bg-white/10 rounded-2xl shadow-2xl border border-white/20 p-6 mb-6">
           <div className="flex items-center gap-4 mb-6">
-            <Link 
+            <Link
               href="/report"
               className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
@@ -191,23 +202,6 @@ const FindViaDoctor = () => {
               )}
             </div>
 
-            {/* Doctor Dropdown */}
-            {/* <div className="relative">
-              <FaStethoscope className="absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-400 z-10" />
-              <select
-                value={selectedDoctor}
-                onChange={(e) => setSelectedDoctor(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-transparent text-white transition-all duration-300 hover:bg-white/15 appearance-none cursor-pointer"
-              >
-                <option value="" className="bg-slate-800">Select Doctor</option>
-                {doctors.map((doctor, index) => (
-                  <option key={index} value={doctor} className="bg-slate-800">
-                    Dr. {doctor}
-                  </option>
-                ))}
-              </select>
-            </div> */}
-
             {/* Clear Filters */}
             <button
               onClick={clearFilters}
@@ -222,18 +216,20 @@ const FindViaDoctor = () => {
           {(searchTerm || selectedDoctor) && (
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 p-4 rounded-xl border border-blue-400/30">
-                <div className="text-2xl font-bold text-white">{filteredReports.length}</div>
+                <div className="text-2xl font-bold text-white">
+                  {filteredReports.length}
+                </div>
                 <div className="text-blue-200">Reports Found</div>
               </div>
               <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 p-4 rounded-xl border border-green-400/30">
                 <div className="text-2xl font-bold text-white">
-                  {filteredReports.filter(r => r.done).length}
+                  {filteredReports.filter((r) => r.done).length}
                 </div>
                 <div className="text-green-200">Completed</div>
               </div>
               <div className="bg-gradient-to-r from-orange-500/20 to-yellow-500/20 p-4 rounded-xl border border-orange-400/30">
                 <div className="text-2xl font-bold text-white">
-                  {filteredReports.filter(r => !r.done).length}
+                  {filteredReports.filter((r) => !r.done).length}
                 </div>
                 <div className="text-orange-200">Pending</div>
               </div>
@@ -250,34 +246,20 @@ const FindViaDoctor = () => {
                 <FaUserMd className="text-8xl text-blue-400/10 mx-auto" />
               </div>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-4">Search for Doctor Reports</h2>
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Search for Doctor Reports
+            </h2>
             <p className="text-blue-200 text-lg">
-              Enter a doctor's name or select from the dropdown to view their reports
+              Enter a doctor&#39;s name or select from the dropdown to view
+              their reports
             </p>
-            {/* <div className="mt-8">
-              <p className="text-cyan-300 font-semibold text-lg mb-2">Available Doctors:</p>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {doctors.slice(0, 6).map((doctor, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedDoctor(doctor)}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-200 rounded-full text-sm font-medium border border-blue-400/30 backdrop-blur-sm hover:from-blue-500/30 hover:to-cyan-500/30 transition-all duration-300"
-                  >
-                    Dr. {doctor}
-                  </button>
-                ))}
-                {doctors.length > 6 && (
-                  <span className="px-4 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 text-gray-300 rounded-full text-sm font-medium border border-gray-400/30 backdrop-blur-sm">
-                    +{doctors.length - 6} more
-                  </span>
-                )}
-              </div>
-            </div> */}
           </div>
         ) : filteredReports.length === 0 ? (
           <div className="backdrop-blur-xl bg-white/5 rounded-2xl shadow-2xl border border-white/10 p-16 text-center">
             <FaExclamationTriangle className="text-8xl text-orange-400/50 mx-auto mb-6" />
-            <h2 className="text-3xl font-bold text-white mb-4">No Reports Found</h2>
+            <h2 className="text-3xl font-bold text-white mb-4">
+              No Reports Found
+            </h2>
             <p className="text-orange-200 text-lg">
               No reports found for the selected doctor criteria
             </p>
@@ -303,24 +285,42 @@ const FindViaDoctor = () => {
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-blue-200">
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-cyan-300">Ref. Doctor:</span>
-                            <span className="text-white font-medium">Dr. {report.refBy}</span>
+                            <span className="font-semibold text-cyan-300">
+                              Ref. Doctor:
+                            </span>
+                            <span className="text-white font-medium">
+                              Dr. {report.refBy}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-blue-300">Age/Gender:</span>
-                            <span className="text-white">{report.age} Yrs, {report.gender}</span>
+                            <span className="font-semibold text-blue-300">
+                              Age/Gender:
+                            </span>
+                            <span className="text-white">
+                              {report.age} Yrs, {report.gender}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-blue-300">Mobile:</span>
+                            <span className="font-semibold text-blue-300">
+                              Mobile:
+                            </span>
                             <span className="text-white">{report.mobile}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-blue-300">Tests:</span>
-                            <span className="text-white font-medium">{report.tests.length}</span>
+                            <span className="font-semibold text-blue-300">
+                              Tests:
+                            </span>
+                            <span className="text-white font-medium">
+                              {report.tests.length}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-blue-300">Amount:</span>
-                            <span className="text-green-400 font-bold">₹{report.totalPrice}</span>
+                            <span className="font-semibold text-blue-300">
+                              Amount:
+                            </span>
+                            <span className="text-green-400 font-bold">
+                              ₹{report.totalPrice}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -331,7 +331,8 @@ const FindViaDoctor = () => {
                   <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
                     <div className="text-right">
                       <div className="text-sm text-cyan-300 mb-2 font-medium">
-                        {formatDate(report.createdAt)} {formatTime(report.createdAt)}
+                        {formatDate(report.createdAt)}{" "}
+                        {formatTime(report.createdAt)}
                       </div>
                       <div
                         className={`inline-flex px-4 py-2 rounded-full text-xs font-bold shadow-lg ${

@@ -215,7 +215,7 @@ const ReportPDF = () => {
                 </div>
                 <div className="flex">
                   <span className="w-32 text-gray-700 font-medium">
-                    Patient's Name
+                    Patient&#39;s Name
                   </span>
                   <span className="text-gray-700">
                     : <strong>{report.patientName.toUpperCase()}</strong>

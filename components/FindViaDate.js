@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -32,37 +32,8 @@ const FindViaDate = () => {
     fetchReports();
   }, []);
 
-  useEffect(() => {
-    if (startDate || endDate || quickFilter) {
-      handleSearch();
-    } else {
-      setFilteredReports([]);
-    }
-  }, [startDate, endDate, quickFilter, reports]);
-
-  const fetchReports = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("/api/report");
-      const data = await response.json();
-
-      if (data.success) {
-        const sortedReports = data.reports.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        setReports(sortedReports);
-      } else {
-        setError(data.message || "Failed to fetch reports");
-      }
-    } catch (err) {
-      setError("Failed to fetch reports");
-      console.error("Error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearch = async () => {
+  // Memoize handleSearch function to prevent infinite re-renders
+  const handleSearch = useCallback(async () => {
     setSearching(true);
     await new Promise(resolve => setTimeout(resolve, 300)); // Smooth UX delay
     
@@ -130,6 +101,36 @@ const FindViaDate = () => {
     
     setFilteredReports(filtered);
     setSearching(false);
+  }, [reports, startDate, endDate, quickFilter]); // Add dependencies here
+
+  useEffect(() => {
+    if (startDate || endDate || quickFilter) {
+      handleSearch();
+    } else {
+      setFilteredReports([]);
+    }
+  }, [startDate, endDate, quickFilter, handleSearch]); // Now include handleSearch
+
+  const fetchReports = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/report");
+      const data = await response.json();
+
+      if (data.success) {
+        const sortedReports = data.reports.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setReports(sortedReports);
+      } else {
+        setError(data.message || "Failed to fetch reports");
+      }
+    } catch (err) {
+      setError("Failed to fetch reports");
+      console.error("Error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReportClick = (reportId) => {
@@ -374,7 +375,7 @@ const FindViaDate = () => {
                 onClick={() => setQuickFilter("today")}
                 className="px-6 py-3 bg-gradient-to-r from-orange-500/20 to-red-500/20 text-orange-200 rounded-xl border border-orange-400/30 hover:from-orange-500/30 hover:to-red-500/30 transition-all duration-300 font-medium"
               >
-                View Today's Reports
+                View Today&#39;s Reports
               </button>
               <button
                 onClick={() => setQuickFilter("last7days")}

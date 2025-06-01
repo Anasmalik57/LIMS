@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -26,6 +26,27 @@ const FindViaAgent = () => {
   const [selectedAgent, setSelectedAgent] = useState("");
   const router = useRouter();
 
+  // useCallback se handleSearch function को memoize karo
+  const handleSearch = useCallback(async () => {
+    setSearching(true);
+    await new Promise(resolve => setTimeout(resolve, 300)); // Smooth UX delay
+    
+    const filtered = reports.filter(report => {
+      const agentMatch = searchTerm 
+        ? report.collectedBy?.toLowerCase().includes(searchTerm.toLowerCase())
+        : true;
+      
+      const selectedMatch = selectedAgent 
+        ? report.collectedBy?.toLowerCase() === selectedAgent.toLowerCase()
+        : true;
+      
+      return agentMatch && selectedMatch && report.collectedBy && report.collectedBy.toLowerCase() !== 'main branch';
+    });
+    
+    setFilteredReports(filtered);
+    setSearching(false);
+  }, [reports, searchTerm, selectedAgent]);
+
   useEffect(() => {
     fetchReports();
   }, []);
@@ -36,7 +57,7 @@ const FindViaAgent = () => {
     } else {
       setFilteredReports([]);
     }
-  }, [searchTerm, selectedAgent, reports]);
+  }, [searchTerm, selectedAgent, handleSearch]);
 
   const fetchReports = async () => {
     try {
@@ -66,26 +87,6 @@ const FindViaAgent = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSearch = async () => {
-    setSearching(true);
-    await new Promise(resolve => setTimeout(resolve, 300)); // Smooth UX delay
-    
-    const filtered = reports.filter(report => {
-      const agentMatch = searchTerm 
-        ? report.collectedBy?.toLowerCase().includes(searchTerm.toLowerCase())
-        : true;
-      
-      const selectedMatch = selectedAgent 
-        ? report.collectedBy?.toLowerCase() === selectedAgent.toLowerCase()
-        : true;
-      
-      return agentMatch && selectedMatch && report.collectedBy && report.collectedBy.toLowerCase() !== 'main branch';
-    });
-    
-    setFilteredReports(filtered);
-    setSearching(false);
   };
 
   const handleReportClick = (reportId) => {
@@ -235,30 +236,8 @@ const FindViaAgent = () => {
             </div>
             <h2 className="text-3xl font-bold text-white mb-4">Search for Agent Reports</h2>
             <p className="text-purple-200 text-lg">
-              Enter an agent's name to view their collected reports
+              Enter an agent&#39;s name to view their collected reports
             </p>
-            {/* <div className="mt-8">
-              <div className="flex items-center justify-center gap-2 text-pink-300 mb-4">
-                <FaUsers className="text-lg" />
-                <span className="font-semibold">Available Agents: {agents.length}</span>
-              </div>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {agents.slice(0, 8).map((agent, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSearchTerm(agent)}
-                    className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 rounded-full text-sm font-medium border border-purple-400/30 backdrop-blur-sm hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300 transform hover:scale-105"
-                  >
-                    {agent}
-                  </button>
-                ))}
-                {agents.length > 8 && (
-                  <span className="px-4 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 text-gray-300 rounded-full text-sm font-medium border border-gray-400/30 backdrop-blur-sm">
-                    +{agents.length - 8} more
-                  </span>
-                )}
-              </div>
-            </div> */}
           </div>
         ) : filteredReports.length === 0 ? (
           <div className="backdrop-blur-xl bg-white/5 rounded-2xl shadow-2xl border border-white/10 p-16 text-center">

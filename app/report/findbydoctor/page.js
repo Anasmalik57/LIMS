@@ -1,3 +1,4 @@
+"use client";
 import FindViaDoctor from "@/components/FindViaDoctor";
 import Navbar from "@/components/Navbar";
 import { useSession } from "next-auth/react";
@@ -5,7 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 const FindByDoctor = () => {
-    const { data: session, status, update } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -13,10 +14,12 @@ const FindByDoctor = () => {
       router.push("/");
     }
   }, [router, status]);
-  return <>
-  <Navbar />
-  <FindViaDoctor />
-  </>
+  return (
+    <>
+      <Navbar />
+      <FindViaDoctor />
+    </>
+  );
 };
 
 export default FindByDoctor;
