@@ -2,6 +2,7 @@
 import connectDB from "@/database/connectDB";
 import Doctor from "@/models/Doctor";
 import Patient from "@/models/Patient";
+import { sendReportNotification } from "./notification";
 
 // Function to add a new report
 export const addreport = async (formData) => {
@@ -32,10 +33,8 @@ export const addreport = async (formData) => {
     }
 
     // Calculate total price from tests (as backup if totalPrice is not provided)
-    const calculatedTotalPrice = totalPrice || tests.reduce(
-      (total, test) => total + (test.price || 0),
-      0
-    );
+    const calculatedTotalPrice =
+      totalPrice || tests.reduce((total, test) => total + (test.price || 0), 0);
 
     console.log("Total price being saved:", calculatedTotalPrice); // Debug log
 
@@ -60,8 +59,26 @@ export const addreport = async (formData) => {
     });
 
     await newPatient.save();
-    
+
     console.log("Patient saved with total price:", newPatient.totalPrice); // Debug log
+    const emailResult = await sendReportNotification({
+      patientName,
+      mobile,
+      age,
+      gender,
+      collectedBy,
+      refBy,
+      address,
+      tests,
+      totalPrice: calculatedTotalPrice,
+    });
+
+    // Log email result but don't fail report creation if email fails
+    if (emailResult.success) {
+      console.log("✅ Email notification sent successfully");
+    } else {
+      console.log("⚠️ Email notification failed:", emailResult.message);
+    }
 
     return {
       success: true,
