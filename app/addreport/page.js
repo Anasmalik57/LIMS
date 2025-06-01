@@ -1,5 +1,6 @@
 "use client";
 import { addreport } from "@/actions/useractions";
+import Navbar from "@/components/Navbar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -125,87 +126,97 @@ const AddReport = () => {
     return formData.tests.reduce((total, test) => total + (test.price || 0), 0);
   };
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
+// Updated handleSubmit function in AddReport component
+const handleSubmit = async () => {
+  setIsSubmitting(true);
 
-    try {
-      // Validate that all tests have required fields
-      const invalidTests = formData.tests.filter(
-        (test) => !test.testName || !test.testCode || test.price <= 0
+  try {
+    // Validate that all tests have required fields
+    const invalidTests = formData.tests.filter(
+      (test) => !test.testName || !test.testCode || test.price <= 0
+    );
+
+    if (invalidTests.length > 0) {
+      alert(
+        "Please select valid tests for all test entries and ensure prices are greater than 0"
       );
-
-      if (invalidTests.length > 0) {
-        alert(
-          "Please select valid tests for all test entries and ensure prices are greater than 0"
-        );
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Validate required patient fields
-      if (
-        !formData.patientName ||
-        !formData.mobile ||
-        !formData.age ||
-        !formData.gender
-      ) {
-        alert("Please fill in all required patient information");
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Calculate total price to send to the server
-      const totalPrice = getTotalPrice();
-
-      // Prepare the formData to include totalPrice
-      const dataToSubmit = {
-        ...formData,
-        totalPrice, // Add totalPrice to the data being sent
-      };
-
-      // Debug: Log the data being sent
-      console.log(
-        "Form data being submitted:",
-        JSON.stringify(dataToSubmit, null, 2)
-      );
-      console.log("Total price calculated:", totalPrice);
-      
-      // Call the server action
-      const result = await addreport(dataToSubmit);
-
-      if (result.success) {
-        // Reset form after successful submission
-        setFormData({
-          patientName: "",
-          mobile: "",
-          age: "",
-          gender: "",
-          collectedBy: "",
-          refBy: "",
-          address: "",
-          tests: [
-            {
-              testName: "",
-              testCode: "",
-              price: 0,
-              status: "Pending",
-              result: "",
-            },
-          ],
-        });
-        alert("Report added successfully!");
-      } else {
-        alert(result.message || "Error adding report");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error adding report. Please try again.");
-    } finally {
       setIsSubmitting(false);
+      return;
     }
-  };
+
+    // Validate required patient fields
+    if (
+      !formData.patientName ||
+      !formData.mobile ||
+      !formData.age ||
+      !formData.gender
+    ) {
+      alert("Please fill in all required patient information");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Calculate total price to send to the server
+    const totalPrice = getTotalPrice();
+
+    // Prepare the formData to include totalPrice
+    const dataToSubmit = {
+      ...formData,
+      totalPrice, // Add totalPrice to the data being sent
+    };
+
+    // Debug: Log the data being sent
+    console.log(
+      "Form data being submitted:",
+      JSON.stringify(dataToSubmit, null, 2)
+    );
+    console.log("Total price calculated:", totalPrice);
+    
+    // Call the server action
+    const result = await addreport(dataToSubmit);
+
+    if (result.success) {
+      // Reset form after successful submission
+      setFormData({
+        patientName: "",
+        mobile: "",
+        age: "",
+        gender: "",
+        collectedBy: "",
+        refBy: "",
+        address: "",
+        tests: [
+          {
+            testName: "",
+            testCode: "",
+            price: 0,
+            status: "Pending",
+            result: "",
+          },
+        ],
+      });
+      
+      // Show success message
+      alert("Report added successfully!");
+      
+      // Redirect to the report page with the new report ID
+      if (result.reportId) {
+        router.push(`/report/${result.reportId}`);
+      }
+    } else {
+      alert(result.message || "Error adding report");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error adding report. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
       <div className="max-w-4xl mx-auto mt-20">
         {/* Header */}
@@ -593,6 +604,7 @@ const AddReport = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -58,9 +58,11 @@ export const addreport = async (formData) => {
       totalPrice: calculatedTotalPrice, // Use the calculated or provided total price
     });
 
-    await newPatient.save();
+    const savedPatient = await newPatient.save();
 
-    console.log("Patient saved with total price:", newPatient.totalPrice); // Debug log
+    console.log("Patient saved with total price:", savedPatient.totalPrice); // Debug log
+    console.log("Patient saved with ID:", savedPatient._id); // Debug log
+
     const emailResult = await sendReportNotification({
       patientName,
       mobile,
@@ -83,6 +85,7 @@ export const addreport = async (formData) => {
     return {
       success: true,
       message: "Report added successfully",
+      reportId: savedPatient._id.toString(), // Return the report ID for redirect
       totalPrice: calculatedTotalPrice, // Return total price in response
     };
   } catch (error) {
