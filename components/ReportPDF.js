@@ -10,6 +10,7 @@ const TEST_PARAMETERS = {
     { parameter: "Total R.B.C.", unit: "mil/cumm", referenceRange: "4.5-6.2" },
     { parameter: "Total W.B.C.", unit: "/cumm", referenceRange: "4000-11000" },
     { parameter: "DIFFERENTIAL COUNT", unit: "", referenceRange: "" },
+    { parameter: "Polymorphs", unit: "%", referenceRange: "20-45" },
     { parameter: "Lymphocytes", unit: "%", referenceRange: "20-45" },
     { parameter: "Eosinophils", unit: "%", referenceRange: "1-6" },
     { parameter: "Monocytes", unit: "%", referenceRange: "2-8" },
@@ -190,10 +191,10 @@ const ReportPDF = () => {
                     Shekhpura Roorkee, Haridwar (U.K)
                   </p>
                   <p className="text-gray-700 text-sm">
-                    Ph no 9084648712, 9084648712
+                    Phone: 9927782011, 9084648712
                   </p>
                   <p className="text-gray-700 text-sm">
-                    Email: imrantyagi01@gmail.com
+                    Email: imrantyagi201@gmail.com, developeranas738@gmail.com
                   </p>
                 </div>
               </div>
