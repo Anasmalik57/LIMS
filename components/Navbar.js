@@ -29,7 +29,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Reports", href: "/report" },
+    { name: "Tests", href: "/tests" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
