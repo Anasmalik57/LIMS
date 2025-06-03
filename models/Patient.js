@@ -68,7 +68,7 @@ const PatientSchema = new mongoose.Schema(
         },
         result: {
           type: String,
-          minlength: [1, "Result must be at least 1 character long"],
+          minlength: [0, "Result must be at least 0 character long"],
         },
       },
     ],
@@ -79,6 +79,39 @@ const PatientSchema = new mongoose.Schema(
       required: true,
       min: [0, "Total price cannot be negative"],
       default: 0,
+    },
+
+    // Hematology Report Fields (CBC - CBC001)
+    cbc001: {
+      // Basic blood counts
+      hemoglobin: { type: String, default: "N/A" },
+      totalRBC: { type: String, default: "N/A" },
+      totalWBC: { type: String, default: "N/A" },
+
+      // Differential count
+      polymorphs: { type: String, default: "N/A" },
+      lymphocytes: { type: String, default: "N/A" },
+      eosinophils: { type: String, default: "N/A" },
+      monocytes: { type: String, default: "N/A" },
+      basophils: { type: String, default: "N/A" },
+
+      // Platelet count
+      plateletCount: { type: String, default: "N/A" },
+
+      // Blood indices
+      hct: { type: String, default: "N/A" }, // H.C.T.
+      mcv: { type: String, default: "N/A" }, // M.C.V.
+      mch: { type: String, default: "N/A" }, // M.C.H.
+      mchc: { type: String, default: "N/A" }, // M.C.H.C.
+      rdw: { type: String, default: "N/A" }, // R.D.W.
+      mpv: { type: String, default: "N/A" }, // M.P.V.
+    },
+
+    // Widal Test Fields (WID001)
+    wid001: {
+      salmonellaO: { type: String, default: "N/A" },
+      salmonellaH: { type: String, default: "N/A" },
+      widalConclusion: { type: String, default: "N/A" },
     },
   },
   {

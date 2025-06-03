@@ -53,7 +53,7 @@ export const addreport = async (formData) => {
         testCode: test.testCode,
         price: test.price || 0, // Ensure price is saved for each test
         status: test.status || "Pending",
-        result: test.result || "",
+        // result field removed - will be added later when machine output is available
       })),
       totalPrice: calculatedTotalPrice, // Use the calculated or provided total price
     });

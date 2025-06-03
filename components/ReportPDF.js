@@ -1,47 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { FaPrint, FaDownload, FaArrowLeft } from "react-icons/fa";
+import Link from "next/link";
+import { FaPrint, FaDownload, FaArrowLeft, FaEdit } from "react-icons/fa";
 
-// Define a mapping for test parameters and their display format
-const TEST_PARAMETERS = {
-  CBC001: [
-    { parameter: "HAEMOGLOBIN", unit: "mg/dl", referenceRange: "13-18" },
-    { parameter: "Total R.B.C.", unit: "mil/cumm", referenceRange: "4.5-6.2" },
-    { parameter: "Total W.B.C.", unit: "/cumm", referenceRange: "4000-11000" },
-    { parameter: "DIFFERENTIAL COUNT", unit: "", referenceRange: "" },
-    { parameter: "Polymorphs", unit: "%", referenceRange: "20-45" },
-    { parameter: "Lymphocytes", unit: "%", referenceRange: "20-45" },
-    { parameter: "Eosinophils", unit: "%", referenceRange: "1-6" },
-    { parameter: "Monocytes", unit: "%", referenceRange: "2-8" },
-    { parameter: "Basophils", unit: "%", referenceRange: "0-1" },
-    {
-      parameter: "PLATELET COUNT",
-      unit: "Lakhs/cmm",
-      referenceRange: "1.5-4.5",
-    },
-    { parameter: "H.C.T.", unit: "%", referenceRange: "45-52" },
-    { parameter: "M.C.V.", unit: "fl", referenceRange: "84-96" },
-    { parameter: "M.C.H.", unit: "pg", referenceRange: "27-32" },
-    { parameter: "M.C.H.C.", unit: "g/dl", referenceRange: "30-36" },
-    { parameter: "R.D.W.", unit: "%", referenceRange: "10.0-15.0" },
-    { parameter: "M.P.V.", unit: "", referenceRange: "6.5-11.0" },
-  ],
-  WID001: [
-    {
-      parameter: "Salmonella typhi - O",
-      unit: "",
-      referenceRange: "1:80 or More Significant Titre 1:80 or More",
-    },
-    {
-      parameter: "Salmonella Typhi - H",
-      unit: "",
-      referenceRange: "1:80 or More Significant Titre 1:80 or More",
-    },
-    { parameter: "Widal Conclusion", unit: "", referenceRange: "" },
-  ],
-  // Add more test mappings here based on your list of tests
-};
+// Define hematology test codes
+const HEMATOLOGY_TEST_CODES = ["CBC001", "ESR023", "HGB136", "BLG019", "PRT020", "AEC150", "HBA004", "BTC132", "GBP147"];
 
 const ReportPDF = () => {
   const params = useParams();
@@ -93,6 +57,166 @@ const ReportPDF = () => {
       minute: "2-digit",
       hour12: true,
     });
+  };
+
+  // Function to determine report heading based on test codes
+  const getReportHeading = () => {
+    if (!report || !report.tests) return "LABORATORY REPORT";
+    
+    const testCodes = report.tests.map(test => test.testCode);
+    const hasHematologyTest = testCodes.some(code => HEMATOLOGY_TEST_CODES.includes(code));
+    
+    return hasHematologyTest ? "HAEMATOLOGY REPORT" : "LABORATORY REPORT";
+  };
+
+  // Function to render CBC test results
+  const renderCBCResults = () => {
+    if (!report.cbc001) return null;
+
+    const cbcParameters = [
+      { parameter: "HAEMOGLOBIN", value: report.cbc001.hemoglobin, unit: "mg/dl", referenceRange: "13-18" },
+      { parameter: "Total R.B.C.", value: report.cbc001.totalRBC, unit: "mil/cumm", referenceRange: "4.5-6.2" },
+      { parameter: "Total W.B.C.", value: report.cbc001.totalWBC, unit: "/cumm", referenceRange: "4000-11000" },
+      { parameter: "DIFFERENTIAL COUNT", value: "", unit: "", referenceRange: "" },
+      { parameter: "Polymorphs", value: report.cbc001.polymorphs, unit: "%", referenceRange: "20-45" },
+      { parameter: "Lymphocytes", value: report.cbc001.lymphocytes, unit: "%", referenceRange: "20-45" },
+      { parameter: "Eosinophils", value: report.cbc001.eosinophils, unit: "%", referenceRange: "1-6" },
+      { parameter: "Monocytes", value: report.cbc001.monocytes, unit: "%", referenceRange: "2-8" },
+      { parameter: "Basophils", value: report.cbc001.basophils, unit: "%", referenceRange: "0-1" },
+      { parameter: "PLATELET COUNT", value: report.cbc001.plateletCount, unit: "Lakhs/cmm", referenceRange: "1.5-4.5" },
+      { parameter: "H.C.T.", value: report.cbc001.hct, unit: "%", referenceRange: "45-52" },
+      { parameter: "M.C.V.", value: report.cbc001.mcv, unit: "fl", referenceRange: "84-96" },
+      { parameter: "M.C.H.", value: report.cbc001.mch, unit: "pg", referenceRange: "27-32" },
+      { parameter: "M.C.H.C.", value: report.cbc001.mchc, unit: "g/dl", referenceRange: "30-36" },
+      { parameter: "R.D.W.", value: report.cbc001.rdw, unit: "%", referenceRange: "10.0-15.0" },
+      { parameter: "M.P.V.", value: report.cbc001.mpv, unit: "", referenceRange: "6.5-11.0" },
+    ];
+
+    return (
+      <div className="mb-8">
+        <h3 className="font-bold text-gray-800 mb-4 text-lg">
+          COMPLETE BLOOD COUNT (CBC)
+        </h3>
+
+        <div className="grid grid-cols-4 gap-4 text-sm">
+          <div className="font-medium text-gray-700">Parameter</div>
+          <div className="font-medium text-gray-700">Result</div>
+          <div className="font-medium text-gray-700">Unit</div>
+          <div className="font-medium text-gray-700">Reference Range</div>
+        </div>
+
+        <hr className="my-2 border-gray-300" />
+
+        {cbcParameters.map((param, idx) => (
+          <div key={idx} className="grid grid-cols-4 gap-4 text-sm py-1">
+            <div className="text-gray-700">{param.parameter}</div>
+            <div className="text-gray-800 font-medium">
+              {param.value && param.value !== "N/A" ? param.value : "N/A"}
+            </div>
+            <div className="text-gray-700">{param.unit}</div>
+            <div className="text-gray-700">{param.referenceRange}</div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Function to render Widal test results
+  const renderWidalResults = () => {
+    if (!report.wid001) return null;
+
+    const widalParameters = [
+      {
+        parameter: "Salmonella typhi - O",
+        value: report.wid001.salmonellaO,
+        unit: "",
+        referenceRange: "1:80 or More Significant Titre 1:80 or More",
+      },
+      {
+        parameter: "Salmonella Typhi - H",
+        value: report.wid001.salmonellaH,
+        unit: "",
+        referenceRange: "1:80 or More Significant Titre 1:80 or More",
+      },
+      {
+        parameter: "Widal Conclusion",
+        value: report.wid001.widalConclusion,
+        unit: "",
+        referenceRange: "",
+      },
+    ];
+
+    return (
+      <div className="mb-8">
+        <h3 className="font-bold text-gray-800 mb-4 text-lg">
+          WIDAL TEST
+        </h3>
+
+        <div className="grid grid-cols-4 gap-4 text-sm">
+          <div className="font-medium text-gray-700">Parameter</div>
+          <div className="font-medium text-gray-700">Result</div>
+          <div className="font-medium text-gray-700">Unit</div>
+          <div className="font-medium text-gray-700">Reference Range</div>
+        </div>
+
+        <hr className="my-2 border-gray-300" />
+
+        {widalParameters.map((param, idx) => (
+          <div key={idx} className="grid grid-cols-4 gap-4 text-sm py-1">
+            <div className="text-gray-700">{param.parameter}</div>
+            <div className="text-gray-800 font-medium">
+              {param.value && param.value !== "N/A" ? param.value : "N/A"}
+            </div>
+            <div className="text-gray-700">{param.unit}</div>
+            <div className="text-gray-700">{param.referenceRange}</div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Function to render other test results
+  const renderOtherTestResults = () => {
+    if (!report.tests || report.tests.length === 0) return null;
+
+    // Filter out tests that are handled by specific functions
+    const otherTests = report.tests.filter(test => 
+      test.testCode !== "CBC001" && test.testCode !== "WID001"
+    );
+
+    if (otherTests.length === 0) return null;
+
+    return otherTests.map((test, index) => (
+      <div key={index} className="mb-8">
+        <h3 className="font-bold text-gray-800 mb-4 text-lg">
+          {test.testName.toUpperCase()}
+        </h3>
+
+        <div className="grid grid-cols-4 gap-4 text-sm">
+          <div className="font-medium text-gray-700">Parameter</div>
+          <div className="font-medium text-gray-700">Result</div>
+          <div className="font-medium text-gray-700">Unit</div>
+          <div className="font-medium text-gray-700">Reference Range</div>
+        </div>
+
+        <hr className="my-2 border-gray-300" />
+
+        <div className="grid grid-cols-4 gap-4 text-sm py-1">
+          <div className="text-gray-700">{test.testName}</div>
+          <div className="text-gray-800 font-medium">
+            {test.result && test.result !== "N/A" ? test.result : "Normal"}
+          </div>
+          <div className="text-gray-700">-</div>
+          <div className="text-gray-700">Normal Range</div>
+        </div>
+
+        <div className="mt-4 p-3 bg-gray-50 rounded">
+          <p className="text-sm text-gray-700">
+            <strong>Status:</strong> {test.status}
+          </p>
+        </div>
+      </div>
+    ));
   };
 
   if (loading) {
@@ -160,6 +284,13 @@ const ReportPDF = () => {
           </button>
 
           <div className="flex gap-3">
+            <Link
+              href={`/editreport/${params.id}`}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              <FaEdit />
+              Edit
+            </Link>
             <button
               onClick={handlePrint}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -307,78 +438,19 @@ const ReportPDF = () => {
           {/* Report Content */}
           <div className="p-6">
             <h2 className="text-xl font-bold text-center text-green-700 mb-6 underline">
-              HAEMATOLOGY REPORT
+              {getReportHeading()}
             </h2>
 
-            {/* Test Results Table */}
+            {/* Test Results */}
             <div className="space-y-6">
-              {report.tests.map((test, index) => (
-                <div key={index} className="mb-8">
-                  <h3 className="font-bold text-gray-800 mb-4 text-lg">
-                    {test.testName.toUpperCase()}
-                  </h3>
-
-                  <div className="grid grid-cols-4 gap-4 text-sm">
-                    <div className="font-medium text-gray-700">Parameter</div>
-                    <div className="font-medium text-gray-700">Result</div>
-                    <div className="font-medium text-gray-700">Unit</div>
-                    <div className="font-medium text-gray-700">
-                      Reference Range
-                    </div>
-                  </div>
-
-                  <hr className="my-2 border-gray-300" />
-
-                  {/* Dynamic rendering of test parameters */}
-                  {TEST_PARAMETERS[test.testCode] ? (
-                    TEST_PARAMETERS[test.testCode].map((param, idx) => (
-                      <div
-                        key={idx}
-                        className="grid grid-cols-4 gap-4 text-sm py-1"
-                      >
-                        <div className="text-gray-700">{param.parameter}</div>
-                        <div className="text-gray-800 font-medium">
-                          {test.result && test.result[param.parameter]
-                            ? test.result[param.parameter]
-                            : "N/A"}
-                        </div>
-                        <div className="text-gray-700">{param.unit}</div>
-                        <div className="text-gray-700">
-                          {param.referenceRange}
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="grid grid-cols-4 gap-4 text-sm py-1">
-                      <div className="text-gray-700">{test.testName}</div>
-                      <div className="text-gray-800 font-medium">
-                        {test.result || "Normal"}
-                      </div>
-                      <div className="text-gray-700">-</div>
-                      <div className="text-gray-700">Normal Range</div>
-                    </div>
-                  )}
-
-                  <div className="mt-4 p-3 bg-gray-50 rounded">
-                    <p className="text-sm text-gray-700">
-                      <strong>Status:</strong> {test.status} |
-                      <strong> Price:</strong> ₹{test.price}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Total Amount */}
-            <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded">
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-semibold text-gray-800">
-                  Total Amount:
-                </span>
-                <span className="text-xl font-bold text-blue-700">
-                  ₹{report.totalPrice}
-                </span>
-              </div>
+              {/* Render CBC results if available */}
+              {report.tests.some(test => test.testCode === "CBC001") && renderCBCResults()}
+              
+              {/* Render Widal results if available */}
+              {report.tests.some(test => test.testCode === "WID001") && renderWidalResults()}
+              
+              {/* Render other test results */}
+              {renderOtherTestResults()}
             </div>
 
             {/* Footer */}

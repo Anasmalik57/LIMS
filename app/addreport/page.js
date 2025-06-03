@@ -40,7 +40,7 @@ const AddReport = () => {
     refBy: "",
     address: "",
     tests: [
-      { testName: "", testCode: "", price: 0, status: "Pending", result: "" },
+      { testName: "", testCode: "", price: 0, status: "Pending" },
     ],
   });
 
@@ -88,7 +88,7 @@ const AddReport = () => {
       ...prev,
       tests: [
         ...prev.tests,
-        { testName: "", testCode: "", price: 0, status: "Pending", result: "" },
+        { testName: "", testCode: "", price: 0, status: "Pending" },
       ],
     }));
   };
@@ -173,7 +173,6 @@ const handleSubmit = async () => {
             testCode: "",
             price: 0,
             status: "Pending",
-            result: "",
           },
         ],
       });
@@ -418,7 +417,7 @@ const handleSubmit = async () => {
                     )}
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid md:grid-cols-3 gap-4">
                     {/* Test Name Dropdown */}
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-slate-200">
@@ -538,23 +537,6 @@ const handleSubmit = async () => {
                           Completed
                         </option>
                       </select>
-                    </div>
-
-                    {/* Result */}
-                    <div className="space-y-2 md:col-span-2">
-                      <label className="block text-sm font-medium text-slate-200">
-                        Result
-                      </label>
-                      <input
-                        type="text"
-                        value={test.result}
-                        onChange={(e) =>
-                          handleTestChange(index, "result", e.target.value)
-                        }
-                        minLength="1"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                        placeholder="Enter test result (min 1 char)"
-                      />
                     </div>
                   </div>
                 </div>

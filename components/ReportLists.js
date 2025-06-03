@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPortal } from 'react-dom';
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import {
   FaFileAlt,
@@ -12,6 +12,7 @@ import {
   FaEye,
   FaSpinner,
   FaExclamationTriangle,
+  FaPen,
 } from "react-icons/fa";
 
 const ReportLists = () => {
@@ -20,7 +21,10 @@ const ReportLists = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({
+    top: 0,
+    right: 0,
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -69,13 +73,16 @@ const ReportLists = () => {
   const handleReportClick = (reportId) => {
     router.push(`/report/${reportId}`);
   };
+  const handleEditClick = (reportId) => {
+    router.push(`/editreport/${reportId}`);
+  };
 
   const handleDropdownToggle = (e) => {
     if (!dropdownOpen) {
       const rect = e.currentTarget.getBoundingClientRect();
       setDropdownPosition({
         top: rect.bottom + window.scrollY + 8,
-        right: window.innerWidth - rect.right
+        right: window.innerWidth - rect.right,
       });
     }
     setDropdownOpen(!dropdownOpen);
@@ -291,10 +298,16 @@ const ReportLists = () => {
                       </div>
                     </div>
 
-                    <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold">
-                      <FaEye />
-                      View Report
-                    </button>
+                    <div className="flex gap-4 flex-col *:cursor-pointer">
+                      <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold">
+                        <FaEye />
+                        View Report
+                      </button>
+                      <button onClick={()=> handleEditClick} className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-700 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold">
+                        <FaPen />
+                        Edit Report
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -323,49 +336,48 @@ const ReportLists = () => {
       </div>
 
       {/* Portal Dropdown */}
-      {dropdownOpen && typeof window !== 'undefined' && createPortal(
-        <div 
-          className="fixed inset-0 z-[9999]" 
-          onClick={handleDropdownClose}
-        >
-          <div 
-            className="absolute w-56 bg-white/10 backdrop-blur-xl rounded-xl shadow-2xl border border-white/20"
-            style={{
-              top: dropdownPosition.top,
-              right: dropdownPosition.right
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="py-3">
-              <Link
-                href="/report/findbydoctor"
-                onClick={handleDropdownClose}
-                className="w-full text-left px-6 py-3 hover:bg-white/10 flex items-center gap-3 text-white transition-all duration-200 group"
-              >
-                <FaUser className="text-green-400 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">Find by Doctor</span>
-              </Link>
-              <Link
-                href="/report/findbyagent"
-                onClick={handleDropdownClose}
-                className="w-full text-left px-6 py-3 hover:bg-white/10 flex items-center gap-3 text-white transition-all duration-200 group"
-              >
-                <FaUser className="text-purple-400 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">Find by Agent</span>
-              </Link>
-              <Link
-                href="/report/findbydate"
-                onClick={handleDropdownClose}
-                className="w-full text-left px-6 py-3 hover:bg-white/10 flex items-center gap-3 text-white transition-all duration-200 group"
-              >
-                <FaCalendarAlt className="text-orange-400 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">Find by Date</span>
-              </Link>
+      {dropdownOpen &&
+        typeof window !== "undefined" &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999]" onClick={handleDropdownClose}>
+            <div
+              className="absolute w-56 bg-white/10 backdrop-blur-xl rounded-xl shadow-2xl border border-white/20"
+              style={{
+                top: dropdownPosition.top,
+                right: dropdownPosition.right,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="py-3">
+                <Link
+                  href="/report/findbydoctor"
+                  onClick={handleDropdownClose}
+                  className="w-full text-left px-6 py-3 hover:bg-white/10 flex items-center gap-3 text-white transition-all duration-200 group"
+                >
+                  <FaUser className="text-green-400 group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">Find by Doctor</span>
+                </Link>
+                <Link
+                  href="/report/findbyagent"
+                  onClick={handleDropdownClose}
+                  className="w-full text-left px-6 py-3 hover:bg-white/10 flex items-center gap-3 text-white transition-all duration-200 group"
+                >
+                  <FaUser className="text-purple-400 group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">Find by Agent</span>
+                </Link>
+                <Link
+                  href="/report/findbydate"
+                  onClick={handleDropdownClose}
+                  className="w-full text-left px-6 py-3 hover:bg-white/10 flex items-center gap-3 text-white transition-all duration-200 group"
+                >
+                  <FaCalendarAlt className="text-orange-400 group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">Find by Date</span>
+                </Link>
+              </div>
             </div>
-          </div>
-        </div>,
-        document.body
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
