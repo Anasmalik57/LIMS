@@ -172,10 +172,10 @@ const ReportPDF = () => {
         {/* Report Container */}
         <div className="bg-white shadow-lg border border-gray-300 print:shadow-none print:border-0">
           {/* Header Section */}
-          <div className="border-b border-gray-300 p-6 bg-gradient-to-tl from-blue-300 via-blue-300 to-blue-400">
-            <div className="flex items-start justify-between">
+          <div className="border-b border-gray-300 p-6 px-0 bg-gradient-to-tl from-blue-300 via-blue-300 to-blue-400">
+            <div className="flex items-start justify-between ">
               {/* Lab Logo and Info */}
-              <div className="flex items-center gap-4  w-full px-2 justify-around">
+              <div className="flex items-center gap-4  w-full px-2 justify-between">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center border-2 border-blue-500">
                   <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-xl">🏥</span>
@@ -186,15 +186,15 @@ const ReportPDF = () => {
                     GLOBAL PATHOLOGY LAB
                   </h1>
                 </div>
-                <div>
+                <div className="*:font-semibold ">
                   <p className="text-red-600 text-sm font-semibold mt-1">
                     Shekhpura Roorkee, Haridwar (U.K)
                   </p>
                   <p className="text-gray-700 text-sm">
                     Phone: 9927782011, 9084648712
                   </p>
-                  <p className="text-gray-700 text-sm">
-                    Email: imrantyagi201@gmail.com, developeranas738@gmail.com
+                  <p className="text-gray-700 text-xs">
+                    Email: imrantyagi201@gmail.com, javadmalik379@gmail.com
                   </p>
                 </div>
               </div>
