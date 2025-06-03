@@ -1,6 +1,7 @@
 // Test data with names, codes, and prices
 export const testData = [
   { name: "Complete Blood Count (CBC)", code: "CBC001", price: 250 },
+  { name: "Widal", code: "WID001", price: 100 },
   { name: "Blood Sugar Fasting", code: "BSF002", price: 60 },
   { name: "Blood Sugar Random", code: "BSR003", price: 50 },
   { name: "HbA1c (Glycated Hemoglobin)", code: "HBA004", price: 500 },
@@ -19,7 +20,6 @@ export const testData = [
   { name: "MP (Card)", code: "MPC017", price: 200 },
   { name: "Dengue Ns1", code: "DNS018", price: 600 },
   { name: "Blood Group", code: "BLG019", price: 50 },
-  { name: "Widal", code: "WDL020", price: 100 },
   { name: "HBTCDC", code: "HTC021", price: 150 },
   { name: "MP (Malaria Parasites)", code: "MPM022", price: 200 },
   { name: "ESR", code: "ESR023", price: 100 },

@@ -83,6 +83,13 @@ const EditReportComponent = () => {
       initialData.cbc001 = {};
     }
 
+    // Initialize WID001 data if exists
+    if (reportData.wid001) {
+      initialData.wid001 = { ...reportData.wid001 };
+    } else {
+      initialData.wid001 = {};
+    }
+
     setFormData(initialData);
   };
 
@@ -107,6 +114,16 @@ const EditReportComponent = () => {
       ...prev,
       cbc001: {
         ...prev.cbc001,
+        [field]: value
+      }
+    }));
+  };
+
+  const handleWIDALChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      wid001: {
+        ...prev.wid001,
         [field]: value
       }
     }));
@@ -362,8 +379,37 @@ const EditReportComponent = () => {
                   </div>
                 )}
 
+                {/* Test Parameters for WID001 */}
+                {test.testCode === "WID001" && TEST_PARAMETERS.WID001 && (
+                  <div className="mt-4">
+                    <h4 className="font-medium text-gray-800 mb-3">WIDAL Test Parameters</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {TEST_PARAMETERS.WID001.map((param, paramIndex) => (
+                        <div key={paramIndex}>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            {param.parameter}
+                            {param.unit && <span className="text-gray-500"> ({param.unit})</span>}
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.wid001?.[param.dbField] || ""}
+                            onChange={(e) => handleWIDALChange(param.dbField, e.target.value)}
+                            placeholder={param.referenceRange || "Enter value"}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          {param.referenceRange && (
+                            <p className="text-xs text-gray-500 mt-1">
+                              Reference: {param.referenceRange}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Generic result field for other tests */}
-                {test.testCode !== "CBC001" && (
+                {test.testCode !== "CBC001" && test.testCode !== "WID001" && (
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Result
