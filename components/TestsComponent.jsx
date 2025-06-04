@@ -41,7 +41,7 @@ const TestsComponent = () => {
     setIsVisible(true);
   }, []);
 
-  // Categorize tests based on their names
+  // Categorize tests based on their names - updated to match your test data
   const categories = [
     { 
       id: "all", 
@@ -51,53 +51,60 @@ const TestsComponent = () => {
       count: testData.length 
     },
     { 
-      id: "blood", 
-      name: "Blood Tests", 
+      id: "hematology", 
+      name: "Hematology", 
       icon: FaHeartbeat, 
       color: "from-red-500 to-pink-500",
-      keywords: ["blood", "cbc", "sugar", "hba1c", "lipid", "hemoglobin"]
+      keywords: ["blood", "cbc", "hemoglobin", "esr", "aec", "haeomgram", "complete blood count", "blood group", "hbtcdc"]
     },
     { 
-      id: "urine", 
-      name: "Urine Tests", 
+      id: "biochemistry", 
+      name: "Biochemistry", 
+      icon: FaFlask, 
+      color: "from-green-500 to-emerald-500",
+      keywords: ["sugar", "glucose", "fasting", "random", "hba1c", "lipid", "liver", "kidney", "lft", "kft", "rft", "thyroid", "tft", "vitamin", "creatinine", "uric acid", "electrolytes", "bilirubin", "amylase", "sgot", "sgpt", "cholesterol", "protein", "calcium", "phosphorus", "tsh", "ferritin", "ammonia", "cpk", "alkaline", "urea", "sodium", "potassium", "chloride", "magnesium", "lipase", "d3", "b12", "fsh", "lh", "beta hcg"]
+    },
+    { 
+      id: "serology", 
+      name: "Serology", 
+      icon: FaDna, 
+      color: "from-purple-500 to-indigo-500",
+      keywords: ["widal", "vdrl", "crp", "hiv", "typhi", "dengue", "scrub typhus", "hbsag", "igg", "igm", "aso", "hcv", "torch", "toxo"]
+    },
+    { 
+      id: "microscopy", 
+      name: "Microscopy", 
       icon: FaMicroscope, 
       color: "from-yellow-500 to-orange-500",
-      keywords: ["urine", "urt", "upt", "albumin"]
+      keywords: ["urine", "stool", "sputum", "microalbumin", "albumin", "ear", "analysis"]
     },
     { 
       id: "cardiac", 
-      name: "Heart Tests", 
+      name: "Cardiac", 
       icon: FaHeartbeat, 
-      color: "from-purple-500 to-indigo-500",
-      keywords: ["ecg", "troponin", "cardiac", "heart"]
-    },
-    { 
-      id: "hormone", 
-      name: "Hormone Tests", 
-      icon: FaDna, 
-      color: "from-green-500 to-emerald-500",
-      keywords: ["thyroid", "tft", "tsh", "hormone", "fsh", "lh"]
-    },
-    { 
-      id: "vitamin", 
-      name: "Vitamins", 
-      icon: FaBrain, 
       color: "from-pink-500 to-rose-500",
-      keywords: ["vitamin", "d3", "b12"]
+      keywords: ["ecg", "troponin", "cardiac", "heart"]
     },
     { 
       id: "imaging", 
       name: "Imaging", 
       icon: FaEye, 
       color: "from-indigo-500 to-purple-500",
-      keywords: ["x-ray", "ultrasound", "xry", "ult"]
+      keywords: ["x-ray", "chest", "ultrasound", "ultra", "sonography"]
     },
     { 
       id: "infection", 
-      name: "Infection Tests", 
+      name: "Infection", 
       icon: FaLungs, 
       color: "from-teal-500 to-cyan-500",
-      keywords: ["covid", "dengue", "malaria", "typhus", "hiv", "hbs"]
+      keywords: ["covid", "malaria", "mp", "chikungunya", "culture", "sensitivity", "afb", "tuberculin", "tb"]
+    },
+    { 
+      id: "specialty", 
+      name: "Specialty Tests", 
+      icon: FaUserMd, 
+      color: "from-orange-500 to-red-500",
+      keywords: ["prostate", "d-dimer", "antenatal", "anc", "semen", "prothrombin", "fluid", "allergy", "anaemia", "autoimmune", "csf", "coagulation", "tumor", "fertility", "pre-operative"]
     }
   ];
 
@@ -152,10 +159,10 @@ const TestsComponent = () => {
 
   const addToCart = (test) => {
     setCart(prev => {
-      const exists = prev.find(item => item.code === test.code);
+      const exists = prev.find(item => item.code === test.code && item.name === test.name);
       if (exists) {
         return prev.map(item =>
-          item.code === test.code
+          item.code === test.code && item.name === test.name
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -166,16 +173,16 @@ const TestsComponent = () => {
 
   const toggleFavorite = (test) => {
     setFavorites(prev => {
-      const exists = prev.find(item => item.code === test.code);
+      const exists = prev.find(item => item.code === test.code && item.name === test.name);
       if (exists) {
-        return prev.filter(item => item.code !== test.code);
+        return prev.filter(item => !(item.code === test.code && item.name === test.name));
       }
       return [...prev, test];
     });
   };
 
-  const isInCart = (test) => cart.some(item => item.code === test.code);
-  const isFavorite = (test) => favorites.some(item => item.code === test.code);
+  const isInCart = (test) => cart.some(item => item.code === test.code && item.name === test.name);
+  const isFavorite = (test) => favorites.some(item => item.code === test.code && item.name === test.name);
 
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
@@ -355,7 +362,7 @@ const TestsComponent = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredTests.map((test, index) => (
                 <div
-                  key={test.code}
+                  key={`${test.code}-${test.name}-${index}`}
                   className="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl p-6 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-white/20 dark:border-gray-700/20"
                 >
                   <div className="flex justify-between items-start mb-4">
@@ -420,7 +427,7 @@ const TestsComponent = () => {
             <div className="space-y-4">
               {filteredTests.map((test, index) => (
                 <div
-                  key={test.code}
+                  key={`${test.code}-${test.name}-${index}`}
                   className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 dark:border-gray-700/20"
                 >
                   <div className="flex items-center justify-between">

@@ -107,11 +107,56 @@ const PatientSchema = new mongoose.Schema(
       mpv: { type: String, default: "N/A" }, // M.P.V.
     },
 
-    // Widal Test Fields (WID001)
+    // Widal Test Fields (WID001 - Serology)
     wid001: {
       salmonellaO: { type: String, default: "N/A" },
       salmonellaH: { type: String, default: "N/A" },
       widalConclusion: { type: String, default: "N/A" },
+    },
+
+    // Biochemistry Report Fields (BCM001)
+    bcm001: {
+      // Liver function tests
+      totalBilirubin: { type: String, default: "N/A" },
+      directBilirubin: { type: String, default: "N/A" },
+      indirectBilirubin: { type: String, default: "N/A" },
+      sgot: { type: String, default: "N/A" }, // AST
+      sgpt: { type: String, default: "N/A" }, // ALT
+      alkalinePhosphatase: { type: String, default: "N/A" },
+
+      // Kidney function tests
+      urea: { type: String, default: "N/A" },
+      creatinine: { type: String, default: "N/A" },
+      uricAcid: { type: String, default: "N/A" },
+
+      // Lipid profile
+      totalCholesterol: { type: String, default: "N/A" },
+      triglycerides: { type: String, default: "N/A" },
+      hdlCholesterol: { type: String, default: "N/A" },
+      ldlCholesterol: { type: String, default: "N/A" },
+
+      // Blood sugar
+      fastingGlucose: { type: String, default: "N/A" },
+      randomGlucose: { type: String, default: "N/A" },
+    },
+
+    // Microscopy Report Fields (MCP001)
+    mcp001: {
+      // Urine microscopy
+      color: { type: String, default: "N/A" },
+      appearance: { type: String, default: "N/A" },
+      pusCells: { type: String, default: "N/A" },
+      redBloodCells: { type: String, default: "N/A" },
+      epithelialCells: { type: String, default: "N/A" },
+      casts: { type: String, default: "N/A" },
+      crystals: { type: String, default: "N/A" },
+      bacteria: { type: String, default: "N/A" },
+
+      // Stool microscopy
+      ova: { type: String, default: "N/A" },
+      cysts: { type: String, default: "N/A" },
+      mucus: { type: String, default: "N/A" },
+      occultBlood: { type: String, default: "N/A" },
     },
   },
   {
