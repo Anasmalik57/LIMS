@@ -27,12 +27,12 @@ export async function PUT(request, { params }) {
       refBy,
       address,
       tests,
-      cbc001,
-      wid001,
+      totalPrice,
+      testResults,
     } = body;
 
     // Validate required fields
-    if (!patientName || !mobile || !age || !gender) {
+    if (!patientName || !mobile || !age || !gender || !totalPrice) {
       return NextResponse.json(
         { success: false, message: "Required fields are missing" },
         { status: 400 }
@@ -48,19 +48,23 @@ export async function PUT(request, { params }) {
       );
     }
 
-    // Calculate total price if tests are provided
-    let totalPrice = existingReport.totalPrice;
-    if (tests && Array.isArray(tests)) {
-      totalPrice = tests.reduce((sum, test) => sum + (test.price || 0), 0);
-    }
-
     // Prepare update data
     const updateData = {
       patientName: patientName.trim(),
       mobile: mobile.trim(),
       age: parseInt(age),
       gender,
-      totalPrice,
+      totalPrice: parseFloat(totalPrice),
+      tests:
+        tests && Array.isArray(tests)
+          ? tests.map((test) => ({
+              testName: test.testName || "",
+              testCode: test.testCode || "",
+              price: parseFloat(test.price) || 0,
+              status: test.status || "Pending",
+              result: test.result || "",
+            }))
+          : existingReport.tests,
     };
 
     // Add optional fields if provided
@@ -74,54 +78,86 @@ export async function PUT(request, { params }) {
       updateData.address = address.trim();
     }
 
-    // Update tests if provided
-    if (tests && Array.isArray(tests)) {
-      updateData.tests = tests.map(test => ({
-        testName: test.testName,
-        testCode: test.testCode,
-        price: test.price || 0,
-        status: test.status || "Pending",
-        result: test.result || "",
-      }));
-    }
-
-    // Update CBC001 data if provided
-    if (cbc001 && typeof cbc001 === 'object') {
-      updateData.cbc001 = {
-        hemoglobin: cbc001.hemoglobin || "N/A",
-        totalRBC: cbc001.totalRBC || "N/A",
-        totalWBC: cbc001.totalWBC || "N/A",
-        polymorphs: cbc001.polymorphs || "N/A",
-        lymphocytes: cbc001.lymphocytes || "N/A",
-        eosinophils: cbc001.eosinophils || "N/A",
-        monocytes: cbc001.monocytes || "N/A",
-        basophils: cbc001.basophils || "N/A",
-        plateletCount: cbc001.plateletCount || "N/A",
-        hct: cbc001.hct || "N/A",
-        mcv: cbc001.mcv || "N/A",
-        mch: cbc001.mch || "N/A",
-        mchc: cbc001.mchc || "N/A",
-        rdw: cbc001.rdw || "N/A",
-        mpv: cbc001.mpv || "N/A",
-      };
-    }
-
-    // Update WID001 data if provided
-    if (wid001 && typeof wid001 === 'object') {
-      updateData.wid001 = {
-        salmonellaO: wid001.salmonellaO || "N/A",
-        salmonellaH: wid001.salmonellaH || "N/A",
-        widalConclusion: wid001.widalConclusion || "N/A",
+    // Update testResults if provided
+    if (testResults && typeof testResults === "object") {
+      updateData.testResults = {
+        cbc001:
+          testResults.cbc001 && typeof testResults.cbc001 === "object"
+            ? {
+                hemoglobin: testResults.cbc001.hemoglobin || "",
+                totalRBC: testResults.cbc001.totalRBC || "",
+                totalWBC: testResults.cbc001.totalWBC || "",
+                polymorphs: testResults.cbc001.polymorphs || "",
+                lymphocytes: testResults.cbc001.lymphocytes || "",
+                eosinophils: testResults.cbc001.eosinophils || "",
+                monocytes: testResults.cbc001.monocytes || "",
+                basophils: testResults.cbc001.basophils || "",
+                plateletCount: testResults.cbc001.plateletCount || "",
+                hct: testResults.cbc001.hct || "",
+                mcv: testResults.cbc001.mcv || "",
+                mch: testResults.cbc001.mch || "",
+                mchc: testResults.cbc001.mchc || "",
+                rdw: testResults.cbc001.rdw || "",
+                mpv: testResults.cbc001.mpv || "",
+              }
+            : existingReport.testResults.cbc001,
+        wid001:
+          testResults.wid001 && typeof testResults.wid001 === "object"
+            ? {
+                salmonellaO: testResults.wid001.salmonellaO || "",
+                salmonellaH: testResults.wid001.salmonellaH || "",
+                widalConclusion: testResults.wid001.widalConclusion || "",
+              }
+            : existingReport.testResults.wid001,
+        bcm001:
+          testResults.bcm001 && typeof testResults.bcm001 === "object"
+            ? {
+                totalBilirubin: testResults.bcm001.totalBilirubin || "",
+                directBilirubin: testResults.bcm001.directBilirubin || "",
+                indirectBilirubin: testResults.bcm001.indirectBilirubin || "",
+                sgot: testResults.bcm001.sgot || "",
+                sgpt: testResults.bcm001.sgpt || "",
+                alkalinePhosphatase:
+                  testResults.bcm001.alkalinePhosphatase || "",
+                bloodUrea: testResults.bcm001.bloodUrea || "",
+                serumCreatinine: testResults.bcm001.serumCreatinine || "",
+                serumUricAcid: testResults.bcm001.serumUricAcid || "",
+                totalCholesterol: testResults.bcm001.totalCholesterol || "",
+                triglycerides: testResults.bcm001.triglycerides || "",
+                hdlCholesterol: testResults.bcm001.hdlCholesterol || "",
+                ldlCholesterol: testResults.bcm001.ldlCholesterol || "",
+                fastingGlucose: testResults.bcm001.fastingGlucose || "",
+                randomGlucose: testResults.bcm001.randomGlucose || "",
+              }
+            : existingReport.testResults.bcm001,
+        mcp001:
+          testResults.mcp001 && typeof testResults.mcp001 === "object"
+            ? {
+                urineColor: testResults.mcp001.urineColor || "",
+                urineAppearance: testResults.mcp001.urineAppearance || "",
+                pusCells: testResults.mcp001.pusCells || "",
+                urineRBC: testResults.mcp001.urineRBC || "",
+                epithelialCells: testResults.mcp001.epithelialCells || "",
+                casts: testResults.mcp001.casts || "",
+                crystals: testResults.mcp001.crystals || "",
+                bacteria: testResults.mcp001.bacteria || "",
+                ova: testResults.mcp001.ova || "",
+                cysts: testResults.mcp001.cysts || "",
+                mucus: testResults.mcp001.mucus || "",
+                occultBlood: testResults.mcp001.occultBlood || "",
+              }
+            : existingReport.testResults.mcp001,
       };
     }
 
     // Update the report
     const updatedReport = await Patient.findByIdAndUpdate(
       id,
-      updateData,
+      { $set: updateData },
       {
-        new: true, // Return updated document
-        runValidators: true, // Run schema validations
+        new: true,
+        runValidators: true,
+        strict: true,
       }
     );
 
@@ -130,15 +166,19 @@ export async function PUT(request, { params }) {
       message: "Report updated successfully",
       report: updatedReport,
     });
-
   } catch (error) {
     console.error("Error updating report:", error);
 
     // Handle validation errors
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.values(error.errors).map(err => err.message);
+    if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
       return NextResponse.json(
-        { success: false, message: `Validation Error: ${validationErrors.join(', ')}` },
+        {
+          success: false,
+          message: `Validation Error: ${validationErrors.join(", ")}`,
+        },
         { status: 400 }
       );
     }
@@ -152,7 +192,7 @@ export async function PUT(request, { params }) {
     }
 
     // Handle invalid ObjectId format
-    if (error.name === 'CastError') {
+    if (error.name === "CastError") {
       return NextResponse.json(
         { success: false, message: "Invalid report ID format" },
         { status: 400 }
@@ -194,12 +234,11 @@ export async function GET(request, { params }) {
       success: true,
       report: report,
     });
-
   } catch (error) {
     console.error("Error fetching report:", error);
 
     // Handle invalid ObjectId format
-    if (error.name === 'CastError') {
+    if (error.name === "CastError") {
       return NextResponse.json(
         { success: false, message: "Invalid report ID format" },
         { status: 400 }

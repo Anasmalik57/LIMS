@@ -4,8 +4,94 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaPrint, FaDownload, FaArrowLeft, FaEdit } from "react-icons/fa";
 
-// Define hematology test codes
+// Define test codes and their categories
 const HEMATOLOGY_TEST_CODES = ["CBC001", "ESR023", "HGB136", "BLG019", "PRT020", "AEC150", "HBA004", "BTC132", "GBP147"];
+const BIOCHEMISTRY_TEST_CODES = ["BCM001"];
+const SEROLOGY_TEST_CODES = ["WID001"];
+const MICROSCOPY_TEST_CODES = ["MCP001"];
+
+// CBC Parameters with reference ranges
+const CBC_PARAMETERS = [
+  { key: "hemoglobin", parameter: "HAEMOGLOBIN", unit: "mg/dl", referenceRange: "13-18" },
+  { key: "totalRBC", parameter: "Total R.B.C.", unit: "mil/cumm", referenceRange: "4.5-6.2" },
+  { key: "totalWBC", parameter: "Total W.B.C.", unit: "/cumm", referenceRange: "4000-11000" },
+  { key: "separator", parameter: "DIFFERENTIAL COUNT", unit: "", referenceRange: "" },
+  { key: "polymorphs", parameter: "Polymorphs", unit: "%", referenceRange: "20-45" },
+  { key: "lymphocytes", parameter: "Lymphocytes", unit: "%", referenceRange: "20-45" },
+  { key: "eosinophils", parameter: "Eosinophils", unit: "%", referenceRange: "1-6" },
+  { key: "monocytes", parameter: "Monocytes", unit: "%", referenceRange: "2-8" },
+  { key: "basophils", parameter: "Basophils", unit: "%", referenceRange: "0-1" },
+  { key: "plateletCount", parameter: "PLATELET COUNT", unit: "Lakhs/cmm", referenceRange: "1.5-4.5" },
+  { key: "hct", parameter: "H.C.T.", unit: "%", referenceRange: "45-52" },
+  { key: "mcv", parameter: "M.C.V.", unit: "fl", referenceRange: "84-96" },
+  { key: "mch", parameter: "M.C.H.", unit: "pg", referenceRange: "27-32" },
+  { key: "mchc", parameter: "M.C.H.C.", unit: "g/dl", referenceRange: "30-36" },
+  { key: "rdw", parameter: "R.D.W.", unit: "%", referenceRange: "10.0-15.0" },
+  { key: "mpv", parameter: "M.P.V.", unit: "", referenceRange: "6.5-11.0" },
+];
+
+// Widal Parameters
+const WIDAL_PARAMETERS = [
+  {
+    key: "salmonellaO",
+    parameter: "Salmonella typhi - O",
+    unit: "",
+    referenceRange: "1:80 or More Significant Titre 1:80 or More",
+  },
+  {
+    key: "salmonellaH",
+    parameter: "Salmonella Typhi - H",
+    unit: "",
+    referenceRange: "1:80 or More Significant Titre 1:80 or More",
+  },
+  {
+    key: "widalConclusion",
+    parameter: "Widal Conclusion",
+    unit: "",
+    referenceRange: "",
+  },
+];
+
+// Biochemistry Parameters
+const BIOCHEMISTRY_PARAMETERS = [
+  { key: "separator", parameter: "LIVER FUNCTION TESTS", unit: "", referenceRange: "" },
+  { key: "totalBilirubin", parameter: "Total Bilirubin", unit: "mg/dl", referenceRange: "0.2-1.2" },
+  { key: "directBilirubin", parameter: "Direct Bilirubin", unit: "mg/dl", referenceRange: "0.0-0.3" },
+  { key: "indirectBilirubin", parameter: "Indirect Bilirubin", unit: "mg/dl", referenceRange: "0.2-0.9" },
+  { key: "sgot", parameter: "SGOT (AST)", unit: "U/L", referenceRange: "8-40" },
+  { key: "sgpt", parameter: "SGPT (ALT)", unit: "U/L", referenceRange: "7-56" },
+  { key: "alkalinePhosphatase", parameter: "Alkaline Phosphatase", unit: "U/L", referenceRange: "44-147" },
+  { key: "separator", parameter: "KIDNEY FUNCTION TESTS", unit: "", referenceRange: "" },
+  { key: "bloodUrea", parameter: "Blood Urea", unit: "mg/dl", referenceRange: "15-40" },
+  { key: "serumCreatinine", parameter: "Serum Creatinine", unit: "mg/dl", referenceRange: "0.7-1.3" },
+  { key: "serumUricAcid", parameter: "Serum Uric Acid", unit: "mg/dl", referenceRange: "3.4-7.0" },
+  { key: "separator", parameter: "LIPID PROFILE", unit: "", referenceRange: "" },
+  { key: "totalCholesterol", parameter: "Total Cholesterol", unit: "mg/dl", referenceRange: "<200" },
+  { key: "triglycerides", parameter: "Triglycerides", unit: "mg/dl", referenceRange: "<150" },
+  { key: "hdlCholesterol", parameter: "HDL Cholesterol", unit: "mg/dl", referenceRange: ">40" },
+  { key: "ldlCholesterol", parameter: "LDL Cholesterol", unit: "mg/dl", referenceRange: "<100" },
+  { key: "separator", parameter: "BLOOD SUGAR", unit: "", referenceRange: "" },
+  { key: "fastingGlucose", parameter: "Fasting Glucose", unit: "mg/dl", referenceRange: "70-100" },
+  { key: "randomGlucose", parameter: "Random Glucose", unit: "mg/dl", referenceRange: "70-140" },
+];
+
+// Microscopy Parameters
+const MICROSCOPY_PARAMETERS = [
+  { key: "separator", parameter: "URINE MICROSCOPY", unit: "", referenceRange: "" },
+  { key: "urineColor", parameter: "Color", unit: "", referenceRange: "Pale Yellow" },
+  { key: "urineAppearance", parameter: "Appearance", unit: "", referenceRange: "Clear" },
+  { key: "pusCells", parameter: "Pus Cells", unit: "/hpf", referenceRange: "0-5" },
+  { key: "urineRBC", parameter: "Red Blood Cells", unit: "/hpf", referenceRange: "0-2" },
+  { key: "epithelialCells", parameter: "Epithelial Cells", unit: "/hpf", referenceRange: "Few" },
+  { key: "casts", parameter: "Casts", unit: "", referenceRange: "Nil" },
+  { key: "crystals", parameter: "Crystals", unit: "", referenceRange: "Nil" },
+  { key: "bacteria", parameter: "Bacteria", unit: "", referenceRange: "Nil" },
+  { key: "separator", parameter: "STOOL MICROSCOPY", unit: "", referenceRange: "" },
+  { key: "ova", parameter: "Ova", unit: "", referenceRange: "Not Seen" },
+  { key: "cysts", parameter: "Cysts", unit: "", referenceRange: "Not Seen" },
+  { key: "mucus", parameter: "Mucus", unit: "", referenceRange: "Nil" },
+  { key: "occultBlood", parameter: "Occult Blood", unit: "", referenceRange: "Negative" },
+];
 
 const ReportPDF = () => {
   const params = useParams();
@@ -19,16 +105,21 @@ const ReportPDF = () => {
       try {
         setLoading(true);
         const response = await fetch(`/api/report/${params.id}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
 
         if (data.success) {
           setReport(data.report);
         } else {
-          setError(data.message);
+          setError(data.message || "Failed to fetch report");
         }
       } catch (err) {
         setError("Failed to fetch report");
-        console.error("Error:", err);
+        console.error("Error fetching report:", err);
       } finally {
         setLoading(false);
       }
@@ -65,123 +156,110 @@ const ReportPDF = () => {
     
     const testCodes = report.tests.map(test => test.testCode);
     const hasHematologyTest = testCodes.some(code => HEMATOLOGY_TEST_CODES.includes(code));
+    const hasBiochemistryTest = testCodes.some(code => BIOCHEMISTRY_TEST_CODES.includes(code));
+    const hasSerologyTest = testCodes.some(code => SEROLOGY_TEST_CODES.includes(code));
+    const hasMicroscopyTest = testCodes.some(code => MICROSCOPY_TEST_CODES.includes(code));
     
-    return hasHematologyTest ? "HAEMATOLOGY REPORT" : "LABORATORY REPORT";
+    if (hasHematologyTest) return "HAEMATOLOGY REPORT";
+    if (hasBiochemistryTest) return "BIOCHEMISTRY REPORT";
+    if (hasSerologyTest) return "SEROLOGY REPORT";
+    if (hasMicroscopyTest) return "MICROSCOPY REPORT";
+    
+    return "LABORATORY REPORT";
+  };
+
+  // Generic function to render test results
+  const renderTestResults = (testCode, testName, parameters, testData) => {
+    if (!testData) return null;
+
+    return (
+      <div className="mb-8">
+        <h3 className="font-bold text-gray-800 mb-4 text-lg">
+          {testName.toUpperCase()}
+        </h3>
+
+        <div className="grid grid-cols-4 gap-4 text-sm">
+          <div className="font-medium text-gray-700">Parameter</div>
+          <div className="font-medium text-gray-700">Result</div>
+          <div className="font-medium text-gray-700">Unit</div>
+          <div className="font-medium text-gray-700">Reference Range</div>
+        </div>
+
+        <hr className="my-2 border-gray-300" />
+
+        {parameters.map((param, idx) => {
+          if (param.key === "separator") {
+            return (
+              <div key={idx} className="grid grid-cols-4 gap-4 text-sm py-2">
+                <div className="text-gray-800 font-semibold">{param.parameter}</div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            );
+          }
+
+          const value = testData[param.key];
+          const displayValue = value && value.trim() !== "" ? value : "N/A";
+
+          return (
+            <div key={idx} className="grid grid-cols-4 gap-4 text-sm py-1">
+              <div className="text-gray-700">{param.parameter}</div>
+              <div className="text-gray-800 font-medium">
+                {displayValue}
+              </div>
+              <div className="text-gray-700">{param.unit}</div>
+              <div className="text-gray-700">{param.referenceRange}</div>
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   // Function to render CBC test results
   const renderCBCResults = () => {
-    if (!report.cbc001) return null;
+    const cbcTest = report.tests.find(test => test.testCode === "CBC001");
+    if (!cbcTest) return null;
 
-    const cbcParameters = [
-      { parameter: "HAEMOGLOBIN", value: report.cbc001.hemoglobin, unit: "mg/dl", referenceRange: "13-18" },
-      { parameter: "Total R.B.C.", value: report.cbc001.totalRBC, unit: "mil/cumm", referenceRange: "4.5-6.2" },
-      { parameter: "Total W.B.C.", value: report.cbc001.totalWBC, unit: "/cumm", referenceRange: "4000-11000" },
-      { parameter: "DIFFERENTIAL COUNT", value: "", unit: "", referenceRange: "" },
-      { parameter: "Polymorphs", value: report.cbc001.polymorphs, unit: "%", referenceRange: "20-45" },
-      { parameter: "Lymphocytes", value: report.cbc001.lymphocytes, unit: "%", referenceRange: "20-45" },
-      { parameter: "Eosinophils", value: report.cbc001.eosinophils, unit: "%", referenceRange: "1-6" },
-      { parameter: "Monocytes", value: report.cbc001.monocytes, unit: "%", referenceRange: "2-8" },
-      { parameter: "Basophils", value: report.cbc001.basophils, unit: "%", referenceRange: "0-1" },
-      { parameter: "PLATELET COUNT", value: report.cbc001.plateletCount, unit: "Lakhs/cmm", referenceRange: "1.5-4.5" },
-      { parameter: "H.C.T.", value: report.cbc001.hct, unit: "%", referenceRange: "45-52" },
-      { parameter: "M.C.V.", value: report.cbc001.mcv, unit: "fl", referenceRange: "84-96" },
-      { parameter: "M.C.H.", value: report.cbc001.mch, unit: "pg", referenceRange: "27-32" },
-      { parameter: "M.C.H.C.", value: report.cbc001.mchc, unit: "g/dl", referenceRange: "30-36" },
-      { parameter: "R.D.W.", value: report.cbc001.rdw, unit: "%", referenceRange: "10.0-15.0" },
-      { parameter: "M.P.V.", value: report.cbc001.mpv, unit: "", referenceRange: "6.5-11.0" },
-    ];
-
-    return (
-      <div className="mb-8">
-        <h3 className="font-bold text-gray-800 mb-4 text-lg">
-          COMPLETE BLOOD COUNT (CBC)
-        </h3>
-
-        <div className="grid grid-cols-4 gap-4 text-sm">
-          <div className="font-medium text-gray-700">Parameter</div>
-          <div className="font-medium text-gray-700">Result</div>
-          <div className="font-medium text-gray-700">Unit</div>
-          <div className="font-medium text-gray-700">Reference Range</div>
-        </div>
-
-        <hr className="my-2 border-gray-300" />
-
-        {cbcParameters.map((param, idx) => (
-          <div key={idx} className="grid grid-cols-4 gap-4 text-sm py-1">
-            <div className="text-gray-700">{param.parameter}</div>
-            <div className="text-gray-800 font-medium">
-              {param.value && param.value !== "N/A" ? param.value : "N/A"}
-            </div>
-            <div className="text-gray-700">{param.unit}</div>
-            <div className="text-gray-700">{param.referenceRange}</div>
-          </div>
-        ))}
-      </div>
-    );
+    const cbcData = report.testResults?.cbc001;
+    return renderTestResults("CBC001", "COMPLETE BLOOD COUNT (CBC)", CBC_PARAMETERS, cbcData);
   };
 
   // Function to render Widal test results
   const renderWidalResults = () => {
-    if (!report.wid001) return null;
+    const widalTest = report.tests.find(test => test.testCode === "WID001");
+    if (!widalTest) return null;
 
-    const widalParameters = [
-      {
-        parameter: "Salmonella typhi - O",
-        value: report.wid001.salmonellaO,
-        unit: "",
-        referenceRange: "1:80 or More Significant Titre 1:80 or More",
-      },
-      {
-        parameter: "Salmonella Typhi - H",
-        value: report.wid001.salmonellaH,
-        unit: "",
-        referenceRange: "1:80 or More Significant Titre 1:80 or More",
-      },
-      {
-        parameter: "Widal Conclusion",
-        value: report.wid001.widalConclusion,
-        unit: "",
-        referenceRange: "",
-      },
-    ];
-
-    return (
-      <div className="mb-8">
-        <h3 className="font-bold text-gray-800 mb-4 text-lg">
-          WIDAL TEST
-        </h3>
-
-        <div className="grid grid-cols-4 gap-4 text-sm">
-          <div className="font-medium text-gray-700">Parameter</div>
-          <div className="font-medium text-gray-700">Result</div>
-          <div className="font-medium text-gray-700">Unit</div>
-          <div className="font-medium text-gray-700">Reference Range</div>
-        </div>
-
-        <hr className="my-2 border-gray-300" />
-
-        {widalParameters.map((param, idx) => (
-          <div key={idx} className="grid grid-cols-4 gap-4 text-sm py-1">
-            <div className="text-gray-700">{param.parameter}</div>
-            <div className="text-gray-800 font-medium">
-              {param.value && param.value !== "N/A" ? param.value : "N/A"}
-            </div>
-            <div className="text-gray-700">{param.unit}</div>
-            <div className="text-gray-700">{param.referenceRange}</div>
-          </div>
-        ))}
-      </div>
-    );
+    const widalData = report.testResults?.wid001;
+    return renderTestResults("WID001", "WIDAL TEST", WIDAL_PARAMETERS, widalData);
   };
 
-  // Function to render other test results
+  // Function to render Biochemistry test results
+  const renderBiochemistryResults = () => {
+    const biochemTest = report.tests.find(test => test.testCode === "BCM001");
+    if (!biochemTest) return null;
+
+    const biochemData = report.testResults?.bcm001;
+    return renderTestResults("BCM001", "BIOCHEMISTRY REPORT", BIOCHEMISTRY_PARAMETERS, biochemData);
+  };
+
+  // Function to render Microscopy test results
+  const renderMicroscopyResults = () => {
+    const microscopyTest = report.tests.find(test => test.testCode === "MCP001");
+    if (!microscopyTest) return null;
+
+    const microscopyData = report.testResults?.mcp001;
+    return renderTestResults("MCP001", "MICROSCOPY REPORT", MICROSCOPY_PARAMETERS, microscopyData);
+  };
+
+  // Function to render other test results (for tests not specifically handled)
   const renderOtherTestResults = () => {
     if (!report.tests || report.tests.length === 0) return null;
 
-    // Filter out tests that are handled by specific functions
+    const handledTestCodes = ["CBC001", "WID001", "BCM001", "MCP001"];
     const otherTests = report.tests.filter(test => 
-      test.testCode !== "CBC001" && test.testCode !== "WID001"
+      !handledTestCodes.includes(test.testCode)
     );
 
     if (otherTests.length === 0) return null;
@@ -204,7 +282,7 @@ const ReportPDF = () => {
         <div className="grid grid-cols-4 gap-4 text-sm py-1">
           <div className="text-gray-700">{test.testName}</div>
           <div className="text-gray-800 font-medium">
-            {test.result && test.result !== "N/A" ? test.result : "Normal"}
+            {test.result && test.result.trim() !== "" ? test.result : "Normal"}
           </div>
           <div className="text-gray-700">-</div>
           <div className="text-gray-700">Normal Range</div>
@@ -273,7 +351,7 @@ const ReportPDF = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4 print:bg-white print:p-0">
       <div className="max-w-4xl mx-auto print:mt-0">
-          {/* Header Actions - Hidden in print */}
+        {/* Header Actions - Hidden in print */}
         <div className="mt-4 flex items-center justify-between mb-6 print:hidden">
           <button
             onClick={() => router.back()}
@@ -300,13 +378,14 @@ const ReportPDF = () => {
             </button>
           </div>
         </div>
+
         {/* Report Container */}
         <div className="bg-white shadow-lg border border-gray-300 print:shadow-none print:border-0">
           {/* Header Section */}
           <div className="border-b border-gray-300 p-6 px-0 bg-gradient-to-tl from-blue-300 via-blue-300 to-blue-400">
-            <div className="flex items-start justify-between ">
+            <div className="flex items-start justify-between">
               {/* Lab Logo and Info */}
-              <div className="flex items-center gap-4  w-full px-2 justify-between">
+              <div className="flex items-center gap-4 w-full px-2 justify-between">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center border-2 border-blue-500">
                   <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-xl">🏥</span>
@@ -317,7 +396,7 @@ const ReportPDF = () => {
                     GLOBAL PATHOLOGY LAB
                   </h1>
                 </div>
-                <div className="*:font-semibold ">
+                <div className="*:font-semibold">
                   <p className="text-red-600 text-sm font-semibold mt-1">
                     Shekhpura Roorkee, Haridwar (U.K)
                   </p>
@@ -347,7 +426,7 @@ const ReportPDF = () => {
                 </div>
                 <div className="flex">
                   <span className="w-32 text-gray-700 font-medium">
-                    Patient&#39;s Name
+                    Patient's Name
                   </span>
                   <span className="text-gray-700">
                     : <strong>{report.patientName.toUpperCase()}</strong>
@@ -444,10 +523,16 @@ const ReportPDF = () => {
             {/* Test Results */}
             <div className="space-y-6">
               {/* Render CBC results if available */}
-              {report.tests.some(test => test.testCode === "CBC001") && renderCBCResults()}
+              {renderCBCResults()}
               
               {/* Render Widal results if available */}
-              {report.tests.some(test => test.testCode === "WID001") && renderWidalResults()}
+              {renderWidalResults()}
+              
+              {/* Render Biochemistry results if available */}
+              {renderBiochemistryResults()}
+              
+              {/* Render Microscopy results if available */}
+              {renderMicroscopyResults()}
               
               {/* Render other test results */}
               {renderOtherTestResults()}
