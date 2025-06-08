@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaPrint, FaDownload, FaArrowLeft, FaEdit } from "react-icons/fa";
 import Image from "next/image";
+import QRCode from "./QRCode";
 
 // Test code categories
 const TEST_CATEGORIES = {
@@ -1031,7 +1032,11 @@ const ReportPDF = () => {
     );
   }
 
+  //  pathname 
+  const pathname = window.location.href;
   return (
+    // console.log(`Report Data 👩‍🦱 --> ${pathname}`),
+    /////////////////////////////
     <div className="min-h-screen bg-gray-100 p-4 print:bg-white print:p-0">
       <div className="max-w-4xl mx-auto print:mt-0">
         <div className="mt-4 flex items-center justify-between mb-6 print:hidden">
@@ -1063,9 +1068,10 @@ const ReportPDF = () => {
           <div className="border-b border-gray-300 p-6 px-0 bg-gradient-to-tl from-blue-300 via-blue-300 to-blue-400">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4 w-full px-2 justify-between">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center border-2 border-blue-500">
-                  <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-xl">🏥</span>
+                <div className="w-16 h-16 bg-blue-300 rounded-full flex items-center justify-center border-[1.2px] border-blue-500">
+                  <div className="w-12 h-12 p-1  rounded-full flex items-center justify-center">
+                    {/* <span className="text-white font-bold text-xl">🏥</span> */}
+                    <Image src={"/global_labs_Logo.png"} width={300} height={300} alt="global_labs_Logo"/>
                   </div>
                 </div>
                 <div>
@@ -1087,7 +1093,7 @@ const ReportPDF = () => {
               </div>
             </div>
           </div>
-          <div className="p-6 border-b border-gray-300">
+          <div className="p-6 border-b border-gray-300 relative">
             <div className="grid grid-cols-2 gap-8">
               <div className="space-y-3">
                 <div className="flex">
@@ -1171,6 +1177,9 @@ const ReportPDF = () => {
                   </span>
                 </div>
               </div>
+            </div>
+            <div className="absolute top-4 right-6 border rounded-xs bg-slate-500">
+              <QRCode param={pathname} />
             </div>
           </div>
           <div className="p-6 py-2 border-b border-gray-300">
