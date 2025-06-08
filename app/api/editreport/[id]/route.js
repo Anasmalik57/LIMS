@@ -2,6 +2,73 @@ import connectDB from "@/database/connectDB";
 import Patient from "@/models/Patient";
 import { NextResponse } from "next/server";
 
+// Define schema fields for validation
+const TEST_RESULT_FIELDS = {
+  cbc001: [
+    "hemoglobin", "totalRBC", "totalWBC", "polymorphs", "lymphocytes",
+    "eosinophils", "monocytes", "basophils", "plateletCount", "hct",
+    "mcv", "mch", "mchc", "rdw", "mpv"
+  ],
+  wid001: ["salmonellaO", "salmonellaH", "widalConclusion"],
+  bcm001: [
+    "totalBilirubin", "directBilirubin", "indirectBilirubin", "sgpt",
+    "sgot", "alkalinePhosphatase", "totalProtein", "albumin", "globulin",
+    "agRatio", "description"
+  ],
+  tdr001: ["styphiIgG", "styphiIgM", "method", "description"],
+  vdr001: ["vdrlResult", "description"],
+  rft001: [
+    "bloodUrea", "bun", "sCreatinine", "serumUricAcid", "totalProtein",
+    "sAlbumin", "sGlobulin", "agRatio"
+  ],
+  uri001: ["serumUricAcid"],
+  scr001: ["sCreatinine"],
+  lip001: [
+    "serumTotalCholesterol", "serumTriglyceride", "hdlCholesterol",
+    "sLDLCholesterol", "sVLDLCholesterol", "nonHDLCholesterol",
+    "cholesterolHDLRatio", "ldlHDLRatio"
+  ],
+  ant001: [
+    "hemoglobin", "totalWBC", "bgRh", "rbc", "rbs", "vdrl",
+    "plateletCount", "hiv", "hbsag"
+  ],
+  ddi001: ["dDimer", "description"],
+  btc001: ["bleedingTime", "clottingTime", "description"],
+  raa001: ["rfa", "asoTest", "crpTest"],
+  sgt001: ["sgot"],
+  coa001: [
+    "coagBleedingTimeMin", "coagBleedingTimeSec", "coagClottingTimeMin",
+    "coagClottingTimeSec", "coagClotRetraction", "hemoPlateletCount",
+    "coagProthrombinTimeControl", "coagProthrombinTimePatient", "coagINR",
+    "coagISI", "coagProthrombinIndex", "coagProthrombinRatio",
+    "coagAPTTTest", "coagAPTTControl", "coagFDP", "coagFactorXIIIScreening",
+    "coagThrombinTime", "plasmaRecalcificationTime", "factorVIIIAssay",
+    "dDimer", "plasmaFibrinogen", "coagNote"
+  ],
+  aec001: ["totalEAC"],
+  ser001: [
+    "sodium", "potassium", "chlorides", "calcium", "elecInorganicPhosphorous",
+    "elecLithium", "splBicarbonate", "elecMagnesium", "method",
+    "instrumentUsed", "description"
+  ],
+  tpt001: ["troponin"],
+  blg001: ["aboGroupingSystem", "rhoTyping"],
+  mpm001: ["malariaParasites", "method"],
+  raf001: ["rheumatoidFactorAssay", "description"],
+  crp001: ["crp", "description"],
+  ant002: ["igg", "igm"],
+  hba001: ["glycatedHemoglobin", "estimatedAverageGlucose"],
+  bet001: ["betaHCG", "description"],
+  hiv001: ["hivIII"],
+  hbs001: ["hepatitisBSurfaceAntigen", "doneBy"],
+  ant003: ["hepatitisCSurfaceAntigen"],
+  tft001: ["totalT3", "totalT4", "tsh", "description"],
+  mcp001: [
+    "urineColor", "urineAppearance", "pusCells", "urineRBC", "epithelialCells",
+    "casts", "crystals", "bacteria", "ova", "cysts", "mucus", "occultBlood"
+  ],
+};
+
 // PUT request to update report by ID
 export async function PUT(request, { params }) {
   try {
@@ -78,76 +145,19 @@ export async function PUT(request, { params }) {
       updateData.address = address.trim();
     }
 
-    // Update testResults if provided
+    // Update testResults dynamically
     if (testResults && typeof testResults === "object") {
-      updateData.testResults = {
-        cbc001:
-          testResults.cbc001 && typeof testResults.cbc001 === "object"
-            ? {
-                hemoglobin: testResults.cbc001.hemoglobin || "",
-                totalRBC: testResults.cbc001.totalRBC || "",
-                totalWBC: testResults.cbc001.totalWBC || "",
-                polymorphs: testResults.cbc001.polymorphs || "",
-                lymphocytes: testResults.cbc001.lymphocytes || "",
-                eosinophils: testResults.cbc001.eosinophils || "",
-                monocytes: testResults.cbc001.monocytes || "",
-                basophils: testResults.cbc001.basophils || "",
-                plateletCount: testResults.cbc001.plateletCount || "",
-                hct: testResults.cbc001.hct || "",
-                mcv: testResults.cbc001.mcv || "",
-                mch: testResults.cbc001.mch || "",
-                mchc: testResults.cbc001.mchc || "",
-                rdw: testResults.cbc001.rdw || "",
-                mpv: testResults.cbc001.mpv || "",
-              }
-            : existingReport.testResults.cbc001,
-        wid001:
-          testResults.wid001 && typeof testResults.wid001 === "object"
-            ? {
-                salmonellaO: testResults.wid001.salmonellaO || "",
-                salmonellaH: testResults.wid001.salmonellaH || "",
-                widalConclusion: testResults.wid001.widalConclusion || "",
-              }
-            : existingReport.testResults.wid001,
-        bcm001:
-          testResults.bcm001 && typeof testResults.bcm001 === "object"
-            ? {
-                totalBilirubin: testResults.bcm001.totalBilirubin || "",
-                directBilirubin: testResults.bcm001.directBilirubin || "",
-                indirectBilirubin: testResults.bcm001.indirectBilirubin || "",
-                sgot: testResults.bcm001.sgot || "",
-                sgpt: testResults.bcm001.sgpt || "",
-                alkalinePhosphatase:
-                  testResults.bcm001.alkalinePhosphatase || "",
-                bloodUrea: testResults.bcm001.bloodUrea || "",
-                serumCreatinine: testResults.bcm001.serumCreatinine || "",
-                serumUricAcid: testResults.bcm001.serumUricAcid || "",
-                totalCholesterol: testResults.bcm001.totalCholesterol || "",
-                triglycerides: testResults.bcm001.triglycerides || "",
-                hdlCholesterol: testResults.bcm001.hdlCholesterol || "",
-                ldlCholesterol: testResults.bcm001.ldlCholesterol || "",
-                fastingGlucose: testResults.bcm001.fastingGlucose || "",
-                randomGlucose: testResults.bcm001.randomGlucose || "",
-              }
-            : existingReport.testResults.bcm001,
-        mcp001:
-          testResults.mcp001 && typeof testResults.mcp001 === "object"
-            ? {
-                urineColor: testResults.mcp001.urineColor || "",
-                urineAppearance: testResults.mcp001.urineAppearance || "",
-                pusCells: testResults.mcp001.pusCells || "",
-                urineRBC: testResults.mcp001.urineRBC || "",
-                epithelialCells: testResults.mcp001.epithelialCells || "",
-                casts: testResults.mcp001.casts || "",
-                crystals: testResults.mcp001.crystals || "",
-                bacteria: testResults.mcp001.bacteria || "",
-                ova: testResults.mcp001.ova || "",
-                cysts: testResults.mcp001.cysts || "",
-                mucus: testResults.mcp001.mucus || "",
-                occultBlood: testResults.mcp001.occultBlood || "",
-              }
-            : existingReport.testResults.mcp001,
-      };
+      updateData.testResults = Object.keys(TEST_RESULT_FIELDS).reduce((acc, testCode) => {
+        if (testResults[testCode] && typeof testResults[testCode] === "object") {
+          acc[testCode] = TEST_RESULT_FIELDS[testCode].reduce((testAcc, field) => ({
+            ...testAcc,
+            [field]: testResults[testCode][field] || existingReport.testResults[testCode]?.[field] || "",
+          }), {});
+        } else {
+          acc[testCode] = existingReport.testResults[testCode] || {};
+        }
+        return acc;
+      }, {});
     }
 
     // Update the report

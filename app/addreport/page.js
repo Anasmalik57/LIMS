@@ -544,8 +544,17 @@ const handleSubmit = async () => {
             </div>
           </div>
 
+
           {/* Submit Button */}
-          <div className="flex justify-center">
+          <div className="flex justify-center relative">
+            <button
+                  type="button"
+                  onClick={addTest}
+                  className=" fixed bottom-8 right-8 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  <FaPlus className="text-sm" />
+                  Add Test
+                </button>
             <button
               type="button"
               onClick={handleSubmit}

@@ -1,267 +1,212 @@
+
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { FaSave, FaArrowLeft, FaSpinner } from "react-icons/fa";
 
-// Define test parameters mapping with units and reference ranges
+// Test parameters mapping synchronized with ReportPDF.js
 const TEST_PARAMETERS = {
   CBC001: [
-    {
-      parameter: "HAEMOGLOBIN",
-      dbField: "hemoglobin",
-      unit: "mg/dl",
-      referenceRange: "13-18",
-    },
-    {
-      parameter: "Total R.B.C.",
-      dbField: "totalRBC",
-      unit: "mil/cumm",
-      referenceRange: "4.5-6.2",
-    },
-    {
-      parameter: "Total W.B.C.",
-      dbField: "totalWBC",
-      unit: "/cumm",
-      referenceRange: "4000-11000",
-    },
-    {
-      parameter: "Polymorphs",
-      dbField: "polymorphs",
-      unit: "%",
-      referenceRange: "20-45",
-    },
-    {
-      parameter: "Lymphocytes",
-      dbField: "lymphocytes",
-      unit: "%",
-      referenceRange: "20-45",
-    },
-    {
-      parameter: "Eosinophils",
-      dbField: "eosinophils",
-      unit: "%",
-      referenceRange: "1-6",
-    },
-    {
-      parameter: "Monocytes",
-      dbField: "monocytes",
-      unit: "%",
-      referenceRange: "2-8",
-    },
-    {
-      parameter: "Basophils",
-      dbField: "basophils",
-      unit: "%",
-      referenceRange: "0-1",
-    },
-    {
-      parameter: "PLATELET COUNT",
-      dbField: "plateletCount",
-      unit: "Lakhs/cmm",
-      referenceRange: "1.5-4.5",
-    },
-    { parameter: "H.C.T.", dbField: "hct", unit: "%", referenceRange: "45-52" },
-    {
-      parameter: "M.C.V.",
-      dbField: "mcv",
-      unit: "fl",
-      referenceRange: "84-96",
-    },
-    {
-      parameter: "M.C.H.",
-      dbField: "mch",
-      unit: "pg",
-      referenceRange: "27-32",
-    },
-    {
-      parameter: "M.C.H.C.",
-      dbField: "mchc",
-      unit: "g/dl",
-      referenceRange: "30-36",
-    },
-    {
-      parameter: "R.D.W.",
-      dbField: "rdw",
-      unit: "%",
-      referenceRange: "10.0-15.0",
-    },
-    {
-      parameter: "M.P.V.",
-      dbField: "mpv",
-      unit: "",
-      referenceRange: "6.5-11.0",
-    },
+    { key: "hemoglobin", parameter: "Haemoglobin", unit: "g/dL", referenceRange: "13-18", type: "number" },
+    { key: "totalRBC", parameter: "Total R.B.C.", unit: "mil/cumm", referenceRange: "4.5-6.2", type: "number" },
+    { key: "totalWBC", parameter: "Total W.B.C.", unit: "/cumm", referenceRange: "4000-11000", type: "number" },
+    { key: "separator", parameter: "DIFFERENTIAL COUNT", unit: "", referenceRange: "" },
+    { key: "polymorphs", parameter: "Polymorphs", unit: "%", referenceRange: "40-75", type: "number" },
+    { key: "lymphocytes", parameter: "Lymphocytes", unit: "%", referenceRange: "20-45", type: "number" },
+    { key: "eosinophils", parameter: "Eosinophils", unit: "%", referenceRange: "1-6", type: "number" },
+    { key: "monocytes", parameter: "Monocytes", unit: "%", referenceRange: "2-10", type: "number" },
+    { key: "basophils", parameter: "Basophils", unit: "%", referenceRange: "0-1", type: "number" },
+    { key: "plateletCount", parameter: "Platelet Count", unit: "Lakhs/cmm", referenceRange: "1.5-4.5", type: "number" },
+    { key: "hct", parameter: "H.C.T.", unit: "%", referenceRange: "36-46", type: "number" },
+    { key: "mcv", parameter: "M.C.V.", unit: "fL", referenceRange: "76-96", type: "number" },
+    { key: "mch", parameter: "M.C.H.", unit: "pg", referenceRange: "27-32", type: "number" },
+    { key: "mchc", parameter: "M.C.H.C.", unit: "g/dL", referenceRange: "32-36", type: "number" },
+    { key: "rdw", parameter: "R.D.W.", unit: "%", referenceRange: "11.5-14.5", type: "number" },
+    { key: "mpv", parameter: "M.P.V.", unit: "fL", referenceRange: "7.4-10.4", type: "number" },
   ],
   WID001: [
-    {
-      parameter: "Salmonella typhi - O",
-      dbField: "salmonellaO",
-      unit: "",
-      referenceRange: "1:80 or More Significant Titre 1:80 or More",
-    },
-    {
-      parameter: "Salmonella Typhi - H",
-      dbField: "salmonellaH",
-      unit: "",
-      referenceRange: "1:80 or More Significant Titre 1:80 or More",
-    },
-    {
-      parameter: "Widal Conclusion",
-      dbField: "widalConclusion",
-      unit: "",
-      referenceRange: "",
-    },
+    { key: "salmonellaO", parameter: "Salmonella Typhi - O", unit: "", referenceRange: "<1:80", type: "text" },
+    { key: "salmonellaH", parameter: "Salmonella Typhi - H", unit: "", referenceRange: "<1:80", type: "text" },
+    { key: "widalConclusion", parameter: "Widal Conclusion", unit: "", referenceRange: "", type: "text" },
   ],
   BCM001: [
-    {
-      parameter: "Total Bilirubin",
-      dbField: "totalBilirubin",
-      unit: "mg/dl",
-      referenceRange: "0.2-1.2",
-    },
-    {
-      parameter: "Direct Bilirubin",
-      dbField: "directBilirubin",
-      unit: "mg/dl",
-      referenceRange: "0.0-0.3",
-    },
-    {
-      parameter: "Indirect Bilirubin",
-      dbField: "indirectBilirubin",
-      unit: "mg/dl",
-      referenceRange: "0.2-0.9",
-    },
-    {
-      parameter: "SGOT (AST)",
-      dbField: "sgot",
-      unit: "U/L",
-      referenceRange: "8-40",
-    },
-    {
-      parameter: "SGPT (ALT)",
-      dbField: "sgpt",
-      unit: "U/L",
-      referenceRange: "7-56",
-    },
-    {
-      parameter: "Alkaline Phosphatase",
-      dbField: "alkalinePhosphatase",
-      unit: "U/L",
-      referenceRange: "44-147",
-    },
-    {
-      parameter: "Blood Urea",
-      dbField: "bloodUrea",
-      unit: "mg/dl",
-      referenceRange: "15-40",
-    },
-    {
-      parameter: "Serum Creatinine",
-      dbField: "serumCreatinine",
-      unit: "mg/dl",
-      referenceRange: "0.7-1.3",
-    },
-    {
-      parameter: "Serum Uric Acid",
-      dbField: "serumUricAcid",
-      unit: "mg/dl",
-      referenceRange: "3.4-7.0",
-    },
-    {
-      parameter: "Total Cholesterol",
-      dbField: "totalCholesterol",
-      unit: "mg/dl",
-      referenceRange: "<200",
-    },
-    {
-      parameter: "Triglycerides",
-      dbField: "triglycerides",
-      unit: "mg/dl",
-      referenceRange: "<150",
-    },
-    {
-      parameter: "HDL Cholesterol",
-      dbField: "hdlCholesterol",
-      unit: "mg/dl",
-      referenceRange: ">40",
-    },
-    {
-      parameter: "LDL Cholesterol",
-      dbField: "ldlCholesterol",
-      unit: "mg/dl",
-      referenceRange: "<100",
-    },
-    {
-      parameter: "Fasting Glucose",
-      dbField: "fastingGlucose",
-      unit: "mg/dl",
-      referenceRange: "70-100",
-    },
-    {
-      parameter: "Random Glucose",
-      dbField: "randomGlucose",
-      unit: "mg/dl",
-      referenceRange: "70-140",
-    },
+    { key: "separator", parameter: "LIVER FUNCTION TESTS", unit: "", referenceRange: "" },
+    { key: "totalBilirubin", parameter: "Total Bilirubin", unit: "mg/dL", referenceRange: "0.2-1.0", type: "number" },
+    { key: "directBilirubin", parameter: "Direct Bilirubin", unit: "mg/dL", referenceRange: "0-0.4", type: "number" },
+    { key: "indirectBilirubin", parameter: "Indirect Bilirubin", unit: "mg/dL", referenceRange: "0-0.5", type: "number" },
+    { key: "alkalinePhosphatase", parameter: "S. Alkaline Phosphatase", unit: "U/L", referenceRange: "60-170", type: "number" },
+    { key: "sgpt", parameter: "Alanine Transaminase (ALT/SGPT)", unit: "U/L", referenceRange: "5-50", type: "number" },
+    { key: "sgot", parameter: "Aspartate Transaminase (AST/SGOT)", unit: "U/L", referenceRange: "5-50", type: "number" },
+    { key: "totalProtein", parameter: "Total Protein", unit: "g/dL", referenceRange: "6-8", type: "number" },
+    { key: "albumin", parameter: "Albumin", unit: "g/dL", referenceRange: "3.5-4.5", type: "number" },
+    { key: "globulin", parameter: "Globulin", unit: "g/dL", referenceRange: "2.5-3.5", type: "number" },
+    { key: "agRatio", parameter: "A/G Ratio", unit: "mgm%", referenceRange: "1.3-4.0", type: "number" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  TDR001: [
+    { key: "styphiIgG", parameter: "S. Typhi IgG", unit: "", referenceRange: "", type: "text" },
+    { key: "styphiIgM", parameter: "S. Typhi IgM", unit: "", referenceRange: "", type: "text" },
+    { key: "method", parameter: "Method", unit: "", referenceRange: "Chromatographic Immunoassay", type: "text" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  VDR001: [
+    { key: "vdrlResult", parameter: "VDRL Result", unit: "", referenceRange: "", type: "text" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  RFT001: [
+    { key: "bloodUrea", parameter: "Blood Urea", unit: "mg/dL", referenceRange: "10-45", type: "number" },
+    { key: "bun", parameter: "Blood Urea Nitrogen", unit: "mg/dL", referenceRange: "3.3-18.7", type: "number" },
+    { key: "sCreatinine", parameter: "Serum Creatinine", unit: "mg/dL", referenceRange: "0.6-1.4", type: "number" },
+    { key: "serumUricAcid", parameter: "Serum Uric Acid", unit: "mg/dL", referenceRange: "2-8", type: "number" },
+    { key: "totalProtein", parameter: "Total Protein", unit: "g/dL", referenceRange: "6-8", type: "number" },
+    { key: "sAlbumin", parameter: "Serum Albumin", unit: "g/dL", referenceRange: "3.5-4.5", type: "number" },
+    { key: "sGlobulin", parameter: "Serum Globulin", unit: "g/dL", referenceRange: "2.5-3.5", type: "number" },
+    { key: "agRatio", parameter: "A/G Ratio", unit: "mgm%", referenceRange: "1.3-4.0", type: "number" },
+  ],
+  URI001: [
+    { key: "serumUricAcid", parameter: "Serum Uric Acid", unit: "mg/dL", referenceRange: "2.0-7.0", type: "number" },
+  ],
+  SCR001: [
+    { key: "sCreatinine", parameter: "Serum Creatinine", unit: "mg/dL", referenceRange: "0.8-1.4", type: "number" },
+  ],
+  LIP001: [
+    { key: "serumTotalCholesterol", parameter: "Serum Total Cholesterol", unit: "mg/dL", referenceRange: "100-200", type: "number" },
+    { key: "serumTriglyceride", parameter: "Serum Triglycerides", unit: "mg/dL", referenceRange: "65-150", type: "number" },
+    { key: "hdlCholesterol", parameter: "HDL Cholesterol", unit: "mg/dL", referenceRange: "30-60", type: "number" },
+    { key: "sLDLCholesterol", parameter: "LDL Cholesterol", unit: "mg/dL", referenceRange: "0-100", type: "number" },
+    { key: "sVLDLCholesterol", parameter: "VLDL Cholesterol", unit: "mg/dL", referenceRange: "6-40", type: "number" },
+    { key: "nonHDLCholesterol", parameter: "Non-HDL Cholesterol", unit: "mg/dL", referenceRange: "0-130", type: "number" },
+    { key: "cholesterolHDLRatio", parameter: "Cholesterol/HDL Ratio", unit: "", referenceRange: "0-5.0", type: "number" },
+    { key: "ldlHDLRatio", parameter: "LDL/HDL Ratio", unit: "", referenceRange: "0-3.5", type: "number" },
+  ],
+  ANT001: [
+    { key: "hemoglobin", parameter: "Haemoglobin", unit: "mg/dL", referenceRange: "14-17", type: "number" },
+    { key: "totalWBC", parameter: "Total W.B.C.", unit: "/cumm", referenceRange: "4000-10000", type: "number" },
+    { key: "bgRh", parameter: "Blood Group & Rh Typing", unit: "", referenceRange: "", type: "text" },
+    { key: "rbc", parameter: "R.B.C.", unit: "mil/cumm", referenceRange: "4.0-5.2", type: "number" },
+    { key: "rbs", parameter: "Random Blood Sugar", unit: "mg/dL", referenceRange: "70-140", type: "number" },
+    { key: "vdrl", parameter: "VDRL", unit: "", referenceRange: "Non-reactive", type: "text" },
+    { key: "plateletCount", parameter: "Platelet Count", unit: "Lakhs/cmm", referenceRange: "1.5-4.5", type: "number" },
+    { key: "hiv", parameter: "HIV", unit: "", referenceRange: "Non-Reactive", type: "text" },
+    { key: "hbsag", parameter: "HBsAg", unit: "", referenceRange: "Non-Reactive", type: "text" },
+  ],
+  DDI001: [
+    { key: "dDimer", parameter: "D-Dimer", unit: "ng/mL", referenceRange: "0-500", type: "number" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  BTC001: [
+    { key: "bleedingTime", parameter: "Bleeding Time", unit: "", referenceRange: "2-7 min", type: "text" },
+    { key: "clottingTime", parameter: "Clotting Time", unit: "", referenceRange: "4-11 min", type: "text" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  RAA001: [
+    { key: "rfa", parameter: "Rheumatoid Factor Assay", unit: "IU/mL", referenceRange: "0-20", type: "number" },
+    { key: "asoTest", parameter: "ASO Test", unit: "IU/mL", referenceRange: "0-200", type: "number" },
+    { key: "crpTest", parameter: "CRP Test", unit: "mg/L", referenceRange: "upto 6.0", type: "number" },
+  ],
+  SGT001: [
+    { key: "sgot", parameter: "SGOT (AST)", unit: "U/L", referenceRange: "6-38", type: "number" },
+  ],
+  COA001: [
+    { key: "coagBleedingTimeMin", parameter: "Bleeding Time (Min)", unit: "min", referenceRange: "3-10", type: "number" },
+    { key: "coagBleedingTimeSec", parameter: "Bleeding Time (Sec)", unit: "sec", referenceRange: "", type: "number" },
+    { key: "coagClottingTimeMin", parameter: "Clotting Time (Min)", unit: "min", referenceRange: "2-7", type: "number" },
+    { key: "coagClottingTimeSec", parameter: "Clotting Time (Sec)", unit: "sec", referenceRange: "", type: "number" },
+    { key: "coagClotRetraction", parameter: "Clot Retraction", unit: "", referenceRange: "", type: "text" },
+    { key: "hemoPlateletCount", parameter: "Platelet Count", unit: "Lakhs/cmm", referenceRange: "1.5-4.5", type: "number" },
+    { key: "coagProthrombinTimeControl", parameter: "Prothrombin Time (Control)", unit: "sec", referenceRange: "10.3-12.8", type: "number" },
+    { key: "coagProthrombinTimePatient", parameter: "Prothrombin Time (Patient)", unit: "sec", referenceRange: "10-14", type: "number" },
+    { key: "coagINR", parameter: "INR", unit: "", referenceRange: "0.8-1.2", type: "number" },
+    { key: "coagISI", parameter: "ISI", unit: "", referenceRange: "", type: "text" },
+    { key: "coagProthrombinIndex", parameter: "Prothrombin Index", unit: "", referenceRange: "", type: "text" },
+    { key: "coagProthrombinRatio", parameter: "Prothrombin Ratio", unit: "", referenceRange: "", type: "text" },
+    { key: "coagAPTTTest", parameter: "APTT (Test)", unit: "sec", referenceRange: "25-37", type: "number" },
+    { key: "coagAPTTControl", parameter: "APTT (Control)", unit: "sec", referenceRange: "25-35", type: "number" },
+    { key: "coagFDP", parameter: "FDP", unit: "µg/mL", referenceRange: "0-5.0", type: "number" },
+    { key: "coagFactorXIIIScreening", parameter: "Factor XIII Screening", unit: "", referenceRange: "", type: "text" },
+    { key: "coagThrombinTime", parameter: "Thrombin Time", unit: "", referenceRange: "", type: "text" },
+    { key: "plasmaRecalcificationTime", parameter: "Plasma Recalcification Time", unit: "sec", referenceRange: "", type: "number" },
+    { key: "factorVIIIAssay", parameter: "Factor VIII Assay", unit: "%", referenceRange: "", type: "number" },
+    { key: "dDimer", parameter: "D-Dimer", unit: "mg/L", referenceRange: "", type: "number" },
+    { key: "plasmaFibrinogen", parameter: "Plasma Fibrinogen", unit: "mg/dL", referenceRange: "200-400", type: "number" },
+    { key: "coagNote", parameter: "Note", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  AEC001: [
+    { key: "totalEAC", parameter: "Absolute Eosinophil Count", unit: "/cumm", referenceRange: "40-440", type: "number" },
+  ],
+  SER001: [
+    { key: "sodium", parameter: "Sodium", unit: "mEq/L", referenceRange: "135-145", type: "number" },
+    { key: "potassium", parameter: "Potassium", unit: "mEq/L", referenceRange: "3.5-5.4", type: "number" },
+    { key: "chlorides", parameter: "Chlorides", unit: "mEq/L", referenceRange: "96-106", type: "number" },
+    { key: "calcium", parameter: "Calcium", unit: "", referenceRange: "", type: "number" },
+    { key: "elecInorganicPhosphorous", parameter: "Inorganic Phosphorus", unit: "", referenceRange: "", type: "number" },
+    { key: "elecLithium", parameter: "Lithium", unit: "mEq/L", referenceRange: "", type: "number" },
+    { key: "splBicarbonate", parameter: "Bicarbonate", unit: "mEq/L", referenceRange: "", type: "number" },
+    { key: "elecMagnesium", parameter: "Magnesium", unit: "mg/dL", referenceRange: "", type: "number" },
+    { key: "method", parameter: "Method", unit: "", referenceRange: "ION Selected Electrodes (ISE) Direct", type: "text" },
+    { key: "instrumentUsed", parameter: "Instrument Used", unit: "", referenceRange: "YUCCA SENSA CORE Electrolyte Analyzer", type: "text" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  TPT001: [
+    { key: "troponin", parameter: "Troponin-T", unit: "", referenceRange: "Negative", type: "text" },
+  ],
+  BLG001: [
+    { key: "aboGroupingSystem", parameter: "ABO Grouping", unit: "", referenceRange: "", type: "text" },
+    { key: "rhoTyping", parameter: "Rh Typing", unit: "", referenceRange: "Positive/Negative", type: "text" },
+  ],
+  MPM001: [
+    { key: "malariaParasites", parameter: "Malaria Parasites", unit: "", referenceRange: "Positive/Negative", type: "text" },
+    { key: "method", parameter: "Method", unit: "", referenceRange: "Microscopic Examination", type: "text" },
+  ],
+  RAF001: [
+    { key: "rheumatoidFactorAssay", parameter: "Rheumatoid Factor Assay", unit: "IU/mL", referenceRange: "0-20", type: "number" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  CRP001: [
+    { key: "crp", parameter: "C-Reactive Protein", unit: "", referenceRange: "0-10", type: "number" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  ANT002: [
+    { key: "igg", parameter: "Scrub Typhus IgG", unit: "", referenceRange: "Negative/Positive", type: "text" },
+    { key: "igm", parameter: "Scrub Typhus IgM", unit: "", referenceRange: "Negative/Positive", type: "text" },
+  ],
+  HBA001: [
+    { key: "glycatedHemoglobin", parameter: "HbA1c", unit: "%", referenceRange: "", type: "number" },
+    { key: "estimatedAverageGlucose", parameter: "Estimated Average Glucose", unit: "mg/dL", referenceRange: "", type: "number" },
+  ],
+  BET001: [
+    { key: "betaHCG", parameter: "Beta HCG", unit: "mIU/mL", referenceRange: "0-5 (Non-pregnant)", type: "number" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  HIV001: [
+    { key: "hivIII", parameter: "HIV I-II", unit: "", referenceRange: "Non-reactive", type: "text" },
+  ],
+  HBS001: [
+    { key: "hepatitisBSurfaceAntigen", parameter: "HBsAg", unit: "", referenceRange: "Negative/Positive", type: "text" },
+    { key: "doneBy", parameter: "Method", unit: "", referenceRange: "Rapid Card Method", type: "text" },
+  ],
+  ANT003: [
+    { key: "hepatitisCSurfaceAntigen", parameter: "Anti-HCV", unit: "", referenceRange: "Non-reactive", type: "text" },
+  ],
+  TFT001: [
+    { key: "totalT3", parameter: "Total T3", unit: "ng/dL", referenceRange: "60-200", type: "number" },
+    { key: "totalT4", parameter: "Total T4", unit: "µg/dL", referenceRange: "4.5-14.5", type: "number" },
+    { key: "tsh", parameter: "TSH", unit: "µIU/mL", referenceRange: "0.35-5.5", type: "number" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
   ],
   MCP001: [
-    {
-      parameter: "Color",
-      dbField: "urineColor",
-      unit: "",
-      referenceRange: "Pale Yellow",
-    },
-    {
-      parameter: "Appearance",
-      dbField: "urineAppearance",
-      unit: "",
-      referenceRange: "Clear",
-    },
-    {
-      parameter: "Pus Cells",
-      dbField: "pusCells",
-      unit: "/hpf",
-      referenceRange: "0-5",
-    },
-    {
-      parameter: "Red Blood Cells",
-      dbField: "urineRBC",
-      unit: "/hpf",
-      referenceRange: "0-2",
-    },
-    {
-      parameter: "Epithelial Cells",
-      dbField: "epithelialCells",
-      unit: "/hpf",
-      referenceRange: "Few",
-    },
-    { parameter: "Casts", dbField: "casts", unit: "", referenceRange: "Nil" },
-    {
-      parameter: "Crystals",
-      dbField: "crystals",
-      unit: "",
-      referenceRange: "Nil",
-    },
-    {
-      parameter: "Bacteria",
-      dbField: "bacteria",
-      unit: "",
-      referenceRange: "Nil",
-    },
-    { parameter: "Ova", dbField: "ova", unit: "", referenceRange: "Not Seen" },
-    {
-      parameter: "Cysts",
-      dbField: "cysts",
-      unit: "",
-      referenceRange: "Not Seen",
-    },
-    { parameter: "Mucus", dbField: "mucus", unit: "", referenceRange: "Nil" },
-    {
-      parameter: "Occult Blood",
-      dbField: "occultBlood",
-      unit: "",
-      referenceRange: "Negative",
-    },
+    { key: "urineColor", parameter: "Color", unit: "", referenceRange: "Pale Yellow", type: "text" },
+    { key: "urineAppearance", parameter: "Appearance", unit: "", referenceRange: "Clear", type: "text" },
+    { key: "pusCells", parameter: "Pus Cells", unit: "/hpf", referenceRange: "0-5", type: "number" },
+    { key: "urineRBC", parameter: "Red Blood Cells", unit: "/hpf", referenceRange: "0-2", type: "number" },
+    { key: "epithelialCells", parameter: "Epithelial Cells", unit: "/hpf", referenceRange: "Few", type: "text" },
+    { key: "casts", parameter: "Casts", unit: "", referenceRange: "Nil", type: "text" },
+    { key: "crystals", parameter: "Crystals", unit: "", referenceRange: "Nil", type: "text" },
+    { key: "bacteria", parameter: "Bacteria", unit: "", referenceRange: "Nil", type: "text" },
+    { key: "ova", parameter: "Ova", unit: "", referenceRange: "Not Seen", type: "text" },
+    { key: "cysts", parameter: "Cysts", unit: "", referenceRange: "Not Seen", type: "text" },
+    { key: "mucus", parameter: "Mucus", unit: "", referenceRange: "Nil", type: "text" },
+    { key: "occultBlood", parameter: "Occult Blood", unit: "", referenceRange: "Negative", type: "text" },
   ],
 };
 
@@ -311,12 +256,10 @@ const EditReportComponent = () => {
       refBy: reportData.refBy || "",
       address: reportData.address || "",
       tests: reportData.tests || [],
-      testResults: {
-        cbc001: reportData.testResults?.cbc001 || {},
-        wid001: reportData.testResults?.wid001 || {},
-        bcm001: reportData.testResults?.bcm001 || {},
-        mcp001: reportData.testResults?.mcp001 || {},
-      },
+      testResults: Object.keys(TEST_PARAMETERS).reduce((acc, testCode) => ({
+        ...acc,
+        [testCode.toLowerCase()]: reportData.testResults?.[testCode.toLowerCase()] || {},
+      }), {}),
     };
     setFormData(initialData);
   };
@@ -347,19 +290,23 @@ const EditReportComponent = () => {
     if (formData.tests) {
       formData.tests.forEach((test, index) => {
         if (!test.testName || test.testName.length < 2) {
-          errors[`testName_${index}`] = `Test name for test ${
-            index + 1
-          } must be at least 2 characters long`;
+          errors[`testName_${index}`] = `Test name for test ${index + 1} must be at least 2 characters long`;
         }
         if (!test.testCode || test.testCode.length < 2) {
-          errors[`testCode_${index}`] = `Test code for test ${
-            index + 1
-          } must be at least 2 characters long`;
+          errors[`testCode_${index}`] = `Test code for test ${index + 1} must be at least 2 characters long`;
         }
         if (test.price < 0) {
-          errors[`price_${index}`] = `Price for test ${
-            index + 1
-          } cannot be negative`;
+          errors[`price_${index}`] = `Price for test ${index + 1} cannot be negative`;
+        }
+        // Validate test result fields
+        const parameters = TEST_PARAMETERS[test.testCode];
+        if (parameters) {
+          parameters.forEach((param) => {
+            const value = formData.testResults[test.testCode.toLowerCase()]?.[param.key];
+            if (param.type === "number" && value && isNaN(parseFloat(value))) {
+              errors[`${test.testCode}_${param.key}`] = `${param.parameter} must be a valid number`;
+            }
+          });
         }
       });
     }
@@ -403,6 +350,10 @@ const EditReportComponent = () => {
           [field]: value,
         },
       },
+    }));
+    setValidationErrors((prev) => ({
+      ...prev,
+      [`${testCode}_${field}`]: null,
     }));
   };
 
@@ -475,34 +426,68 @@ const EditReportComponent = () => {
           {test.testName} Parameters
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {parameters.map((param, paramIndex) => (
-            <div key={paramIndex}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {param.parameter}
-                {param.unit && (
-                  <span className="text-gray-500"> ({param.unit})</span>
+          {parameters.map((param, paramIndex) => {
+            if (param.key === "separator") {
+              return (
+                <div key={paramIndex} className="col-span-full font-semibold text-gray-800">
+                  {param.parameter}
+                </div>
+              );
+            }
+            return (
+              <div key={paramIndex}>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {param.parameter}
+                  {param.unit && (
+                    <span className="text-gray-500"> ({param.unit})</span>
+                  )}
+                </label>
+                {param.type === "textarea" ? (
+                  <textarea
+                    value={testData[param.key] || ""}
+                    onChange={(e) =>
+                      handleTestResultChange(
+                        testCode,
+                        param.key,
+                        e.target.value
+                      )
+                    }
+                    rows="3"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder={param.referenceRange || "Enter description"}
+                  />
+                ) : (
+                  <input
+                    type={param.type === "number" ? "number" : "text"}
+                    value={testData[param.key] || ""}
+                    onChange={(e) =>
+                      handleTestResultChange(
+                        testCode,
+                        param.key,
+                        e.target.value
+                      )
+                    }
+                    placeholder={param.referenceRange || "Enter value"}
+                    className={`w-full px-3 py-2 border ${
+                      validationErrors[`${testCode}_${param.key}`]
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  />
                 )}
-              </label>
-              <input
-                type="text"
-                value={testData[param.dbField] || ""}
-                onChange={(e) =>
-                  handleTestResultChange(
-                    testCode,
-                    param.dbField,
-                    e.target.value
-                  )
-                }
-                placeholder={param.referenceRange || "Enter value"}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {param.referenceRange && (
-                <p className="text-xs text-gray-500 mt-1">
-                  Reference: {param.referenceRange}
-                </p>
-              )}
-            </div>
-          ))}
+                {param.referenceRange && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Reference: {param.referenceRange}
+                  </p>
+                )}
+                {validationErrors[`${testCode}_${param.key}`] && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {validationErrors[`${testCode}_${param.key}`]}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
@@ -549,7 +534,6 @@ const EditReportComponent = () => {
             <FaArrowLeft />
             Back
           </button>
-
           <button
             onClick={handleSave}
             disabled={saving}
@@ -559,7 +543,6 @@ const EditReportComponent = () => {
             {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
-
         <div className="bg-white shadow-lg rounded-lg">
           {/* Basic Patient Information */}
           <div className="p-6 border-b border-gray-300">
@@ -590,7 +573,6 @@ const EditReportComponent = () => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Mobile Number *
@@ -614,7 +596,6 @@ const EditReportComponent = () => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Age *
@@ -634,7 +615,6 @@ const EditReportComponent = () => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Gender *
@@ -662,7 +642,6 @@ const EditReportComponent = () => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Collected By
@@ -685,7 +664,6 @@ const EditReportComponent = () => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Referred By
@@ -709,7 +687,6 @@ const EditReportComponent = () => {
                 )}
               </div>
             </div>
-
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Address
@@ -733,7 +710,6 @@ const EditReportComponent = () => {
               )}
             </div>
           </div>
-
           {/* Tests Information */}
           <div className="p-6 border-b border-gray-300">
             <h2 className="text-xl font-bold text-gray-800 mb-4">
@@ -741,9 +717,10 @@ const EditReportComponent = () => {
             </h2>
             {formData.tests &&
               formData.tests.map((test, testIndex) => (
+                <>
                 <div
                   key={testIndex}
-                  className="mb-6 p-4 border border-gray-200 rounded-lg"
+                  className="mb-6 p-4 border-4 border-gray-200 rounded-lg "
                 >
                   <h3 className="font-semibold text-gray-800 mb-3">
                     {test.testName}
@@ -814,12 +791,13 @@ const EditReportComponent = () => {
                       )}
                     </div>
                   </div>
-
                   {renderTestParameters(test, testIndex)}
                 </div>
+                {/* vertical devider */}
+                <div className="w-full h-[3px] bg-gradient-to-br from-green-400 to-green-600 -translate-y-2.5 rounded-xl"></div>
+                </>
               ))}
           </div>
-
           {/* Save Button */}
           <div className="p-6 flex justify-end">
             <button
