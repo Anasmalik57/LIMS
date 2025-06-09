@@ -17,6 +17,8 @@ import {
   FaFeatherAlt,
   FaStethoscope,
 } from "react-icons/fa";
+import { RiFileList3Fill } from "react-icons/ri";
+
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
@@ -40,6 +42,7 @@ const Navbar = () => {
     { name: "Add Doctor", href: "/addDoctor", icon: FaUserMd },
     { name: "All Reports", href: "/report", icon: IoReceiptSharp },
     { name: "Doctor List", href: "/doctorlist", icon: FaStethoscope },
+    { name: "All Bills", href: "/allBills", icon: RiFileList3Fill },
   ];
 
   // Close dropdown when clicking outside
@@ -65,8 +68,8 @@ const Navbar = () => {
           <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-blue-500/30 group-hover:ring-blue-500/60 transition-all">
             {session?.user?.image ? (
               <Image
-              width={500}
-              height={500}
+                width={500}
+                height={500}
                 src={session.user.image}
                 alt="Profile"
                 className="w-full h-full object-cover"
@@ -105,8 +108,8 @@ const Navbar = () => {
               <div className="w-12 h-12 rounded-full overflow-hidden">
                 {session?.user?.image ? (
                   <Image
-                  width={500}
-                  height={500}
+                    width={500}
+                    height={500}
                     src={session.user.image}
                     alt="Profile"
                     className="w-full h-full object-cover"
@@ -263,8 +266,8 @@ const Navbar = () => {
                     <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-blue-500/30">
                       {session?.user?.image ? (
                         <Image
-                        width={500}
-                        height={500}
+                          width={500}
+                          height={500}
                           src={session.user.image}
                           alt="Profile"
                           className="w-full h-full object-cover"
