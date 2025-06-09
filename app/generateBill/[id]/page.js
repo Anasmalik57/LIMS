@@ -1,7 +1,12 @@
+import GenerateBillComponent from "@/components/GenerateBillComponent";
 import React from "react";
 
 const GenerateBill = () => {
-  return <div>GenerateBill</div>;
+  return (
+    <>
+      <GenerateBillComponent />{" "}
+    </>
+  );
 };
 
 export default GenerateBill;
