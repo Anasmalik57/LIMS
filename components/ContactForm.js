@@ -97,15 +97,10 @@ const ContactForm = () => {
     },
   ];
 
-  const socialLinks = [
-    { icon: FaGithub, href: "#", color: "hover:text-gray-800" },
-    { icon: FaLinkedin, href: "#", color: "hover:text-blue-600" },
-    { icon: FaTwitter, href: "#", color: "hover:text-blue-400" },
-    { icon: FaInstagram, href: "#", color: "hover:text-pink-600" },
-  ];
+
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/30 py-20">
+    <div className="min-h-screen bg-[#172131] pt-28  py-20">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header Section */}
         <div className="text-center mb-16">
@@ -150,33 +145,12 @@ const ContactForm = () => {
                   );
                 })}
               </div>
-
-              {/* Social Links */}
-              <div className="mt-12 pt-8 border-t border-gray-200/50 dark:border-gray-700/50">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-                  Follow Us
-                </h3>
-                <div className="flex gap-4">
-                  {socialLinks.map((social, index) => {
-                    const IconComponent = social.icon;
-                    return (
-                      <a
-                        key={index}
-                        href={social.href}
-                        className={`w-12 h-12 bg-white/50 dark:bg-gray-700/50 rounded-2xl flex items-center justify-center text-gray-600 dark:text-gray-400 ${social.color} hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl`}
-                      >
-                        <IconComponent className="text-lg" />
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
             </div>
 
             {/* Decorative Elements */}
             <div className="hidden lg:block">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-3xl blur-3xl"></div>
+                <div className="absolute inset-0bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-gray-700/30 rounded-3xl blur-3xl"></div>
                 <div className="relative bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl rounded-3xl p-8 border border-white/20 dark:border-gray-700/30">
                   <div className="text-center">
                     <FaPaperPlane className="text-4xl text-blue-500 mx-auto mb-4" />
@@ -277,7 +251,7 @@ const ContactForm = () => {
               <button
                 type="submit"
                 disabled={status.loading}
-                className="w-full relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full cursor-pointer relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative z-10 flex items-center justify-center gap-3 font-semibold">
