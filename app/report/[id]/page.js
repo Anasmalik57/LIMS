@@ -1,18 +1,17 @@
 "use client";
 import ReportPDF from "@/components/ReportPDF";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+
+import React from "react";
 
 const ReportPage = () => {
-    const { data: session, status, update } = useSession();
-  const router = useRouter();
+  //   const { data: session, status, update } = useSession();
+  // const router = useRouter();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-    }
-  }, [router, status]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     router.push("/");
+  //   }
+  // }, [router, status]);
   return (
     <>
       <ReportPDF />

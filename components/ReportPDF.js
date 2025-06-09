@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FaPrint, FaDownload, FaArrowLeft, FaEdit } from "react-icons/fa";
 import Image from "next/image";
 import QRCode from "./QRCode";
+import { useSession } from "next-auth/react";
 
 // Test code categories
 const TEST_CATEGORIES = {
@@ -855,6 +856,8 @@ const ReportPDF = () => {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // check session
+  const { data: session, status, update } = useSession();
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -1032,38 +1035,50 @@ const ReportPDF = () => {
     );
   }
 
-  //  pathname 
+  // pathname
   const pathname = window.location.href;
+
   return (
     // console.log(`Report Data 👩‍🦱 --> ${pathname}`),
     /////////////////////////////
     <div className="min-h-screen bg-gray-100 p-4 print:bg-white print:p-0">
       <div className="max-w-4xl mx-auto print:mt-0">
-        <div className="mt-4 flex items-center justify-between mb-6 print:hidden">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
-          >
-            <FaArrowLeft />
-            Back
-          </button>
-          <div className="flex gap-3">
-            <Link
-              href={`/editreport/${params.id}`}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              <FaEdit />
-              Edit
-            </Link>
+        {/* checking authentication then display buttons  */}
+        {status === "authenticated" ? (
+          <div className="mt-4 flex items-center justify-between mb-6 print:hidden">
             <button
-              onClick={handlePrint}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              onClick={() => router.back()}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
             >
-              <FaPrint />
-              Print
+              <FaArrowLeft />
+              Back
             </button>
+            <div className="flex gap-3">
+              <Link
+                href={`/editreport/${params.id}`}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <FaEdit />
+                Edit
+              </Link>
+              <button
+                onClick={handlePrint}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <FaPrint />
+                Print
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 mb-2 print:hidden px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <FaPrint />
+            Print
+          </button>
+        )}
         <div className="bg-white shadow-lg border border-gray-300 print:shadow-none print:border-0">
           <div className="border-b border-gray-300 p-6 px-0 bg-gradient-to-tl from-blue-300 via-blue-300 to-blue-400">
             <div className="flex items-start justify-between">
@@ -1071,7 +1086,12 @@ const ReportPDF = () => {
                 <div className="w-16 h-16 bg-blue-300 rounded-full flex items-center justify-center border-[1.2px] border-blue-500">
                   <div className="w-12 h-12 p-1  rounded-full flex items-center justify-center">
                     {/* <span className="text-white font-bold text-xl">🏥</span> */}
-                    <Image src={"/global_labs_Logo.png"} width={300} height={300} alt="global_labs_Logo"/>
+                    <Image
+                      src={"/global_labs_Logo.png"}
+                      width={300}
+                      height={300}
+                      alt="global_labs_Logo"
+                    />
                   </div>
                 </div>
                 <div>

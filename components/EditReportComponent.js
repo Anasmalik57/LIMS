@@ -717,12 +717,12 @@ const EditReportComponent = () => {
             </h2>
             {formData.tests &&
               formData.tests.map((test, testIndex) => (
-                <>
+                // <>
                 <div
                   key={testIndex}
                   className="mb-6 p-4 border-4 border-gray-200 rounded-lg "
                 >
-                  <h3 className="font-semibold text-gray-800 mb-3">
+                  <h3 className="font-semibold pb-1 border-b-2 border-green-500 text-gray-800 mb-3">
                     {test.testName}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -793,9 +793,9 @@ const EditReportComponent = () => {
                   </div>
                   {renderTestParameters(test, testIndex)}
                 </div>
-                {/* vertical devider */}
-                <div className="w-full h-[3px] bg-gradient-to-br from-green-400 to-green-600 -translate-y-2.5 rounded-xl"></div>
-                </>
+                /* vertical devider */
+                // <div className="w-full h-[3px] bg-gradient-to-br from-green-400 to-green-600 -translate-y-2.5 rounded-xl"></div>
+                // </>
               ))}
           </div>
           {/* Save Button */}

@@ -13,6 +13,7 @@ import {
   FaSpinner,
   FaExclamationTriangle,
   FaPen,
+  FaFileInvoice,
 } from "react-icons/fa";
 
 const ReportLists = () => {
@@ -34,11 +35,10 @@ const ReportLists = () => {
   const fetchReports = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/report"); // Assuming your API endpoint
+      const response = await fetch("/api/report");
       const data = await response.json();
 
       if (data.success) {
-        // Sort reports by createdAt in descending order (most recent first)
         const sortedReports = data.reports.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -73,6 +73,7 @@ const ReportLists = () => {
   const handleReportClick = (reportId) => {
     router.push(`/report/${reportId}`);
   };
+
   const handleEditClick = (reportId) => {
     router.push(`/editreport/${reportId}`);
   };
@@ -299,14 +300,29 @@ const ReportLists = () => {
                     </div>
 
                     <div className="flex gap-4 flex-col *:cursor-pointer">
-                      <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold">
+                      <Link
+                        href={`/report/${report._id}`}
+                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
+                      >
                         <FaEye />
                         View Report
-                      </button>
-                      <button onClick={()=> handleEditClick} className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-700 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold">
+                      </Link>
+                      <Link
+                        href={`/editreport/${report._id}`}
+                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <FaPen />
                         Edit Report
-                      </button>
+                      </Link>
+                      <Link
+                        href={`/GenerateBill/${report._id}`}
+                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl hover:from-teal-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <FaFileInvoice />
+                        Generate Bill
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -375,8 +391,7 @@ const ReportLists = () => {
                 </Link>
               </div>
             </div>
-          </div>,
-          document.body
+          </div>
         )}
     </div>
   );
