@@ -150,7 +150,7 @@ const ContactForm = () => {
             {/* Decorative Elements */}
             <div className="hidden lg:block">
               <div className="relative">
-                <div className="absolute inset-0bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-gray-700/30 rounded-3xl blur-3xl"></div>
+                <div className="absolute inset-0bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-gray-700/30  blur-3xl"></div>
                 <div className="relative bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl rounded-3xl p-8 border border-white/20 dark:border-gray-700/30">
                   <div className="text-center">
                     <FaPaperPlane className="text-4xl text-blue-500 mx-auto mb-4" />

@@ -856,6 +856,7 @@ const ReportPDF = () => {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showHeader, setshowHeader] = useState(true);
   // check session
   const { data: session, status, update } = useSession();
 
@@ -1079,40 +1080,61 @@ const ReportPDF = () => {
             Print
           </button>
         )}
-        <div className="bg-white shadow-lg border border-gray-300 print:shadow-none print:border-0">
-          <div className="border-b border-gray-300 p-6 px-0 bg-gradient-to-tl from-blue-300 via-blue-300 to-blue-400">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-4 w-full px-2 justify-between">
-                <div className="w-16 h-16 bg-blue-300 rounded-full flex items-center justify-center border-[1.2px] border-blue-500">
-                  <div className="w-12 h-12 p-1  rounded-full flex items-center justify-center">
-                    {/* <span className="text-white font-bold text-xl">🏥</span> */}
-                    <Image
-                      src={"/global_labs_Logo.png"}
-                      width={300}
-                      height={300}
-                      alt="global_labs_Logo"
-                    />
+        <div className="bg-white shadow-lg border relative border-gray-300 print:shadow-none print:border-0">
+          {/* Toggle Button */}
+          <div className="absolute top-8 -right-20 translate-x-20  ">
+            {showHeader ? <button
+              onClick={() => {
+                setshowHeader(!showHeader);
+              }}
+              className="border px-4 py-2 rounded-full shadow-xl cursor-pointer text-white bg-gradient-to-tl to-violet-500 from-blue-500 "
+            >
+              Hide Header
+            </button> : <button
+              onClick={() => {
+                setshowHeader(!showHeader);
+              }}
+              className="border px-4 py-2 rounded-full shadow-xl cursor-pointer text-white bg-gradient-to-tl to-violet-500 from-blue-500 "
+            >
+              Show Header
+            </button> }
+          </div>
+          {showHeader &&
+           (
+              <div className="border-b border-gray-300 p-6 px-0 bg-gradient-to-tl from-blue-300 via-blue-300 to-blue-400">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-4 w-full px-2 justify-between">
+                    <div className="w-16 h-16 bg-blue-300 rounded-full flex items-center justify-center border-[1.2px] border-blue-500">
+                      <div className="w-12 h-12 p-1  rounded-full flex items-center justify-center">
+                        {/* <span className="text-white font-bold text-xl">🏥</span> */}
+                        <Image
+                          src={"/global_labs_Logo.png"}
+                          width={300}
+                          height={300}
+                          alt="global_labs_Logo"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <h1 className="text-3xl font-bold text-gray-800 border-2 rounded-sm border-gray-800 px-4 py-1 print:text-2xl">
+                        GLOBAL PATHOLOGY LAB
+                      </h1>
+                    </div>
+                    <div className="*:font-semibold">
+                      <p className="text-red-600 text-sm font-semibold mt-1">
+                        Shekhpura Roorkee, Haridwar (U.K)
+                      </p>
+                      <p className="text-gray-700 text-sm">
+                        Phone: 9927782011, 9084648712
+                      </p>
+                      <p className="text-gray-700 text-xs">
+                        Email: imrantyagi201@gmail.com, javadmalik379@gmail.com
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-800 border-2 rounded-sm border-gray-800 px-4 py-1 print:text-2xl">
-                    GLOBAL PATHOLOGY LAB
-                  </h1>
-                </div>
-                <div className="*:font-semibold">
-                  <p className="text-red-600 text-sm font-semibold mt-1">
-                    Shekhpura Roorkee, Haridwar (U.K)
-                  </p>
-                  <p className="text-gray-700 text-sm">
-                    Phone: 9927782011, 9084648712
-                  </p>
-                  <p className="text-gray-700 text-xs">
-                    Email: imrantyagi201@gmail.com, javadmalik379@gmail.com
-                  </p>
-                </div>
               </div>
-            </div>
-          </div>
+            )}
           <div className="p-6 border-b border-gray-300 relative">
             <div className="grid grid-cols-2 gap-8">
               <div className="space-y-3">
