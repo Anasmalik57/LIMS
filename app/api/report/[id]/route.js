@@ -7,10 +7,14 @@ export async function GET(request, { params }) {
     await connectDB();
     
     const { id } = params;
-    
-    // Find the patient report by ID
-    const report = await Patient.findById(id);
-    
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Report ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const report = await Patient.findById(id).lean(); // Use lean() for better performance
     if (!report) {
       return NextResponse.json(
         { success: false, message: "Report not found" },
@@ -20,13 +24,13 @@ export async function GET(request, { params }) {
 
     return NextResponse.json({
       success: true,
-      report: report
+      report,
     });
 
   } catch (error) {
-    console.error("Error fetching report:", error);
+    console.error("Error fetching report:", error.message);
     return NextResponse.json(
-      { success: false, message: "Failed to fetch report" },
+      { success: false, message: "Failed to fetch report", error: error.message },
       { status: 500 }
     );
   }
@@ -37,15 +41,27 @@ export async function PUT(request, { params }) {
     await connectDB();
     
     const { id } = params;
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Report ID is required" },
+        { status: 400 }
+      );
+    }
+
     const updateData = await request.json();
-    
-    // Find and update the patient report
+    if (!updateData || Object.keys(updateData).length === 0) {
+      return NextResponse.json(
+        { success: false, message: "Update data is required" },
+        { status: 400 }
+      );
+    }
+
     const updatedReport = await Patient.findByIdAndUpdate(
       id,
       updateData,
       { new: true, runValidators: true }
-    );
-    
+    ).lean();
+
     if (!updatedReport) {
       return NextResponse.json(
         { success: false, message: "Report not found" },
@@ -56,13 +72,13 @@ export async function PUT(request, { params }) {
     return NextResponse.json({
       success: true,
       report: updatedReport,
-      message: "Report updated successfully"
+      message: "Report updated successfully",
     });
 
   } catch (error) {
-    console.error("Error updating report:", error);
+    console.error("Error updating report:", error.message);
     return NextResponse.json(
-      { success: false, message: "Failed to update report" },
+      { success: false, message: "Failed to update report", error: error.message },
       { status: 500 }
     );
   }

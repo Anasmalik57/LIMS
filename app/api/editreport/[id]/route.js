@@ -67,6 +67,42 @@ const TEST_RESULT_FIELDS = {
     "urineColor", "urineAppearance", "pusCells", "urineRBC", "epithelialCells",
     "casts", "crystals", "bacteria", "ova", "cysts", "mucus", "occultBlood"
   ],
+  gtt001: [
+    "glucoseToleranceTest", "fglb", "fugl", "g1pgl", "ugl1h", "g2pgl",
+    "ugl2h", "g3pgl", "ugl3h", "description1", "description2"
+  ],
+  mxt001: ["inDiameter", "result"],
+  hmg001: [
+    "hemoglobin", "totalRBC", "totalWBC", "lymphocytes", "eosinophils",
+    "monocytes", "basophils", "polymorphs"
+  ],
+  esr001: ["esr1h", "esrAvg"],
+  mps001: ["malariaPArasites", "method"],
+  pgt001: [
+    "pregnancyTestSample", "lmp", "pregnancyTestResult", "pregnancyIndi",
+    "pregnancySenstivity", "method"
+  ],
+  ura001: [
+    "color", "transparency", "reaction", "specificGravity", "protein",
+    "sugar", "ketone", "bilePigment", "bileSalt", "urobilinogen",
+    "pusCells", "rbc", "morphologyOfRBC", "epithelialCells", "crystals",
+    "casts", "amorphousCrystals", "backteriaFlora", "note"
+  ],
+  ldh001: ["ldh", "method", "description1", "description2", "description3", "description4"],
+  rbs001: ["randomBloodSugar", "method1", "method2"],
+  fbs001: ["fastingBloodSugar"],
+  ckg001: ["result"],
+  brb001: ["bilirubinTotal", "serumMethod1", "bilirubinDirect", "serumMethod2", "bilirubinIndirect", "serumMethod3"],
+  sfr001: [
+    "methodOfCollection", "periodOfAbstinence", "timeOfCollection", "timeOfExamination",
+    "quantity", "color", "viscosity", "liquificationTIme", "reaction", "fructoseTest",
+    "totalSpermCount", "motilityImmediate", "slugishlyMotil", "nonMotile", "motility",
+    "abnormalFormsHead", "body", "tails", "immatureForms", "pusCells", "redCells",
+    "epithelialCell", "autoAgglutination", "gramsStain", "totalSperCountAfterWash", "Impression"
+  ],
+  sml001: ["serumAmylase", "method", "description"],
+  slp001: ["serumLipase", "method", "description"],
+  sfb001: ["sputumForAFB_Stain"],
 };
 
 // PUT request to update report by ID

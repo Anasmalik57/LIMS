@@ -143,21 +143,33 @@ const PatientSchema = new mongoose.Schema(
         agRatio: { type: String, default: "" }, // Albumin/Globulin ratio
 
         // Additional notes
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• The pattern of liver test abnormality is hepatocellular. The AST is typically in the 100 to 200 IU/L range, even in severe disease, and the ALT level may be normal, even in severe cases. The AST level is higher than the ALT level, and the ratio is greater than 2:1 in 70% of patients",
+        },
       },
 
       // ============= RAPID TEST - Typhi DOT (Rapid) - TDR001 =============
       tdr001: {
         styphiIgG: { type: String, default: "" },
         styphiIgM: { type: String, default: "" },
-        method: { type: String, default: "Rapid Card Test" },
-        description: { type: String, default: "" },
+        method: { type: String, default: "Chromatographic Immunaassay" },
+        description: {
+          type: String,
+          default:
+            "• Typhidot is a medical test consisting of a dot ELISA kit that detects IgM and IgG antibodies against the outer membrane protein (OMP) of the Salmonella typhi. The typhidot test becomes positive within 2-3 days of infection and separately identifies IgM and IgG antibodies.",
+        },
       },
 
       // ============= SEROLOGY - VDRL Report - VDR001 =============
       vdr001: {
         vdrlResult: { type: String, default: "" }, // Reactive/Non-reactive
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• False positive reactions occur not infrequently and have been attributed to a variety of acute and chronic conditions. In absence of supporting clinical, historical or epidemiological evidence, reactive results must be confirmed with more specific Treponemal tests",
+        },
       },
 
       // ============= BIOCHEMISTRY - Renal Function Test (RFT) - RFT001 =============
@@ -217,14 +229,22 @@ const PatientSchema = new mongoose.Schema(
       // ============= COAGULATION - D-Dimer - DDI001 =============
       ddi001: {
         dDimer: { type: String, default: "" },
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• D-dimer is a fibrin degradation product. Fibrins are fine threads of protein, which are produced when bleeding occurs as part of the coagulation process. The fibrins are cross-linked and form a net, which help to hold the clot in place. Once the wound has healed, the body starts to break down the clot by using a protein known as plasmin, the pieces of the disintegrating blood clot are known as the fibrin degradation products. D-dimer is not usually present in the bloodstream; it is only released into the blood when a blood clot is being broken down.",
+        },
       },
 
       // ============= COAGULATION - BTCT (Bleeding Time & Clotting Time) - BTC001 =============
       btc001: {
         bleedingTime: { type: String, default: "" },
         clottingTime: { type: String, default: "" },
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• The person could be suffering from thrombocytopenia wherein the person bone marrow starts creating too little platelets in the body. • The person may be suffering from Von Willebrand's disease. This is an acquired hereditary disease that affects the process of blood coagulation in a person.",
+        },
       },
 
       // ============= IMMUNOLOGY - RA-ASO-CRP - RAA001 =============
@@ -301,7 +321,11 @@ const PatientSchema = new mongoose.Schema(
           type: String,
           default: "YUCCA SENSA CORE Electrolyte Analyzer",
         },
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• Electrolyte measurements may be used to help investigate conditions that cause electrolyte imbalances such as dehydration, kidney disease, lung diseases, or heart conditions. Repeat testing may then also be used to monitor treatment of the condition causing the imbalance. • An electrolyte panel may be ordered as part of a routine screening or as a diagnostic aid when a person has signs and symptoms, such as: • -Fluid accumulation (edema). • Nausea or vomiting • -Weakness • -confussion • -Irregular heart beat (cardiac arrhythmias) • It is frequently ordered as part of an evaluation when someone has an acute or chronic illness and at regular intervals when a person has a disease or condition or is taking a medication that can cause an electrolyte imbalance. Electrolyte tests are commonly ordered at regular intervals to monitor treatment of certain conditions, including high blood pressure (hypertension), heart failure, lung diseases, and liver and kidney disease",
+        },
       },
 
       // ============= CARDIOLOGY - Troponin-T - TPT001 =============
@@ -324,13 +348,21 @@ const PatientSchema = new mongoose.Schema(
       // ============= IMMUNOLOGY - RA Factor - RAF001 =============
       raf001: {
         rheumatoidFactorAssay: { type: String, default: "" },
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• Rheumatoid factors are proteins produced by your immune system that can attack healthy tissue in your body. Healthy individuals normally do not produce rheumatoid factor, so its presence in your blood can indicate that you have an autoimmune disease.",
+        },
       },
 
       // ============= IMMUNOLOGY - C. Reactive Protein (C.R.P.) - CRP001 =============
       crp001: {
         crp: { type: String, default: "" },
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• C-reactive protein (CRP) is an important and evolutionarily ancient component of the innate immune response. CRP has been described as the prototypical acute-phase reactant to infections and inflammation in human beings. In the clinical setting, CRP is used as a clinical indicator of acute infections and response to treatment, and to assess inflammatory status in chronic diseases. Initially it was thought that CRP might be a pathogenic secretion as it was elevated in people with a variety of illnesses including cancer. However, discovery of synthesis in the liver demonstrated that it is manufactured by the human body",
+        },
       },
 
       // ============= SEROLOGY - SCRUB TYPHUS (Anti Body) - ANT002 =============
@@ -348,7 +380,11 @@ const PatientSchema = new mongoose.Schema(
       // ============= HORMONES - Beta HCG (Hormones Assay) - BET001 =============
       bet001: {
         betaHCG: { type: String, default: "" }, // Positive or Negative
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• FSH and LH values should be correlated with phase of cycle, high FSH and LH indicates ovarian failure or menopause, low FSH and LH indicates hypogonadism, LH/FSH ratio more than 2.0 indicates P.C.O.O. Prolcatin is stress hormone and many drugs affects prolactin result. Pooled serum is recommended to avoide false hyperprolactemia. • Testosterone is mojor adrogen responsible for sexna differentiation, and Male secondary sex Characteristics.it is coveried is blood by sex hormone binding globulin (SHBG). In Female it is important to diagnose hirtuism, hyperandrogenism for PCOD is useful to diagnose hypepituitarism, Kallamans syndrome",
+        },
       },
 
       // ============= SEROLOGY - HIV I-II - HIV001 =============
@@ -372,7 +408,11 @@ const PatientSchema = new mongoose.Schema(
         totalT3: { type: String, default: "" },
         totalT4: { type: String, default: "" },
         tsh: { type: String, default: "" }, // TSH (Thyroid Stimulating Hormone)
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• Triodothyronine (T3) is produced by the thyroid gland and along with thyroxine (T4) help control the rate at which the body uses energy. Elevated T3 denote hyperthyroidism while low levels indicate hypothyroidism. • The most common causes of thyroid dysfunction are related to autoimmune disorders. Graves disease causes hyperthyroidism, but it can also be caused by thyroiditis, thyroid cancer, and excessive production of TSH. Total T3 is used to assess thyroid function. •  Elevated T4 levels may indicate hyperthyroidism. They may also indicate other thyroid problems, such as thyroiditis or toxic multinodular goiter. Abnormally low levels of T4 may indicate: dietary issues, such as fasting, malnutrition, or an iodine deficiency, medications that affect protein levels, hypothyroidism, illness. • Thyroid-stimulating hormone (TSH) stimulates the production and release of T4 (primarily) and T3. They help control the rate at which the body uses energy and are regulated by a feedback system. Most of the T4 circulates in the blood bound to protein, while a small percentage is free (not bound). • Lab has estimated Total T4 reference intervals that are specific for India, using the indirect sampling technique following CLSI EP28-A3c document: Defining Establishing, and Verifying Reference Intervals in the Clinical Laboratory: Approved Guideline-Third Edition.",
+        },
       },
 
       ////////////////////////////////////////////////
@@ -395,8 +435,11 @@ const PatientSchema = new mongoose.Schema(
         g3pgl: { type: String, default: "" },
         // Glucose Urine Level 3rd Hour
         ugl3h: { type: String, default: "" },
-        description1: { type: String, default: "" },
-        description2: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• At least two values must meet or exceed the stated reference value for a diagnosis of Gestational Diabetes mellitus (Fasting >95 mg/dL; 1 hour >180 mg/dL; 2 hours > 155 mg/dl; 3 hours 140 mg/dL). • If results are normal in clinically suspected cases, test must be repeated in the third trimester. Approximately 7% of all pregnancies develop glucose intolerance• ",
+        },
       },
       // ============ Mantoux Test - MXT001 ============
       mxt001: {
@@ -465,10 +508,26 @@ const PatientSchema = new mongoose.Schema(
         // Lactic Acid Dehydrogenase (LDH)
         ldh: { type: String, default: "" },
         method: { type: String, default: "Lactate to Pyrovate" },
-        description1: { type: String, default: "" },
-        description2: { type: String, default: "" },
-        description3: { type: String, default: "" },
-        description4: { type: String, default: "" },
+        description1: {
+          type: String,
+          default:
+            "• CDH is as a general indicator Of the existence and severity of acute or chronic tissue damage . This test helps identifying the and location of tissue damage in the body and to monitor its progress.",
+        },
+        description2: {
+          type: String,
+          default:
+            "• Marked elevations in lactate dehydrogenase (IDH) activity can be observed in megaloblastic anemia, untreated pernicious anemia, Hodgkin's disease, abdominal and lung cancers, severe shock, and hypoxia.",
+        },
+        description3: {
+          type: String,
+          default:
+            "• Moderate to slight increases in LDH levels are seen in myocardial infarction (MI), pulmonary infarction, pulmonary embolism, hemolytic anemia, infectious mononucleosis, progressive muscular dystrophy (especially in the early and middie stages of the disease), liver disease and renal disease",
+        },
+        description4: {
+          type: String,
+          default:
+            "• LDH is most often measured to check for tissue damage. The enzyme LDH is in many body tissues, especially the heart, liver, kidney, skeleton muscle, brain. Other conditions under which the test may be done; Anemea of vitamin B-12 deficiency, Megaloblastic anemea, Pernicious anemea.",
+        },
       },
       // ============ Randon Blood Sugar Level - RBS001 ============
       rbs001: {
@@ -530,13 +589,21 @@ const PatientSchema = new mongoose.Schema(
       sml001: {
         serumAmylase: { type: String, default: "" },
         method: { type: String, default: "Enzymatic" },
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• In acute pancreatitis, a transient rise in serum amylase activity occurs within 2 to 12 hours of onset; levels return to normal by the third or fourth day. A 3- to 6-fold elevation of amylase activity above the reference limit is usual, with maximal levels reached in 12 to 72 hours. A significant number of patients may show lesser elevations or none at all. The degree of elevation in serum enzyme activity does not correlate with the severity of pancreatic damage. Normalization does not necessarily indicate resolution. In cases associated with hyperlipidemia, serum amylase activity may appear spuriously normal; the amylasemia may be unmasked either by serial dilution of the serum or by ultracentrifugation. • A portion of serum amylase is excreted in the urine, and thus, elevation of serum activity is reflected in urinary activity. Urinary amylase, compared to serum amylase, is often more frequently elevated, reaches higher levels, and persists longer. However, receiver operating characteristic (ROC) curves of various serum and urine amylase assays show that all urine assays have poorer diagnostic utility than serum assays. In quiescent chronic pancreatitis, both serum and urine activities are usually normal. • Because it is produced by several organs, amylase is not a specific marker of pancreatic function. Elevated levels may result from non-pancreatic conditions including mumps, salivary gland obstruction, ectopic pregnancy, and intestinal diseases. ",
+        },
       },
       // ============ Serum Lipase - SLP001  ============
       slp001: {
         serumLipase: { type: String, default: "" },
         method: { type: String, default: "Enzymatic" },
-        description: { type: String, default: "" },
+        description: {
+          type: String,
+          default:
+            "• Lipase levels are increased in chronic pancreatitis and pancreatic duct obstruction. • Pancreatic duct obstruction due to fibrous strictures, stones, tumors, or edema elevates secretory pressure and leads to extravasation of lipase into the pericapillary spaces. • Lipase is not specific to pancreatic disease and may be elevated in renal disease, acute cholecystitis, bowel obstruction, intestinal infarction, duodenal ulcers, liver disease, alcoholism, diabetic ketoacidosis, and following endoscopic retrograde cholangiopancreatography (ERCP). • Patients with renal failure may exhibit lipase levels up to three times the upper limit of normal. • Lipase levels may be decreased due to methodological interferences (e.g., presence of hemoglobin, quinine, heavy metals, calcium ions). Lipase remains normal in individuals with mumps and macroamylasemia. Values are also lower in neonates.",
+        },
       },
       // ============= Sputum AFB - SFB001 ============
       sfb001: {

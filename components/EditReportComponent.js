@@ -1,4 +1,3 @@
-
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -207,6 +206,141 @@ const TEST_PARAMETERS = {
     { key: "cysts", parameter: "Cysts", unit: "", referenceRange: "Not Seen", type: "text" },
     { key: "mucus", parameter: "Mucus", unit: "", referenceRange: "Nil", type: "text" },
     { key: "occultBlood", parameter: "Occult Blood", unit: "", referenceRange: "Negative", type: "text" },
+  ],
+  GTT001: [
+    { key: "glucoseToleranceTest", parameter: "Glucose Tolerance Test", unit: "", referenceRange: "", type: "text" },
+    { key: "fglb", parameter: "Fasting Glucose Level (Basal)", unit: "mg/dL", referenceRange: "70-100", type: "number" },
+    { key: "fugl", parameter: "Fasting Urine Glucose Level", unit: "", referenceRange: "Negative", type: "text" },
+    { key: "g1pgl", parameter: "Glucose 1.0 hr Post Glucose Load", unit: "mg/dL", referenceRange: "<140", type: "number" },
+    { key: "ugl1h", parameter: "Glucose Urine Level 1st Hour", unit: "", referenceRange: "Negative", type: "text" },
+    { key: "g2pgl", parameter: "Glucose 2.0 hr Post Glucose Load", unit: "mg/dL", referenceRange: "<140", type: "number" },
+    { key: "ugl2h", parameter: "Glucose Urine Level 2nd Hour", unit: "", referenceRange: "Negative", type: "text" },
+    { key: "g3pgl", parameter: "Glucose 3.0 hr Post Glucose Load", unit: "mg/dL", referenceRange: "<140", type: "number" },
+    { key: "ugl3h", parameter: "Glucose Urine Level 3rd Hour", unit: "", referenceRange: "Negative", type: "text" },
+    { key: "description1", parameter: "Description 1", unit: "", referenceRange: "", type: "textarea" },
+    { key: "description2", parameter: "Description 2", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  MXT001: [
+    { key: "inDiameter", parameter: "Induration Diameter", unit: "mm", referenceRange: "", type: "number" },
+    { key: "result", parameter: "Result", unit: "", referenceRange: "Positive/Negative", type: "dropdown", options: ["Positive", "Negative"] },
+  ],
+  HMG001: [
+    { key: "hemoglobin", parameter: "Hemoglobin", unit: "g/dL", referenceRange: "13-18", type: "number" },
+    { key: "totalRBC", parameter: "Total R.B.C.", unit: "mil/cumm", referenceRange: "4.5-6.2", type: "number" },
+    { key: "totalWBC", parameter: "Total W.B.C.", unit: "/cumm", referenceRange: "4000-11000", type: "number" },
+    { key: "lymphocytes", parameter: "Lymphocytes", unit: "%", referenceRange: "20-45", type: "number" },
+    { key: "eosinophils", parameter: "Eosinophils", unit: "%", referenceRange: "1-6", type: "number" },
+    { key: "monocytes", parameter: "Monocytes", unit: "%", referenceRange: "2-10", type: "number" },
+    { key: "basophils", parameter: "Basophils", unit: "%", referenceRange: "0-1", type: "number" },
+    { key: "polymorphs", parameter: "Polymorphs", unit: "%", referenceRange: "40-75", type: "number" },
+  ],
+  ESR001: [
+    { key: "esr1h", parameter: "ESR (1st Hour)", unit: "mm/hr", referenceRange: "0-20", type: "number" },
+    { key: "esrAvg", parameter: "ESR (Average)", unit: "mm/hr", referenceRange: "0-20", type: "number" },
+  ],
+  MPS001: [
+    { key: "malariaPArasites", parameter: "Malaria Parasites", unit: "", referenceRange: "Positive/Negative", type: "dropdown", options: ["Positive", "Negative"] },
+    { key: "method", parameter: "Method", unit: "", referenceRange: "", type: "text" },
+  ],
+  PGT001: [
+    { key: "pregnancyTestSample", parameter: "Sample Time", unit: "", referenceRange: "", type: "dropdown", options: ["Morning", "Afternoon", "Evening"] },
+    { key: "lmp", parameter: "Last Menstrual Period (LMP)", unit: "", referenceRange: "", type: "text" },
+    { key: "pregnancyTestResult", parameter: "Pregnancy Test Result", unit: "", referenceRange: "Positive/Negative", type: "dropdown", options: ["Positive", "Negative"] },
+    { key: "pregnancyIndi", parameter: "Indication", unit: "", referenceRange: "", type: "text" },
+    { key: "pregnancySenstivity", parameter: "Sensitivity", unit: "", referenceRange: "", type: "text" },
+    { key: "method", parameter: "Method", unit: "", referenceRange: "Chromatographic Immunoassay", type: "text" },
+  ],
+  URA001: [
+    { key: "separator", parameter: "PHYSICAL EXAMINATION", unit: "", referenceRange: "" },
+    { key: "color", parameter: "Color", unit: "", referenceRange: "Pale Yellow", type: "text" },
+    { key: "transparency", parameter: "Transparency", unit: "", referenceRange: "Clear", type: "text" },
+    { key: "reaction", parameter: "Reaction", unit: "", referenceRange: "Acidic", type: "text" },
+    { key: "specificGravity", parameter: "Specific Gravity", unit: "", referenceRange: "1010-1030", type: "number" },
+    { key: "separator", parameter: "BIOCHEMICAL EXAMINATION", unit: "", referenceRange: "" },
+    { key: "protein", parameter: "Protein", unit: "", referenceRange: "Negative", type: "text" },
+    { key: "sugar", parameter: "Sugar", unit: "", referenceRange: "Negative", type: "text" },
+    { key: "ketone", parameter: "Ketone", unit: "", referenceRange: "Negative", type: "text" },
+    { key: "bilePigment", parameter: "Bile Pigment", unit: "", referenceRange: "Negative", type: "text" },
+    { key: "bileSalt", parameter: "Bile Salt", unit: "", referenceRange: "Negative", type: "text" },
+    { key: "urobilinogen", parameter: "Urobilinogen", unit: "", referenceRange: "Normal", type: "text" },
+    { key: "separator", parameter: "MICROSCOPIC EXAMINATION", unit: "", referenceRange: "" },
+    { key: "pusCells", parameter: "Pus Cells", unit: "/hpf", referenceRange: "0-5", type: "number" },
+    { key: "rbc", parameter: "RBCs", unit: "/hpf", referenceRange: "0-2", type: "number" },
+    { key: "morphologyOfRBC", parameter: "Morphology of RBC", unit: "", referenceRange: "", type: "text" },
+    { key: "epithelialCells", parameter: "Epithelial Cells", unit: "/hpf", referenceRange: "Few", type: "text" },
+    { key: "crystals", parameter: "Crystals", unit: "", referenceRange: "Nil", type: "text" },
+    { key: "casts", parameter: "Casts", unit: "", referenceRange: "Nil", type: "text" },
+    { key: "amorphousCrystals", parameter: "Amorphous Crystals", unit: "", referenceRange: "Nil", type: "text" },
+    { key: "backteriaFlora", parameter: "Bacterial Flora", unit: "", referenceRange: "Nil", type: "text" },
+    { key: "note", parameter: "Note", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  LDH001: [
+    { key: "ldh", parameter: "Lactic Acid Dehydrogenase (LDH)", unit: "U/L", referenceRange: "140-280", type: "number" },
+    { key: "method", parameter: "Method", unit: "", referenceRange: "Lactate to Pyruvate", type: "text" },
+    { key: "description1", parameter: "Description 1", unit: "", referenceRange: "", type: "textarea" },
+    { key: "description2", parameter: "Description 2", unit: "", referenceRange: "", type: "textarea" },
+    { key: "description3", parameter: "Description 3", unit: "", referenceRange: "", type: "textarea" },
+    { key: "description4", parameter: "Description 4", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  RBS001: [
+    { key: "randomBloodSugar", parameter: "Random Blood Sugar", unit: "mg/dL", referenceRange: "70-140", type: "number" },
+    { key: "method1", parameter: "Method 1", unit: "", referenceRange: "By GOD POD", type: "text" },
+    { key: "method2", parameter: "Method 2", unit: "", referenceRange: "Semi Automated Access/127 / Yucca Diagnostics", type: "text" },
+  ],
+  FBS001: [
+    { key: "fastingBloodSugar", parameter: "Fasting Blood Sugar", unit: "mg/dL", referenceRange: "70-100", type: "number" },
+  ],
+  CKG001: [
+    { key: "result", parameter: "Result", unit: "", referenceRange: "Positive/Negative", type: "dropdown", options: ["Positive", "Negative"] },
+  ],
+  BRB001: [
+    { key: "bilirubinTotal", parameter: "Bilirubin Total", unit: "mg/dL", referenceRange: "0.2-1.0", type: "number" },
+    { key: "serumMethod1", parameter: "Method 1", unit: "", referenceRange: "By Modified Tab Method", type: "text" },
+    { key: "bilirubinDirect", parameter: "Bilirubin Direct", unit: "mg/dL", referenceRange: "0-0.4", type: "number" },
+    { key: "serumMethod2", parameter: "Method 2", unit: "", referenceRange: "Diazotization", type: "text" },
+    { key: "bilirubinIndirect", parameter: "Bilirubin Indirect", unit: "mg/dL", referenceRange: "0-0.5", type: "number" },
+    { key: "serumMethod3", parameter: "Method 3", unit: "", referenceRange: "Calculated", type: "text" },
+  ],
+  SFR001: [
+    { key: "methodOfCollection", parameter: "Method of Collection", unit: "", referenceRange: "", type: "text" },
+    { key: "periodOfAbstinence", parameter: "Period of Abstinence", unit: "days", referenceRange: "", type: "number" },
+    { key: "timeOfCollection", parameter: "Time of Collection", unit: "", referenceRange: "", type: "text" },
+    { key: "timeOfExamination", parameter: "Time of Examination", unit: "", referenceRange: "", type: "text" },
+    { key: "quantity", parameter: "Quantity", unit: "mL", referenceRange: "1.5-5.0", type: "number" },
+    { key: "color", parameter: "Color", unit: "", referenceRange: "Greyish White", type: "text" },
+    { key: "viscosity", parameter: "Viscosity", unit: "", referenceRange: "", type: "text" },
+    { key: "liquificationTIme", parameter: "Liquefaction Time", unit: "min", referenceRange: "15-60", type: "number" },
+    { key: "reaction", parameter: "Reaction", unit: "", referenceRange: "Alkaline", type: "text" },
+    { key: "fructoseTest", parameter: "Fructose Test", unit: "", referenceRange: "Positive", type: "text" },
+    { key: "totalSpermCount", parameter: "Total Sperm Count", unit: "million/mL", referenceRange: "15-200", type: "number" },
+    { key: "motilityImmediate", parameter: "Motility Immediate (Actively Motile)", unit: "%", referenceRange: ">40", type: "number" },
+    { key: "slugishlyMotil", parameter: "Sluggishly Motile", unit: "%", referenceRange: "", type: "number" },
+    { key: "nonMotile", parameter: "Non-Motile", unit: "%", referenceRange: "", type: "number" },
+    { key: "motility", parameter: "Motility After 2 hrs (Actively Motile)", unit: "%", referenceRange: ">40", type: "number" },
+    { key: "abnormalFormsHead", parameter: "Abnormal Forms (Head)", unit: "%", referenceRange: "", type: "number" },
+    { key: "body", parameter: "Abnormal Forms (Body)", unit: "%", referenceRange: "", type: "number" },
+    { key: "tails", parameter: "Abnormal Forms (Tails)", unit: "%", referenceRange: "", type: "number" },
+    { key: "immatureForms", parameter: "Immature Forms", unit: "%", referenceRange: "", type: "number" },
+    { key: "pusCells", parameter: "Pus Cells", unit: "/hpf", referenceRange: "0-5", type: "number" },
+    { key: "redCells", parameter: "Red Cells", unit: "/hpf", referenceRange: "0-2", type: "number" },
+    { key: "epithelialCell", parameter: "Epithelial Cells", unit: "/hpf", referenceRange: "Few", type: "text" },
+    { key: "autoAgglutination", parameter: "Auto Agglutination", unit: "", referenceRange: "Absent", type: "text" },
+    { key: "gramsStain", parameter: "Gram's Stain", unit: "", referenceRange: "", type: "text" },
+    { key: "totalSperCountAfterWash", parameter: "Total Sperm Count After Wash", unit: "million/mL", referenceRange: "", type: "number" },
+    { key: "Impression", parameter: "Impression", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  SML001: [
+    { key: "serumAmylase", parameter: "Serum Amylase", unit: "U/L", referenceRange: "30-110", type: "number" },
+    { key: "method", parameter: "Method", unit: "", referenceRange: "Enzymatic", type: "text" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  SLP001: [
+    { key: "serumLipase", parameter: "Serum Lipase", unit: "U/L", referenceRange: "10-140", type: "number" },
+    { key: "method", parameter: "Method", unit: "", referenceRange: "Enzymatic", type: "text" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+  ],
+  SFB001: [
+    { key: "sputumForAFB_Stain", parameter: "Sputum for AFB Stain", unit: "", referenceRange: "Negative", type: "text" },
   ],
 };
 
@@ -456,6 +590,29 @@ const EditReportComponent = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder={param.referenceRange || "Enter description"}
                   />
+                ) : param.type === "dropdown" ? (
+                  <select
+                    value={testData[param.key] || ""}
+                    onChange={(e) =>
+                      handleTestResultChange(
+                        testCode,
+                        param.key,
+                        e.target.value
+                      )
+                    }
+                    className={`w-full px-3 py-2 border ${
+                      validationErrors[`${testCode}_${param.key}`]
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  >
+                    <option value="">Select Option</option>
+                    {param.options.map((option, idx) => (
+                      <option key={idx} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 ) : (
                   <input
                     type={param.type === "number" ? "number" : "text"}
@@ -717,10 +874,9 @@ const EditReportComponent = () => {
             </h2>
             {formData.tests &&
               formData.tests.map((test, testIndex) => (
-                // <>
                 <div
                   key={testIndex}
-                  className="mb-6 p-4 border-4 border-gray-200 rounded-lg "
+                  className="mb-6 p-4 border-4 border-gray-200 rounded-lg"
                 >
                   <h3 className="font-semibold pb-1 border-b-2 border-green-500 text-gray-800 mb-3">
                     {test.testName}
@@ -793,9 +949,6 @@ const EditReportComponent = () => {
                   </div>
                   {renderTestParameters(test, testIndex)}
                 </div>
-                /* vertical devider */
-                // <div className="w-full h-[3px] bg-gradient-to-br from-green-400 to-green-600 -translate-y-2.5 rounded-xl"></div>
-                // </>
               ))}
           </div>
           {/* Save Button */}
