@@ -14,7 +14,7 @@ export const testData = [
   { name: "D-Dimer", code: "DDI001", price: 1500 },
   { name: "BTCT", code: "BTC001", price: 100 }, // Bleeding Time & Clotting Time
   { name: "RA-ASO-CRP", code: "RAA001", price: 200 },
-  { name: "S.G.O.T.", code: "SGT001", price: 90 },
+  { name: "S.G.O.T.", code: "SGT001", price: 100 },
   { name: "Coagulation Profile", code: "COA001", price: 1500 },
   { name: "AEC", code: "AEC001", price: 150 },
   { name: "Serum Electrolytes", code: "SER001", price: 500 },
@@ -29,7 +29,23 @@ export const testData = [
   { name: "HIV I-II", code: "HIV001", price: 350 },
   { name: "HBSAG", code: "HBS001", price: 150 },
   { name: "Anti HCV", code: "ANT003", price: 300 },
-
-
   { name: "Thyroid Function Test (TFT)", code: "TFT001", price: 400 },
+
+  { name: "Glucose Tolerance Test (GTT)", code: "GTT001", price: 0 },
+  { name: "Mantoux Test", code: "MXT001", price: 400 }, //////// ------- /////////
+  { name: "Haemogram Report", code: "HMG001", price: 250 },
+  { name: "Erythrocyte Sedimentation Rate (ESR)", code: "ESR001", price: 250 },
+  { name: "Malaria Parasites", code: "MPS001", price: 200 },
+  { name: "Pregnancy Test", code: "PGT001", price: 80 },
+  { name: "Urine Analysis", code: "URA001", price: 100 },
+  { name: "Lactic Acid Dehydrogenase (LDH)", code: "LDH001", price: 350 },
+  { name: "Randon Blood Sugar Level", code: "RBS001", price: 50 },
+  { name: "Fasting Blood Sugar Level", code: "FBS001", price: 100 },
+  { name: "ChikunGunya", code: "CKG001", price: 800 },
+  { name: "Bilirubin", code: "BRB001", price: 800 },
+  { name: "Seminal Fluid Report", code: "SFR001", price: 0 }, ////////------////////
+  { name: "Serum Amylase", code: "SML001", price: 400 },
+  { name: "Serum Lipase", code: "SLP001", price: 400 },
+  { name: "Sputum AFB", code: "SFB001", price: 100 },
+
 ];

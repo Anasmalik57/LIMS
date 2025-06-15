@@ -196,7 +196,7 @@ const GenerateBillComponent = () => {
                   </div>
                   <div className="*:font-semibold">
                     <p className="text-red-600 text-sm font-semibold mt-1">
-                      Shekhpura Roorkee, Haridwar (U.K)
+                      Shekhpuri Roorkee, Haridwar (U.K)
                     </p>
                     <p className="text-gray-700 text-sm">
                       Phone: 9927782011, 9084648712

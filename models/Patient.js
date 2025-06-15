@@ -31,9 +31,9 @@ const PatientSchema = new mongoose.Schema(
       enum: ["Male", "Female", "Other"],
       required: true,
     },
-    done: { 
-      type: Boolean, 
-      default: false 
+    done: {
+      type: Boolean,
+      default: false,
     },
 
     // =================== OPTIONAL FIELDS ===================
@@ -130,7 +130,7 @@ const PatientSchema = new mongoose.Schema(
         totalBilirubin: { type: String, default: "" },
         directBilirubin: { type: String, default: "" },
         indirectBilirubin: { type: String, default: "" },
-        
+
         // Liver enzymes
         sgpt: { type: String, default: "" }, // ALT (Alanine Aminotransferase)
         sgot: { type: String, default: "" }, // AST (Aspartate Aminotransferase)
@@ -166,7 +166,7 @@ const PatientSchema = new mongoose.Schema(
         bun: { type: String, default: "" }, // Blood Urea Nitrogen
         sCreatinine: { type: String, default: "" }, // Serum Creatinine
         serumUricAcid: { type: String, default: "" },
-        
+
         // Protein tests
         totalProtein: { type: String, default: "" },
         sAlbumin: { type: String, default: "" }, // Serum Albumin
@@ -203,10 +203,10 @@ const PatientSchema = new mongoose.Schema(
         totalWBC: { type: String, default: "" },
         rbc: { type: String, default: "" }, // Red Blood Cell count
         plateletCount: { type: String, default: "" },
-        
+
         // Blood Group & RH Typing
         bgRh: { type: String, default: "" },
-        
+
         // Blood sugar and serology
         rbs: { type: String, default: "" }, // Random Blood Sugar
         vdrl: { type: String, default: "" },
@@ -246,11 +246,11 @@ const PatientSchema = new mongoose.Schema(
         coagBleedingTimeSec: { type: String, default: "" },
         coagClottingTimeMin: { type: String, default: "" },
         coagClottingTimeSec: { type: String, default: "" },
-        
+
         // Coagulation parameters
         coagClotRetraction: { type: String, default: "" },
         hemoPlateletCount: { type: String, default: "" },
-        
+
         // Prothrombin Time
         coagProthrombinTimeControl: { type: String, default: "" },
         coagProthrombinTimePatient: { type: String, default: "" },
@@ -258,11 +258,11 @@ const PatientSchema = new mongoose.Schema(
         coagISI: { type: String, default: "" },
         coagProthrombinIndex: { type: String, default: "" },
         coagProthrombinRatio: { type: String, default: "" },
-        
+
         // APTT
         coagAPTTTest: { type: String, default: "" },
         coagAPTTControl: { type: String, default: "" },
-        
+
         // Additional coagulation tests
         coagFDP: { type: String, default: "" },
         coagFactorXIIIScreening: { type: String, default: "" },
@@ -271,7 +271,7 @@ const PatientSchema = new mongoose.Schema(
         factorVIIIAssay: { type: String, default: "" },
         dDimer: { type: String, default: "" },
         plasmaFibrinogen: { type: String, default: "" },
-        
+
         // Notes
         coagNote: { type: String, default: "" },
       },
@@ -291,7 +291,7 @@ const PatientSchema = new mongoose.Schema(
         elecLithium: { type: String, default: "" },
         splBicarbonate: { type: String, default: "" },
         elecMagnesium: { type: String, default: "" },
-        
+
         // Method and instrument details
         method: {
           type: String,
@@ -373,6 +373,174 @@ const PatientSchema = new mongoose.Schema(
         totalT4: { type: String, default: "" },
         tsh: { type: String, default: "" }, // TSH (Thyroid Stimulating Hormone)
         description: { type: String, default: "" },
+      },
+
+      ////////////////////////////////////////////////
+      // ============= Glucose Tolerance Test (GTT) - GTT001 =============
+      gtt001: {
+        glucoseToleranceTest: { type: String, default: "" },
+        // Fasting Glucose Level or (BAsal)
+        fglb: { type: String, default: "" },
+        // Fasting Urine Glucose Level
+        fugl: { type: String, default: "" },
+        // Glucose 1.0 hr Post glucose load
+        g1pgl: { type: String, default: "" },
+        // Glucose Urine Level 1st Hour
+        ugl1h: { type: String, default: "" },
+        // Glucose 2.0 hr Post glucose load
+        g2pgl: { type: String, default: "" },
+        // Glucose Urine Level 2nd Hour
+        ugl2h: { type: String, default: "" },
+        // Glucose 3.0 hr Post glucose load
+        g3pgl: { type: String, default: "" },
+        // Glucose Urine Level 3rd Hour
+        ugl3h: { type: String, default: "" },
+        description1: { type: String, default: "" },
+        description2: { type: String, default: "" },
+      },
+      // ============ Mantoux Test - MXT001 ============
+      mxt001: {
+        inDiameter: { type: String, default: "" },
+        result: { type: String, default: "" }, // Positive or Negetive
+      },
+      // ============ Haemogram Report - HMG001 ============
+      hmg001: {
+        hemoglobin: { type: String, default: "" },
+        totalRBC: { type: String, default: "" },
+        totalWBC: { type: String, default: "" },
+        lymphocytes: { type: String, default: "" },
+        eosinophils: { type: String, default: "" },
+        monocytes: { type: String, default: "" },
+        basophils: { type: String, default: "" },
+        polymorphs: { type: String, default: "" },
+      },
+      // ============ Erythrocyte Sedimentation Rate (ESR) - ESR001 ============
+      esr001: {
+        // Erythrocyte Sedimentation Rate : 1st hour
+        esr1h: { type: String, default: "" },
+        // ESR (Average)
+        esrAvg: { type: String, default: "" },
+      },
+      // ============ Malaria Parasites - MPS001 ============
+      mps001: {
+        malariaPArasites: { type: String, default: "" }, // Negetive OR Positive
+        method: { type: String, default: "" },
+      },
+      // ============ Pregnancy Test - PGT001 ============
+      pgt001: {
+        pregnancyTestSample: { type: String, default: "" }, // Morning || AfterNoon || Evening
+        lmp: { type: String, default: "" },
+        pregnancyTestResult: { type: String, default: "" },
+        pregnancyIndi: { type: String, default: "" },
+        pregnancySenstivity: { type: String, default: "" },
+        method: { type: String, default: "Chromatographic Immunaassay" },
+      },
+      // ============ Urine Analysis - URA001 ============
+      ura001: {
+        // Physical Examination
+        color: { type: String, default: "" },
+        transparency: { type: String, default: "" },
+        reaction: { type: String, default: "" },
+        specificGravity: { type: String, default: "" },
+        // Bio Chemical Examination
+        protein: { type: String, default: "" },
+        sugar: { type: String, default: "" },
+        ketone: { type: String, default: "" },
+        bilePigment: { type: String, default: "" },
+        bileSalt: { type: String, default: "" },
+        urobilinogen: { type: String, default: "" },
+        // Microscopic Examination
+        pusCells: { type: String, default: "" }, // Pus Cells (Leokocytes)
+        rbc: { type: String, default: "" }, // RBC's (Erythrocytes)
+        morphologyOfRBC: { type: String, default: "" },
+        epithelialCells: { type: String, default: "" },
+        crystals: { type: String, default: "" },
+        casts: { type: String, default: "" },
+        amorphousCrystals: { type: String, default: "" },
+        backteriaFlora: { type: String, default: "" },
+        note: { type: String, default: "" },
+      },
+      // ============ Lactic Acid Dehydrogenase (LDH) - LDH001 ============
+      ldh001: {
+        // Lactic Acid Dehydrogenase (LDH)
+        ldh: { type: String, default: "" },
+        method: { type: String, default: "Lactate to Pyrovate" },
+        description1: { type: String, default: "" },
+        description2: { type: String, default: "" },
+        description3: { type: String, default: "" },
+        description4: { type: String, default: "" },
+      },
+      // ============ Randon Blood Sugar Level - RBS001 ============
+      rbs001: {
+        randomBloodSugar: { type: String, default: "" },
+        method1: { type: String, default: "By GOD POD" },
+        method2: {
+          type: String,
+          default: "Semi Automated Access/127 / Yucca Diagnostics",
+        },
+      },
+      // ============ Fasting Blood Sugar Level - FBS001 ============
+      fbs001: {
+        fastingBloodSugar: { type: String, default: "" },
+      },
+      // ============ ChikunGunya - CKG001 ============
+      ckg001: {
+        result: { type: String, default: "" }, // Positive or Negetive
+      },
+      // ============ Bilirubin - BRB001 ============
+      brb001: {
+        bilirubinTotal: { type: String, default: "" },
+        serumMethod1: { type: String, default: "By Modified Tab Method" },
+        bilirubinDirect: { type: String, default: "" },
+        serumMethod2: { type: String, default: "Diazotization" },
+        bilirubinIndirect: { type: String, default: "" },
+        serumMethod3: { type: String, default: "Calulated" },
+      },
+      // ============== Seminal Fluid Report - SFR001 =============
+      sfr001: {
+        methodOfCollection: { type: String, default: "" },
+        periodOfAbstinence: { type: String, default: "" },
+        timeOfCollection: { type: String, default: "" },
+        timeOfExamination: { type: String, default: "" },
+        quantity: { type: String, default: "" },
+        color: { type: String, default: "" },
+        viscosity: { type: String, default: "" },
+        liquificationTIme: { type: String, default: "" },
+        reaction: { type: String, default: "" },
+        fructoseTest: { type: String, default: "" },
+        totalSpermCount: { type: String, default: "" },
+        // Motility-Immediate (Actively Motile)
+        motilityImmediate: { type: String, default: "" },
+        slugishlyMotil: { type: String, default: "" },
+        nonMotile: { type: String, default: "" },
+        motility: { type: String, default: "" }, // Motility - After 2 hrs (Actively Motile)
+        abnormalFormsHead: { type: String, default: "" },
+        body: { type: String, default: "" },
+        tails: { type: String, default: "" },
+        immatureForms: { type: String, default: "" },
+        pusCells: { type: String, default: "" },
+        redCells: { type: String, default: "" },
+        epithelialCell: { type: String, default: "" },
+        autoAgglutination: { type: String, default: "" },
+        gramsStain: { type: String, default: "" },
+        totalSperCountAfterWash: { type: String, default: "" },
+        Impression: { type: String, default: "" },
+      },
+      // ============ Serum Amylase - SML001 ==============
+      sml001: {
+        serumAmylase: { type: String, default: "" },
+        method: { type: String, default: "Enzymatic" },
+        description: { type: String, default: "" },
+      },
+      // ============ Serum Lipase - SLP001  ============
+      slp001: {
+        serumLipase: { type: String, default: "" },
+        method: { type: String, default: "Enzymatic" },
+        description: { type: String, default: "" },
+      },
+      // ============= Sputum AFB - SFB001 ============
+      sfb001: {
+        sputumForAFB_Stain: { type: String, default: "" },
       },
     },
   },
