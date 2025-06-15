@@ -237,9 +237,9 @@ const Navbar = () => {
       {/* Premium Mobile Menu */}
       {isOpen && (
         <div className="lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl border-t border-gray-200/20 dark:border-gray-700/20 shadow-2xl">
-          <div className="px-6 py-6 space-y-6">
+          <div  onBlur={()=>setIsOpen(!isOpen)}  className="px-6 py-6 space-y-6">
             {/* Mobile Navigation Links */}
-            <ul className="space-y-2">
+            <ul className="space-y-2 hidden">
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <Link
@@ -291,7 +291,7 @@ const Navbar = () => {
 
                   {/* Mobile Quick Links */}
                   <div className="grid grid-cols-2 gap-3">
-                    {dropdownLinks.slice(0, 4).map((link) => {
+                    {dropdownLinks.map((link) => {
                       const IconComponent = link.icon;
                       return (
                         <Link
