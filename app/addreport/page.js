@@ -537,7 +537,7 @@ const AddReport = () => {
                                 )
                               ) : (
                                 <div className="px-4 py-3 text-slate-400 text-center">
-                                  No tests found matching "{searchTerms[index]}"
+                                  No tests found matching {searchTerms[index]}
                                 </div>
                               )}
                             </div>

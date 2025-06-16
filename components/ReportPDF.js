@@ -689,7 +689,7 @@ const ReportPDF = () => {
                   <span className="text-gray-700">: {report.collectedBy || "Main Branch"}</span>
                 </div>
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">Patient's Name</span>
+                  <span className="w-32 text-gray-700 font-medium">Patient&#39;s Name</span>
                   <span className="text-gray-700">
                     : <strong>{report.patientName.toUpperCase()}</strong>
                   </span>
