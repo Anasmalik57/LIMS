@@ -46,7 +46,7 @@ const FindViaDate = () => {
       switch (quickFilter) {
         case "today":
           filtered = reports.filter(report => {
-            const reportDate = new Date(report.createdAt);
+            const reportDate = new Date(report.date);
             return reportDate >= startOfToday;
           });
           break;
@@ -54,7 +54,7 @@ const FindViaDate = () => {
           const yesterday = new Date(startOfToday);
           yesterday.setDate(yesterday.getDate() - 1);
           filtered = reports.filter(report => {
-            const reportDate = new Date(report.createdAt);
+            const reportDate = new Date(report.date);
             return reportDate >= yesterday && reportDate < startOfToday;
           });
           break;
@@ -62,7 +62,7 @@ const FindViaDate = () => {
           const last7Days = new Date(startOfToday);
           last7Days.setDate(last7Days.getDate() - 7);
           filtered = reports.filter(report => {
-            const reportDate = new Date(report.createdAt);
+            const reportDate = new Date(report.date);
             return reportDate >= last7Days;
           });
           break;
@@ -70,21 +70,21 @@ const FindViaDate = () => {
           const last30Days = new Date(startOfToday);
           last30Days.setDate(last30Days.getDate() - 30);
           filtered = reports.filter(report => {
-            const reportDate = new Date(report.createdAt);
+            const reportDate = new Date(report.date);
             return reportDate >= last30Days;
           });
           break;
         case "thismonth":
           const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
           filtered = reports.filter(report => {
-            const reportDate = new Date(report.createdAt);
+            const reportDate = new Date(report.date);
             return reportDate >= startOfMonth;
           });
           break;
       }
     } else if (startDate || endDate) {
       filtered = reports.filter(report => {
-        const reportDate = new Date(report.createdAt);
+        const reportDate = new Date(report.date);
         const start = startDate ? new Date(startDate) : null;
         const end = endDate ? new Date(endDate + "T23:59:59") : null;
         
@@ -119,7 +119,7 @@ const FindViaDate = () => {
 
       if (data.success) {
         const sortedReports = data.reports.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.date) - new Date(a.date)
         );
         setReports(sortedReports);
       } else {
@@ -446,7 +446,7 @@ const FindViaDate = () => {
                   <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
                     <div className="text-right">
                       <div className="text-sm text-orange-300 mb-2 font-medium">
-                        {formatDate(report.createdAt)} {formatTime(report.createdAt)}
+                        {formatDate(report.date)} {formatTime(report.date)}
                       </div>
                       <div
                         className={`inline-flex px-4 py-2 rounded-full text-xs font-bold shadow-lg ${
