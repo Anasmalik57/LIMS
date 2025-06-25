@@ -132,6 +132,7 @@ export async function PUT(request, { params }) {
       tests,
       totalPrice,
       testResults,
+      date
     } = body;
 
     // Validate required fields
@@ -156,6 +157,7 @@ export async function PUT(request, { params }) {
       patientName: patientName.trim(),
       mobile: mobile.trim(),
       age: parseInt(age),
+      date,
       gender,
       totalPrice: parseFloat(totalPrice),
       tests:

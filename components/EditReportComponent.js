@@ -112,7 +112,7 @@ const TEST_PARAMETERS = {
     { key: "coagClottingTimeMin", parameter: "Clotting Time (Min)", unit: "min", referenceRange: "2-7", type: "number" },
     { key: "coagClottingTimeSec", parameter: "Clotting Time (Sec)", unit: "sec", referenceRange: "", type: "number" },
     { key: "coagClotRetraction", parameter: "Clot Retraction", unit: "", referenceRange: "", type: "text" },
-    { key: "hemoPlateletCount", parameter: "Platelet Count", unit: "Lakhs/cmm", referenceRange: "1.5-4.5", type: "number" },
+    { key: "hemoPlateletCount", parameter: "Platelet Count", unit: "Lakhs/cmm", type: "number" },
     { key: "coagProthrombinTimeControl", parameter: "Prothrombin Time (Control)", unit: "sec", referenceRange: "10.3-12.8", type: "number" },
     { key: "coagProthrombinTimePatient", parameter: "Prothrombin Time (Patient)", unit: "sec", referenceRange: "10-14", type: "number" },
     { key: "coagINR", parameter: "INR", unit: "", referenceRange: "0.8-1.2", type: "number" },
@@ -351,7 +351,7 @@ const EditReportComponent = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({ testResults: {} });
+  const [formData, setFormData] = useState({ testResults: {}, date: "" });
   const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
@@ -389,6 +389,7 @@ const EditReportComponent = () => {
       collectedBy: reportData.collectedBy || "",
       refBy: reportData.refBy || "",
       address: reportData.address || "",
+      date: reportData.date ? new Date(reportData.date).toISOString().split("T")[0] : "", // Format date for input
       tests: reportData.tests || [],
       testResults: Object.keys(TEST_PARAMETERS).reduce((acc, testCode) => ({
         ...acc,
@@ -420,6 +421,9 @@ const EditReportComponent = () => {
     }
     if (formData.address && formData.address.length < 5) {
       errors.address = "Address must be at least 5 characters long";
+    }
+    if (!formData.date) {
+      errors.date = "Date is required";
     }
     if (formData.tests) {
       formData.tests.forEach((test, index) => {
@@ -503,7 +507,11 @@ const EditReportComponent = () => {
         (sum, test) => sum + (test.price || 0),
         0
       );
-      const payload = { ...formData, totalPrice };
+      const payload = {
+        ...formData,
+        totalPrice,
+        date: formData.date ? new Date(formData.date).toISOString() : new Date().toISOString(),
+      };
 
       const response = await fetch(`/api/editreport/${params.id}`, {
         method: "PUT",
@@ -840,6 +848,29 @@ const EditReportComponent = () => {
                 {validationErrors.refBy && (
                   <p className="text-xs text-red-500 mt-1">
                     {validationErrors.refBy}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Date *
+                </label>
+                <input
+                  type="date"
+                  value={formData.date || ""}
+                  onChange={(e) =>
+                    handleBasicInfoChange("date", e.target.value)
+                  }
+                  className={`w-full px-3 py-2 border ${
+                    validationErrors.date
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  required
+                />
+                {validationErrors.date && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {validationErrors.date}
                   </p>
                 )}
               </div>

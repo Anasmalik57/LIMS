@@ -354,7 +354,7 @@ const ReportLists = () => {
       {/* Portal Dropdown */}
       {dropdownOpen &&
         typeof window !== "undefined" &&
-        createPortal(
+        // createPortal(
           <div className="fixed inset-0 z-[9999]" onClick={handleDropdownClose}>
             <div
               className="absolute w-56 bg-white/10 backdrop-blur-xl rounded-xl shadow-2xl border border-white/20"
@@ -392,7 +392,8 @@ const ReportLists = () => {
               </div>
             </div>
           </div>
-        )}
+        // )
+        }
     </div>
   );
 };

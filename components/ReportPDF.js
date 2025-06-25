@@ -714,22 +714,22 @@ const ReportPDF = () => {
                 </div>
                 <div className="flex">
                   <span className="w-32 text-gray-700 font-medium">Patient ID</span>
-                  <span className="text-gray-700">: {formatDate(report.createdAt).replace(/\//g, "")}</span>
+                  <span className="text-gray-700">: {formatDate(report.date).replace(/\//g, "")}</span> {/* CHANGED: report.createdAt to report.date */}
                 </div>
                 <div className="flex">
                   <span className="w-32 text-gray-700 font-medium">Collection Date</span>
                   <span className="text-gray-700">
-                    : {formatDate(report.createdAt)} {formatTime(report.createdAt)}
+                    : {formatDate(report.date)} {formatTime(report.date)} {/* CHANGED: report.createdAt to report.date */}
                   </span>
                 </div>
                 <div className="flex">
                   <span className="w-32 text-gray-700 font-medium">Received Date</span>
-                  <span className="text-gray-700">: {formatDate(report.createdAt)}</span>
+                  <span className="text-gray-700">: {formatDate(report.date)}</span> {/* CHANGED: report.createdAt to report.date */}
                 </div>
                 <div className="flex">
                   <span className="w-32 text-gray-700 font-medium">Reporting Date</span>
                   <span className="text-gray-700">
-                    : {formatDate(report.createdAt)} {formatTime(report.createdAt)}
+                    : {formatDate(report.date)} {formatTime(report.date)} {/* CHANGED: report.createdAt to report.date */}
                   </span>
                 </div>
               </div>
