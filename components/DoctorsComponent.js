@@ -1,21 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  FaUserMd,
-  FaGraduationCap,
-  FaRupeeSign,
-  FaSearch,
-  FaFilter,
-  FaStar,
-  FaCalendarAlt,
-  FaMapMarkerAlt,
-  FaPhone,
-  FaEnvelope,
-  FaHeart,
-  FaShieldAlt,
-  FaPhoneAlt,
-} from "react-icons/fa";
+import { FaUserMd, FaGraduationCap, FaSearch, FaFilter, FaCalendarAlt, FaMapMarkerAlt, FaHeart, FaShieldAlt, } from "react-icons/fa";
 // import { BiLoading } from "react-icons/bi";
 import { HiSparkles, HiLightningBolt } from "react-icons/hi";
 
@@ -260,7 +246,7 @@ const DoctorsComponent = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
+          <div className="flex flex-wrap justify-center items-center gap-8">
             {filteredDoctors.map((doctor, index) => (
               <div
                 key={doctor._id}
@@ -268,46 +254,35 @@ const DoctorsComponent = () => {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Card Background Glow */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                {/* <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div> */}
 
                 {/* Main Card */}
-                <div className="relative cursor-pointer bg-gray-900/80 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-6 hover:border-cyan-400/50 transition-all duration-500 transform group-hover:-translate-y-2 group-hover:scale-105">
-                  {/* Premium Badge */}
-                  {/* <div className="absolute -top-3 -right-3 z-10">
-                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-3 rounded-full shadow-lg ">
-                      <Fa className="text-white text-lg" />
-                    </div>
-                  </div> */}
+                <div className="relative cursor-pointer bg-gray-900/80 min-w-80 max-w-80 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-6 hover:border-cyan-400/50 transition-all duration-500 transform group-hover:-translate-y-2 group-hover:scale-105">
+                <div className="relative flex justify-between items-center gap-8">
 
                   {/* Doctor Avatar */}
                   <div className="relative mb-6 flex justify-center">
                     <div className="relative">
-                      <div className="w-24 h-24 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
+                      <div className="w-20 h-20 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
                         <FaUserMd className="text-3xl text-white" />
                       </div>
-                      {/* Status Indicator */}
-                      <div className="absolute -bottom-2 -right-2">
-                        <div className="w-8 h-8 bg-green-400 rounded-full border-4 border-gray-900 flex items-center justify-center animate-pulse">
-                          <FaHeart className="text-gray-900 text-sm" />
-                        </div>
-                      </div>
-                      {/* Glow Effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500"></div>
                     </div>
                   </div>
 
                   {/* Doctor Info */}
-                  <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors duration-300">
+                  <div className=" mb-6 overflow-hidden">
+                    <h3 className="text-lg truncate flex justify-start items-center font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors duration-300">
                       Dr. {doctor.name}
                     </h3>
-                    <div className="flex items-center justify-center gap-2 text-gray-400 mb-4">
-                      <FaGraduationCap className="text-purple-400" />
-                      <span className="text-sm font-medium">
+                    <div className="flex items-center justify-start  gap-2 text-gray-400 mb-4">
+                      <span className="text-sm font-medium flex items-start gap-2">
+                      <FaGraduationCap size={20} className="text-purple-400" />
                         {doctor.degree}
                       </span>
                     </div>
                   </div>
+                </div>
+
 
                   {/* Commission Display */}
                   <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 rounded-2xl p-4 mb-6 relative overflow-hidden">
@@ -326,17 +301,14 @@ const DoctorsComponent = () => {
                   </div>
 
                   {/* Details */}
-                  <div className="space-y-3 mb-6">
+                  <div className="space-y-3 mb-6 flex justify-center items-center">
                     <div className="flex items-center gap-3 text-gray-400">
                       <FaCalendarAlt className="text-blue-400" />
                       <span className="text-sm">
                         Joined {formatDate(doctor.createdAt)}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 text-gray-400">
-                      <FaMapMarkerAlt className="text-red-400" />
-                      <span className="text-sm">Available 24/7</span>
-                    </div>
+
                   </div>
 
                   {/* Action Buttons */}
