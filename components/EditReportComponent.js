@@ -649,7 +649,14 @@ const EditReportComponent = () => {
                 {/* =================== */}
                 {Number(param.referenceRange.split("-")[1]) < Number(testData[param.key])  && (
                   <p className="text-xs text-red-500 mt-1 font-bold">
-                    ✋ Reference Limit Exeed! Max Limit is  {param.referenceRange.split("-")[1] }
+                    <span className="text-[14px]">✋</span>
+                     Reference Limit Exeed! Max Limit is  {param.referenceRange.split("-")[1] }
+                  </p>
+                )}
+                {Number(param.referenceRange.split("-")[0]) > Number(testData[param.key])  && (
+                  <p className="text-xs text-red-500 mt-1 font-bold">
+                    <span className="text-[14px]">🚨</span>
+                    Low Units! Min Units are  {param.referenceRange.split("-")[0] }
                   </p>
                 )}
                 {/* =================== */}
