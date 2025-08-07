@@ -25,6 +25,7 @@ const TEST_CATEGORIES = {
     "SML001",
     "SLP001",
     "LDH001",
+    "KFT001" // Added KFT001 to BIOCHEMISTRY
   ],
   SEROLOGY: ["WID001", "VDR001", "HIV001", "HBS001", "ANT003", "ANT002", "SFB001"],
   RAPID_TEST: ["TDR001", "PGT001", "CKG001"],
@@ -359,6 +360,15 @@ const TEST_PARAMETERS = {
   ],
   SFB001: [
     { key: "sputumForAFB_Stain", parameter: "Sputum for AFB Stain", unit: "", referenceRange: "Negative/Positive" },
+  ],
+  KFT001: [
+    { key: "urea", parameter: "Urea", unit: "mg/dL", referenceRange: "10-45" },
+    { key: "creatine", parameter: "Creatinine", unit: "mg/dL", referenceRange: "0.6-1.4" },
+    { key: "bun", parameter: "Blood Urea Nitrogen (BUN)", unit: "mg/dL", referenceRange: "3.3-18.7" },
+    { key: "bunCreatineRatio", parameter: "BUN/Creatinine Ratio", unit: "", referenceRange: "10-20" },
+    { key: "uricAid", parameter: "Uric Acid", unit: "mg/dL", referenceRange: "2.0-7.0" },
+    { key: "sodium", parameter: "Sodium", unit: "mEq/L", referenceRange: "135-145" },
+    { key: "potassium", parameter: "Potassium", unit: "mmol/L", referenceRange: "3.5-5.0" },
   ],
 };
 

@@ -103,6 +103,10 @@ const TEST_RESULT_FIELDS = {
   sml001: ["serumAmylase", "method", "description"],
   slp001: ["serumLipase", "method", "description"],
   sfb001: ["sputumForAFB_Stain"],
+  kft001: [
+    "urea", "creatine", "bun", "bunCreatineRatio", "uricAid",
+    "sodium", "potassium"
+  ]
 };
 
 // PUT request to update report by ID

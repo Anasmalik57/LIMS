@@ -35,7 +35,7 @@ const PatientSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    date: { type: Date, default: Date.now }, 
+    date: { type: Date, default: Date.now },
 
     // =================== OPTIONAL FIELDS ===================
     collectedBy: {
@@ -609,6 +609,16 @@ const PatientSchema = new mongoose.Schema(
       // ============= Sputum AFB - SFB001 ============
       sfb001: {
         sputumForAFB_Stain: { type: String, default: "" },
+      },
+      // =========== Welness Kidney Profile - KFT001 ===========
+      kft001: {
+        urea: { type: String, default: "" },
+        creatine: { type: String, default: "" },
+        bun: { type: String, default: "" },
+        bunCreatineRatio: { type: String, default: "" },
+        uricAid: { type: String, default: "" },
+        sodium: { type: String, default: "" },
+        potassium: { type: String, default: "" },
       },
     },
   },

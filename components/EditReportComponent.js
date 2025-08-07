@@ -343,6 +343,15 @@ const TEST_PARAMETERS = {
   SFB001: [
     { key: "sputumForAFB_Stain", parameter: "Sputum for AFB Stain", unit: "", referenceRange: "Negative", type: "text" },
   ],
+  KFT001: [
+    { key: "urea", parameter: "Urea", unit: "mg/dL", referenceRange: "10-45", type: "number" },
+    { key: "creatine", parameter: "Creatinine", unit: "mg/dL", referenceRange: "0.6-1.4", type: "number" },
+    { key: "bun", parameter: "Blood Urea Nitrogen (BUN)", unit: "mg/dL", referenceRange: "3.3-18.7", type: "number" },
+    { key: "bunCreatineRatio", parameter: "BUN/Creatinine Ratio", unit: "", referenceRange: "10-20", type: "number" },
+    { key: "uricAid", parameter: "Uric Acid", unit: "mg/dL", referenceRange: "2.0-7.0", type: "number" },
+    { key: "sodium", parameter: "Sodium", unit: "mmol/L", referenceRange: "135-145", type: "number" },
+    { key: "potassium", parameter: "Potassium", unit: "mmol/L", referenceRange: "3.5-5.0", type: "number" },
+  ],
 };
 
 const EditReportComponent = () => {
