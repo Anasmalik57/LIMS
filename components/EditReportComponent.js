@@ -538,6 +538,19 @@ const EditReportComponent = () => {
         updatedTestResults.bcm001.agRatio = albumin && updatedTestResults.bcm001.globulin ? (albumin / parseFloat(updatedTestResults.bcm001.globulin)).toFixed(2).toString() : "";
       }
 
+      // For KFT001, calculate bun and bunCreatineRatio
+      if (testCode === "KFT001" && ["urea", "creatine"].includes(field)) {
+        const testData = updatedTestResults.kft001;
+        const urea = parseFloat(testData.urea) || 0;
+        const creatine = parseFloat(testData.creatine) || 0;
+
+        // Calculate bun as half of urea
+        updatedTestResults.kft001.bun = urea ? (urea / 2).toFixed(2).toString() : "";
+
+        // Calculate bunCreatineRatio as bun / creatine
+        updatedTestResults.kft001.bunCreatineRatio = creatine && updatedTestResults.kft001.bun ? (parseFloat(updatedTestResults.kft001.bun) / creatine).toFixed(2).toString() : "";
+      }
+
       return {
         ...prev,
         testResults: updatedTestResults,
@@ -692,7 +705,7 @@ const EditReportComponent = () => {
                         ? "border-red-500"
                         : "border-gray-300"
                     } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    disabled={testCode === "CBC001" && ["basophils", "hct", "mcv", "mch", "mchc"].includes(param.key) || testCode === "BCM001" && ["globulin", "agRatio"].includes(param.key)}
+                    disabled={testCode === "CBC001" && ["basophils", "hct", "mcv", "mch", "mchc"].includes(param.key) || testCode === "BCM001" && ["globulin", "agRatio"].includes(param.key) || testCode === "KFT001" && ["bun", "bunCreatineRatio"].includes(param.key)}
                   />
                 )}
                 {param.referenceRange && (
