@@ -15,7 +15,7 @@ const TEST_PARAMETERS = {
     { key: "lymphocytes", parameter: "Lymphocytes", unit: "%", referenceRange: "20-45", type: "number" },
     { key: "eosinophils", parameter: "Eosinophils", unit: "%", referenceRange: "1-6", type: "number" },
     { key: "monocytes", parameter: "Monocytes", unit: "%", referenceRange: "2-10", type: "number" },
-    { key: "basophils", parameter: "Basophils", unit: "%", referenceRange: "0-1", type: "number" },
+    { key: "basophils", parameter: "Basophils", unit: "%", referenceRange: "0-1", type: "number", defaultValue: 100 },
     { key: "plateletCount", parameter: "Platelet Count", unit: "Lakhs/cmm", referenceRange: "1.5-4.5", type: "number" },
     { key: "hct", parameter: "H.C.T.", unit: "%", referenceRange: "36-46", type: "number" },
     { key: "mcv", parameter: "M.C.V.", unit: "fL", referenceRange: "76-96", type: "number" },
@@ -127,7 +127,7 @@ const TEST_PARAMETERS = {
     { key: "coagThrombinTime", parameter: "Thrombin Time", unit: "", referenceRange: "", type: "text" },
     { key: "plasmaRecalcificationTime", parameter: "Plasma Recalcification Time", unit: "sec", referenceRange: "", type: "number" },
     { key: "factorVIIIAssay", parameter: "Factor VIII Assay", unit: "%", referenceRange: "", type: "number" },
-    { key: "dDimer", parameter: "D-Dimer", unit: "mg/L", referenceRange: "", type: "number" },
+    { key: "dDimer", parameter: "D-Dimer", unit: "mg/L", unit: "mg/L", referenceRange: "", type: "number" },
     { key: "plasmaFibrinogen", parameter: "Plasma Fibrinogen", unit: "mg/dL", referenceRange: "200-400", type: "number" },
     { key: "coagNote", parameter: "Note", unit: "", referenceRange: "", type: "textarea" },
   ],
@@ -390,12 +390,18 @@ const EditReportComponent = () => {
       collectedBy: reportData.collectedBy || "",
       refBy: reportData.refBy || "",
       address: reportData.address || "",
-      date: reportData.date ? new Date(reportData.date).toISOString().split("T")[0] : "", // Format date for input
+      date: reportData.date ? new Date(reportData.date).toISOString().split("T")[0] : "",
       tests: reportData.tests || [],
-      testResults: Object.keys(TEST_PARAMETERS).reduce((acc, testCode) => ({
-        ...acc,
-        [testCode.toLowerCase()]: reportData.testResults?.[testCode.toLowerCase()] || {},
-      }), {}),
+      testResults: Object.keys(TEST_PARAMETERS).reduce((acc, testCode) => {
+        const testData = reportData.testResults?.[testCode.toLowerCase()] || {};
+        if (testCode === "CBC001" && !testData.basophils) {
+          testData.basophils = "100"; // Set default Basophils value to 100 for CBC001
+        }
+        return {
+          ...acc,
+          [testCode.toLowerCase()]: testData,
+        };
+      }, {}),
     };
     setFormData(initialData);
   };
@@ -437,7 +443,6 @@ const EditReportComponent = () => {
         if (test.price < 0) {
           errors[`price_${index}`] = `Price for test ${index + 1} cannot be negative`;
         }
-        // Validate test result fields
         const parameters = TEST_PARAMETERS[test.testCode];
         if (parameters) {
           parameters.forEach((param) => {
@@ -480,16 +485,42 @@ const EditReportComponent = () => {
   };
 
   const handleTestResultChange = (testCode, field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      testResults: {
+    setFormData((prev) => {
+      const updatedTestResults = {
         ...prev.testResults,
         [testCode.toLowerCase()]: {
           ...prev.testResults[testCode.toLowerCase()],
           [field]: value,
         },
-      },
-    }));
+      };
+
+      // For CBC001, calculate Basophils and other derived fields
+      if (testCode === "CBC001" && ["polymorphs", "lymphocytes", "eosinophils", "monocytes", "hemoglobin", "totalRBC", "plateletCount"].includes(field)) {
+        const testData = updatedTestResults.cbc001;
+        const polymorphs = parseFloat(testData.polymorphs) || 0;
+        const lymphocytes = parseFloat(testData.lymphocytes) || 0;
+        const eosinophils = parseFloat(testData.eosinophils) || 0;
+        const monocytes = parseFloat(testData.monocytes) || 0;
+        const hemoglobin = parseFloat(testData.hemoglobin) || 0;
+        const totalRBC = parseFloat(testData.totalRBC) || 0;
+        const plateletCount = parseFloat(testData.plateletCount) || 0;
+
+        // Calculate Basophils
+        const sum = polymorphs + lymphocytes + eosinophils + monocytes;
+        updatedTestResults.cbc001.basophils = Math.max(0, 100 - sum).toString();
+
+        // Calculate HCT, MCV, MCH, MCHC
+        updatedTestResults.cbc001.hct = hemoglobin ? (hemoglobin / 3).toFixed(2).toString() : "";
+        updatedTestResults.cbc001.mcv = totalRBC && plateletCount ? ((plateletCount / totalRBC) * 10).toFixed(2).toString() : "";
+        updatedTestResults.cbc001.mch = hemoglobin && totalRBC ? ((hemoglobin / totalRBC) * 10).toFixed(2).toString() : "";
+        updatedTestResults.cbc001.mchc = hemoglobin && plateletCount ? (hemoglobin / plateletCount).toFixed(2).toString() : "";
+      }
+
+      return {
+        ...prev,
+        testResults: updatedTestResults,
+      };
+    });
     setValidationErrors((prev) => ({
       ...prev,
       [`${testCode}_${field}`]: null,
@@ -639,6 +670,7 @@ const EditReportComponent = () => {
                         ? "border-red-500"
                         : "border-gray-300"
                     } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    disabled={testCode === "CBC001" && ["basophils", "hct", "mcv", "mch", "mchc"].includes(param.key)}
                   />
                 )}
                 {param.referenceRange && (
@@ -646,20 +678,18 @@ const EditReportComponent = () => {
                     Reference: {param.referenceRange}
                   </p>
                 )}
-                {/* =================== */}
-                {Number(param.referenceRange.split("-")[1]) < Number(testData[param.key])  && (
+                {Number(param.referenceRange.split("-")[1]) < Number(testData[param.key]) && (
                   <p className="text-xs text-red-500 mt-1 font-bold">
                     <span className="text-[14px]">✋</span>
-                     Reference Limit Exeed! Max Limit is  {param.referenceRange.split("-")[1] }
+                    Reference Limit Exceeded! Max Limit is {param.referenceRange.split("-")[1]}
                   </p>
                 )}
-                {Number(param.referenceRange.split("-")[0]) > Number(testData[param.key])  && (
+                {Number(param.referenceRange.split("-")[0]) > Number(testData[param.key]) && (
                   <p className="text-xs text-red-500 mt-1 font-bold">
                     <span className="text-[14px]">🚨</span>
-                    Low Units! Min Units are  {param.referenceRange.split("-")[0] }
+                    Low Units! Min Units are {param.referenceRange.split("-")[0]}
                   </p>
                 )}
-                {/* =================== */}
                 {validationErrors[`${testCode}_${param.key}`] && (
                   <p className="text-xs text-red-500 mt-1">
                     {validationErrors[`${testCode}_${param.key}`]}
@@ -685,111 +715,213 @@ const EditReportComponent = () => {
   }
 
   if (error) {
-    return (
-      <ErrorReport error={error} />
-    );
+    return <ErrorReport error={error} />;
   }
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-4xl mx-auto">
-        {/* Header Actions */}
         <div className="flex items-center justify-between mb-6">
-          <button onClick={() => router.back()} className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"><FaArrowLeft />Back</button>
-          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50" >
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+          >
+            <FaArrowLeft /> Back
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+          >
             {saving ? <FaSpinner className="animate-spin" /> : <FaSave />}
             {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
         <div className="bg-white shadow-lg rounded-lg">
-          {/* Basic Patient Information */}
           <div className="p-6 border-b border-gray-300">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Patient Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Patient Name *</label>
-                <input type="text" value={formData.patientName || ""} onChange={(e) =>handleBasicInfoChange("patientName", e.target.value)} 
+                <input
+                  type="text"
+                  value={formData.patientName || ""}
+                  onChange={(e) => handleBasicInfoChange("patientName", e.target.value)}
                   className={`w-full px-3 py-2 border ${
-                    validationErrors.patientName
-                      ? "border-red-500"
-                      : "border-gray-300"
+                    validationErrors.patientName ? "border-red-500" : "border-gray-300"
                   } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   required
                 />
-                {validationErrors.patientName && ( <p className="text-xs text-red-500 mt-1">{validationErrors.patientName}</p>)}
+                {validationErrors.patientName && (
+                  <p className="text-xs text-red-500 mt-1">{validationErrors.patientName}</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Mobile Number *</label>
-                <input type="text" value={formData.mobile || ""} onChange={(e) => handleBasicInfoChange("mobile", e.target.value) } className={`w-full px-3 py-2 border ${ validationErrors.mobile ? "border-red-500" : "border-gray-300" } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`} required />
-                {validationErrors.mobile && ( <p className="text-xs text-red-500 mt-1"> {validationErrors.mobile} </p> )}
+                <input
+                  type="text"
+                  value={formData.mobile || ""}
+                  onChange={(e) => handleBasicInfoChange("mobile", e.target.value)}
+                  className={`w-full px-3 py-2 border ${
+                    validationErrors.mobile ? "border-red-500" : "border-gray-300"
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  required
+                />
+                {validationErrors.mobile && (
+                  <p className="text-xs text-red-500 mt-1">{validationErrors.mobile}</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Age *</label>
-                <input type="number" value={formData.age || ""} onChange={(e) => handleBasicInfoChange("age", e.target.value)} className={`w-full px-3 py-2 border ${ validationErrors.age ? "border-red-500" : "border-gray-300" } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`} required />
-                {validationErrors.age && ( <p className="text-xs text-red-500 mt-1"> {validationErrors.age} </p>)}
+                <input
+                  type="number"
+                  value={formData.age || ""}
+                  onChange={(e) => handleBasicInfoChange("age", e.target.value)}
+                  className={`w-full px-3 py-2 border ${
+                    validationErrors.age ? "border-red-500" : "border-gray-300"
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  required
+                />
+                {validationErrors.age && (
+                  <p className="text-xs text-red-500 mt-1">{validationErrors.age}</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Gender *</label>
-                <select value={formData.gender || ""} onChange={(e) => handleBasicInfoChange("gender", e.target.value) } className={`w-full px-3 py-2 border ${ validationErrors.gender ? "border-red-500" : "border-gray-300" } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`} required >
+                <select
+                  value={formData.gender || ""}
+                  onChange={(e) => handleBasicInfoChange("gender", e.target.value)}
+                  className={`w-full px-3 py-2 border ${
+                    validationErrors.gender ? "border-red-500" : "border-gray-300"
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  required
+                >
                   <option value="">Select Gender</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </select>
-                {validationErrors.gender && ( <p className="text-xs text-red-500 mt-1"> {validationErrors.gender} </p> )}
+                {validationErrors.gender && (
+                  <p className="text-xs text-red-500 mt-1">{validationErrors.gender}</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Collected By</label>
-                <input type="text" value={formData.collectedBy || ""} onChange={(e) => handleBasicInfoChange("collectedBy", e.target.value) } className={`w-full px-3 py-2 border ${ validationErrors.collectedBy ? "border-red-500" : "border-gray-300" } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`} />
-                {validationErrors.collectedBy && ( <p className="text-xs text-red-500 mt-1"> {validationErrors.collectedBy} </p> )}
+                <input
+                  type="text"
+                  value={formData.collectedBy || ""}
+                  onChange={(e) => handleBasicInfoChange("collectedBy", e.target.value)}
+                  className={`w-full px-3 py-2 border ${
+                    validationErrors.collectedBy ? "border-red-500" : "border-gray-300"
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                />
+                {validationErrors.collectedBy && (
+                  <p className="text-xs text-red-500 mt-1">{validationErrors.collectedBy}</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Referred By</label>
-                <input type="text" value={formData.refBy || ""} onChange={(e) => handleBasicInfoChange("refBy", e.target.value) } className={`w-full px-3 py-2 border ${ validationErrors.refBy ? "border-red-500" : "border-gray-300" } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`} />
-                {validationErrors.refBy && ( <p className="text-xs text-red-500 mt-1"> {validationErrors.refBy} </p> )}
+                <input
+                  type="text"
+                  value={formData.refBy || ""}
+                  onChange={(e) => handleBasicInfoChange("refBy", e.target.value)}
+                  className={`w-full px-3 py-2 border ${
+                    validationErrors.refBy ? "border-red-500" : "border-gray-300"
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                />
+                {validationErrors.refBy && (
+                  <p className="text-xs text-red-500 mt-1">{validationErrors.refBy}</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date *</label>
-                <input type="date" value={formData.date || ""} onChange={(e) => handleBasicInfoChange("date", e.target.value) } className={`w-full px-3 py-2 border ${ validationErrors.date ? "border-red-500" : "border-gray-300" } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`} required />
-                {validationErrors.date && ( <p className="text-xs text-red-500 mt-1"> {validationErrors.date} </p> )} </div>
+                <input
+                  type="date"
+                  value={formData.date || ""}
+                  onChange={(e) => handleBasicInfoChange("date", e.target.value)}
+                  className={`w-full px-3 py-2 border ${
+                    validationErrors.date ? "border-red-500" : "border-gray-300"
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  required
+                />
+                {validationErrors.date && (
+                  <p className="text-xs text-red-500 mt-1">{validationErrors.date}</p>
+                )}
+              </div>
             </div>
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-              <textarea value={formData.address || ""} onChange={(e) => handleBasicInfoChange("address", e.target.value) } rows="3" className={`w-full px-3 py-2 border ${ validationErrors.address ? "border-red-500" : "border-gray-300" } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`} />
-              {validationErrors.address && ( <p className="text-xs text-red-500 mt-1"> {validationErrors.address} </p> )} </div>
+              <textarea
+                value={formData.address || ""}
+                onChange={(e) => handleBasicInfoChange("address", e.target.value)}
+                rows="3"
+                className={`w-full px-3 py-2 border ${
+                  validationErrors.address ? "border-red-500" : "border-gray-300"
+                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              />
+              {validationErrors.address && (
+                <p className="text-xs text-red-500 mt-1">{validationErrors.address}</p>
+              )}
+            </div>
           </div>
-          {/* Tests Information */}
           <div className="p-6 border-b border-gray-300">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Tests Information</h2>
             {formData.tests &&
               formData.tests.map((test, testIndex) => (
-                <div key={testIndex} className="mb-6 p-4 border-4 border-gray-200 rounded-lg" >
+                <div key={testIndex} className="mb-6 p-4 border-4 border-gray-200 rounded-lg">
                   <h3 className="font-semibold pb-1 border-b-2 border-green-500 text-gray-800 mb-3">{test.testName}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Test Status</label>
-                      <select value={test.status || "Pending"} onChange={(e) => handleTestChange(testIndex, "status", e.target.value) } className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" >
+                      <select
+                        value={test.status || "Pending"}
+                        onChange={(e) => handleTestChange(testIndex, "status", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
                         <option value="Pending">Pending</option>
                         <option value="Completed">Completed</option>
                       </select>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Test Code</label>
-                      <input type="text" value={test.testCode || ""} onChange={(e) => handleTestChange( testIndex, "testCode", e.target.value ) } className={`w-full px-3 py-2 border ${ validationErrors[`testCode_${testIndex}`] ? "border-red-500" : "border-gray-300" } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`} readOnly />
-                      {validationErrors[`testCode_${testIndex}`] && ( <p className="text-xs text-red-500 mt-1"> {validationErrors[`testCode_${testIndex}`]} </p> )}
+                      <input
+                        type="text"
+                        value={test.testCode || ""}
+                        onChange={(e) => handleTestChange(testIndex, "testCode", e.target.value)}
+                        className={`w-full px-3 py-2 border ${
+                          validationErrors[`testCode_${testIndex}`] ? "border-red-500" : "border-gray-300"
+                        } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        readOnly
+                      />
+                      {validationErrors[`testCode_${testIndex}`] && (
+                        <p className="text-xs text-red-500 mt-1">{validationErrors[`testCode_${testIndex}`]}</p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
-                      <input type="number" value={test.price || 0} onChange={(e) => handleTestChange(testIndex, "price", e.target.value) } className={`w-full px-3 py-2 border ${ validationErrors[`price_${testIndex}`] ? "border-red-500" : "border-gray-300" } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`} />
-                      {validationErrors[`price_${testIndex}`] && ( <p className="text-xs text-red-500 mt-1"> {validationErrors[`price_${testIndex}`]} </p> )} </div>
+                      <input
+                        type="number"
+                        value={test.price || 0}
+                        onChange={(e) => handleTestChange(testIndex, "price", e.target.value)}
+                        className={`w-full px-3 py-2 border ${
+                          validationErrors[`price_${testIndex}`] ? "border-red-500" : "border-gray-300"
+                        } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                      />
+                      {validationErrors[`price_${testIndex}`] && (
+                        <p className="text-xs text-red-500 mt-1">{validationErrors[`price_${testIndex}`]}</p>
+                      )}
+                    </div>
                   </div>
                   {renderTestParameters(test, testIndex)}
                 </div>
               ))}
           </div>
-          {/* Save Button */}
           <div className="p-6 flex justify-end">
-            <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50" >
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+            >
               {saving ? <FaSpinner className="animate-spin" /> : <FaSave />}
               {saving ? "Saving..." : "Save Changes"}
             </button>
