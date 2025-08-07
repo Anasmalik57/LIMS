@@ -516,6 +516,19 @@ const EditReportComponent = () => {
         updatedTestResults.cbc001.mchc = hemoglobin && plateletCount ? (hemoglobin / plateletCount).toFixed(2).toString() : "";
       }
 
+      // For BCM001, calculate Globulin and A/G Ratio
+      if (testCode === "BCM001" && ["totalProtein", "albumin"].includes(field)) {
+        const testData = updatedTestResults.bcm001;
+        const totalProtein = parseFloat(testData.totalProtein) || 0;
+        const albumin = parseFloat(testData.albumin) || 0;
+
+        // Calculate Globulin
+        updatedTestResults.bcm001.globulin = totalProtein && albumin ? (totalProtein - albumin).toFixed(2).toString() : "";
+
+        // Calculate A/G Ratio
+        updatedTestResults.bcm001.agRatio = albumin && updatedTestResults.bcm001.globulin ? (albumin / parseFloat(updatedTestResults.bcm001.globulin)).toFixed(2).toString() : "";
+      }
+
       return {
         ...prev,
         testResults: updatedTestResults,
@@ -670,7 +683,7 @@ const EditReportComponent = () => {
                         ? "border-red-500"
                         : "border-gray-300"
                     } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    disabled={testCode === "CBC001" && ["basophils", "hct", "mcv", "mch", "mchc"].includes(param.key)}
+                    disabled={testCode === "CBC001" && ["basophils", "hct", "mcv", "mch", "mchc"].includes(param.key) || testCode === "BCM001" && ["globulin", "agRatio"].includes(param.key)}
                   />
                 )}
                 {param.referenceRange && (
