@@ -513,16 +513,17 @@ const EditReportComponent = () => {
         const hemoglobin = parseFloat(testData.hemoglobin) || 0;
         const totalRBC = parseFloat(testData.totalRBC) || 0;
         const plateletCount = parseFloat(testData.plateletCount) || 0;
+        const hct = parseFloat(testData.hct) || 0;
 
         // Calculate Basophils
         const sum = polymorphs + lymphocytes + eosinophils + monocytes;
         updatedTestResults.cbc001.basophils = Math.max(0, 100 - sum).toString();
 
         // Calculate HCT, MCV, MCH, MCHC
-        updatedTestResults.cbc001.hct = hemoglobin ? (hemoglobin / 3).toFixed(2).toString() : "";
-        updatedTestResults.cbc001.mcv = totalRBC && plateletCount ? ((plateletCount / totalRBC) * 10).toFixed(2).toString() : "";
+        updatedTestResults.cbc001.hct = hemoglobin ? (hemoglobin * 3).toFixed(2).toString() : "";
+        updatedTestResults.cbc001.mcv = hct ? ((hct * 10) / totalRBC).toFixed(2).toString() : "";
         updatedTestResults.cbc001.mch = hemoglobin && totalRBC ? ((hemoglobin / totalRBC) * 10).toFixed(2).toString() : "";
-        updatedTestResults.cbc001.mchc = hemoglobin && plateletCount ? (hemoglobin / plateletCount).toFixed(2).toString() : "";
+        updatedTestResults.cbc001.mchc = hemoglobin && hct ? ((hemoglobin / hct)*100).toFixed(2).toString() : "";
       }
 
       // For BCM001, calculate Globulin and A/G Ratio
