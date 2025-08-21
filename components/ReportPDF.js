@@ -1766,7 +1766,7 @@ const ReportPDF = () => {
                   <div className="w-16 h-16 bg-blue-300 rounded-full flex items-center justify-center border-[1.2px] border-blue-500">
                     <div className="w-12 h-12 p-1 rounded-full flex items-center justify-center">
                       <Image
-                        src={"/global_labs_Logo.png"}
+                        src={"/global_labs_logo.png"}
                         width={300}
                         height={300}
                         alt="global_labs_Logo"
