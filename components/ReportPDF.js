@@ -1911,10 +1911,10 @@ const ReportPDF = () => {
             <div className="flex justify-between items-end">
               <div className="text-center gap-0 relative">
                 <Image
-                  src={"/image.png"}
+                  src={"/azam.png"}
                   width={100}
                   height={50}
-                  alt="Dr. M Tyagi"
+                  alt="Dr. Azam"
                   className="absolute top-4 left-3"
                 />
                 <div className="w-32 h-16 border-b border-gray-400 mb-2"></div>
@@ -1923,9 +1923,17 @@ const ReportPDF = () => {
                 </p>
                 <p className="text-xs text-gray-600">M.D PATHOLOGIST 66154</p>
               </div>
+              <div className="text-center gap-0 ">
+                <span className="text-xl font-semibold">Lab Incharge</span>
+                <div className="w-full h-2 border-b border-gray-400 mb-2"></div>
+                <p className="text-[16px]  font-semibold text-gray-700">
+                  Imran tyagi 
+                </p>
+                <p className="text-xs text-gray-600 tracking-wider ">DMLT</p>
+              </div>
               <div className="text-center relative">
                 <Image
-                  src={"/image.png"}
+                  src={"/mtyagi.png"}
                   width={100}
                   height={50}
                   alt="Dr. M Tyagi"

@@ -336,33 +336,24 @@ const GenerateBillComponent = () => {
             <div className="border-t p-4 px-6 print:p-3 bg-slate-50 print:bg-white">
               <div className="flex justify-between items-end">
                 <div className="text-center">
-                  <div className="w-24 h-12 border-b border-slate-400 mb-1 flex items-end justify-center">
-                    <Image
-                      src="/image.png"
-                      width={100}
-                      height={40}
-                      alt="Dr. Azam Tyagi"
-                    />
+                  <div className="w-24 h-12 ml-4 border-b border-slate-400 mb-1 flex items-end justify-center">
+                    <Image src="/azam.png" width={100} height={40} alt="Dr. Azam Tyagi" />
                   </div>
-                  <p className="text-xs font-semibold text-slate-700">
-                    DR AZAM TYAGI
-                  </p>
-                  <p className="text-xs text-slate-600">
-                    M.D PATHOLOGIST 66154
-                  </p>
+                  <p className="text-xs font-semibold text-slate-700">DR AZAM TYAGI</p>
+                  <p className="text-xs text-slate-600">M.D PATHOLOGIST 66154</p>
                 </div>
+                <div className="text-center gap-0 ">
+                <span className="text-[15px] font-semibold">Lab Incharge</span>
+                <p className="text-sm  font-semibold text-gray-700">
+                  Imran tyagi 
+                </p>
+                <p className="text-xs text-gray-600 tracking-wider ">DMLT</p>
+              </div>
                 <div className="text-center">
                   <div className="w-24 h-12 border-b border-slate-400 mb-1 flex items-end justify-center">
-                    <Image
-                      src="/image.png"
-                      width={100}
-                      height={40}
-                      alt="M. Tyagi"
-                    />
+                    <Image src="/mtyagi.png" width={100} height={40} alt="M. Tyagi" />
                   </div>
-                  <p className="text-xs font-semibold text-slate-700">
-                    M.TYAGI (B.M.L.T)
-                  </p>
+                  <p className="text-xs font-semibold text-slate-700">M.TYAGI (B.M.L.T)</p>
                   <p className="text-xs text-slate-600 opacity-0">BMLT</p>
                 </div>
               </div>
