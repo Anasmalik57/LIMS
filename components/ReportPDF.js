@@ -659,36 +659,20 @@ const ReportPDF = () => {
             <div className="grid grid-cols-2 gap-8">
               <div className="space-y-3">
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">
-                    Collected by
-                  </span>
-                  <span className="text-gray-700">
-                    : {report.collectedBy || "Main Branch"}
-                  </span>
+                  <span className="w-32 text-gray-700 font-medium">Collected by</span>
+                  <span className="text-gray-700">: {report.collectedBy || "Main Branch"}</span>
                 </div>
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">
-                    Patient&#39;s Name
-                  </span>
-                  <span className="text-gray-700">
-                    : <strong>{report.patientName.toUpperCase()}</strong>
-                  </span>
+                  <span className="w-32 text-gray-700 font-medium">Patient&#39;s Name</span>
+                  <span className="text-gray-700">: <strong>{report.patientName.toUpperCase()}</strong></span>
                 </div>
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">
-                    Age / Gender
-                  </span>
-                  <span className="text-gray-700">
-                    : {report.age} Yrs, {report.gender}
-                  </span>
+                  <span className="w-32 text-gray-700 font-medium">Age / Gender</span>
+                  <span className="text-gray-700">: {report.age} Yrs, {report.gender}</span>
                 </div>
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">
-                    Ref. By
-                  </span>
-                  <span className="text-gray-700">
-                    : {report.refBy || "Self"}
-                  </span>
+                  <span className="w-32 text-gray-700 font-medium">Ref. By</span>
+                  <span className="text-gray-700">: {report.refBy || "Self"}</span>
                 </div>
                 <div className="flex">
                   <span className="w-32 text-gray-700 font-medium">UHID</span>
@@ -697,48 +681,24 @@ const ReportPDF = () => {
               </div>
               <div className="space-y-3">
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">
-                    Reg. No.
-                  </span>
-                  <span className="text-gray-700">
-                    : {report._id.slice(-6).toUpperCase()}
-                  </span>
+                  <span className="w-32 text-gray-700 font-medium">Reg. No.</span>
+                  <span className="text-gray-700">: {report._id.slice(-6).toUpperCase()}</span>
                 </div>
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">
-                    Patient ID
-                  </span>
-                  <span className="text-gray-700">
-                    : {formatDate(report.date).replace(/\//g, "")}
-                  </span>{" "}
-                  {/* CHANGED: report.createdAt to report.date */}
+                  <span className="w-32 text-gray-700 font-medium">Patient ID</span>
+                  <span className="text-gray-700">: {formatDate(report.date).replace(/\//g, "")}</span>
                 </div>
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">
-                    Collection Date
-                  </span>
-                  <span className="text-gray-700">
-                    : {formatDate(report.date)} {formatTime(report.date)}{" "}
-                    {/* CHANGED: report.createdAt to report.date */}
-                  </span>
+                  <span className="w-32 text-gray-700 font-medium">Collection Date</span>
+                  <span className="text-gray-700">: {formatDate(report.date)} {formatTime(report.date)}</span>
                 </div>
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">
-                    Received Date
-                  </span>
-                  <span className="text-gray-700">
-                    : {formatDate(report.date)}
-                  </span>{" "}
-                  {/* CHANGED: report.createdAt to report.date */}
+                  <span className="w-32 text-gray-700 font-medium">Received Date</span>
+                  <span className="text-gray-700">: {formatDate(report.date)}</span>{" "}
                 </div>
                 <div className="flex">
-                  <span className="w-32 text-gray-700 font-medium">
-                    Reporting Date
-                  </span>
-                  <span className="text-gray-700">
-                    : {formatDate(report.date)} {formatTime(report.date)}{" "}
-                    {/* CHANGED: report.createdAt to report.date */}
-                  </span>
+                  <span className="w-32 text-gray-700 font-medium">Reporting Date</span>
+                  <span className="text-gray-700">: {formatDate(report.date)} {formatTime(report.date)}</span>
                 </div>
               </div>
             </div>
@@ -748,61 +708,35 @@ const ReportPDF = () => {
           </div>
           <div className="p-6 py-2 border-b border-gray-300">
             <div className="flex">
-              <span className="w-32 text-gray-700 font-medium">
-                Investigations
-              </span>
-              <span className="text-gray-700">
-                : {report.tests.map((test) => test.testCode).join(", ")}
-              </span>
+              <span className="w-32 text-gray-700 font-medium">Investigations</span>
+              <span className="text-gray-700">: {report.tests.map((test) => test.testCode).join(", ")}</span>
             </div>
           </div>
           <div className="p-6">
-            <h2 className="text-xl font-bold text-center text-green-700 mb-6 underline">
-              {getReportHeading()}
-            </h2>
+            <h2 className="text-xl font-bold text-center text-green-700 mb-6 underline">{getReportHeading()}</h2>
             <div className="space-y-6">{renderAllTestResults()}</div>
             <div className="mt-8 text-center">
-              <p className="text-sm text-gray-600 mb-2">
-                *** End of Report ***
-              </p>
+              <p className="text-sm text-gray-600 mb-2">*** End of Report ***</p>
             </div>
           </div>
           <div className="p-6 border-t border-gray-300">
             <div className="flex justify-between items-end">
               <div className="text-center gap-0 relative">
-                <Image
-                  src={"/azam.png"}
-                  width={100}
-                  height={50}
-                  alt="Dr. Azam"
-                  className="absolute top-4 left-3"
-                />
+                <Image src={"/azam.png"} width={100} height={50} alt="Dr. Azam" className="absolute top-4 left-3" />
                 <div className="w-32 h-16 border-b border-gray-400 mb-2"></div>
-                <p className="text-sm font-semibold text-gray-700">
-                  DR AZAM TYAGI
-                </p>
+                <p className="text-sm font-semibold text-gray-700">DR AZAM TYAGI</p>
                 <p className="text-xs text-gray-600">M.D PATHOLOGIST 66154</p>
               </div>
               <div className="text-center gap-0 ">
                 <span className="text-xl font-semibold">Lab Incharge</span>
                 <div className="w-full h-2 border-b border-gray-400 mb-2"></div>
-                <p className="text-[16px]  font-semibold text-gray-700">
-                  Imran tyagi 
-                </p>
+                <p className="text-[16px]  font-semibold text-gray-700">Imran tyagi</p>
                 <p className="text-xs text-gray-600 tracking-wider ">DMLT</p>
               </div>
               <div className="text-center relative">
-                <Image
-                  src={"/mtyagi.png"}
-                  width={100}
-                  height={50}
-                  alt="Dr. M Tyagi"
-                  className="absolute top-4 left-3"
-                />
+                <Image src={"/mtyagi.png"} width={100} height={50} alt="Dr. M Tyagi" className="absolute top-4 left-3" />
                 <div className="w-32 h-16 border-b border-gray-400 mb-2"></div>
-                <p className="text-sm font-semibold text-gray-700">
-                  M.TYAGI (B.M.L.T)
-                </p>
+                <p className="text-sm font-semibold text-gray-700">M.TYAGI (B.M.L.T)</p>
                 <p className="text-xs text-gray-600 opacity-0">BMLT</p>
               </div>
             </div>
