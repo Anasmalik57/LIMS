@@ -603,25 +603,27 @@ const ReportPDF = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4 print:bg-white print:p-0">
       <div className="max-w-4xl mx-auto print:mt-0">
-        {status === "authenticated" ? (
-          <div className="mt-4 flex items-center justify-between mb-6 print:hidden">
-            <button onClick={() => router.back()} className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors">
-              <FaArrowLeft /> Back
-            </button>
-            <div className="flex gap-3">
-              <Link href={`/editreport/${params.id}`} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                <FaEdit /> Edit
-              </Link>
-              <button onClick={handlePrint} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                <FaPrint /> Print
+        <div>
+          {status === "authenticated" ? (
+            <div className="mt-4 flex items-center justify-between mb-6 print:hidden">
+              <button onClick={() => router.back()} className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                <FaArrowLeft /> Back
               </button>
+              <div className="flex gap-3">
+                <Link href={`/editreport/${params.id}`} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                  <FaEdit /> Edit
+                </Link>
+                <button onClick={handlePrint} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  <FaPrint /> Print
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <button onClick={handlePrint} className="flex items-center gap-2 mb-2 print:hidden px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            <FaPrint /> Print
-          </button>
-        )}
+          ) : (
+            <button onClick={handlePrint} className="flex items-center gap-2 mb-2 print:hidden px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <FaPrint /> Print
+            </button>
+          )}
+        </div>
         <div className="bg-white shadow-lg border relative border-gray-300 print:shadow-none print:border-0">
           <div className="absolute top-8 -right-20 translate-x-20">
             {showHeader ? (
