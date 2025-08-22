@@ -175,12 +175,11 @@ const GenerateBillComponent = () => {
         <div className="flex-1 print:max-w-none">
           <div className="bg-white shadow-xl print:shadow-none rounded-2xl print:rounded-none overflow-hidden border border-slate-200 print:border-none">
             {/* Header */}
-            <div className="border-b border-gray-300 p-6 px-4 bg-gradient-to-tl from-blue-300 via-blue-300 to-blue-400">
-              <div className="flex items-start justify-between">
+            <div className="border-b border-gray-300  bg-gradient-to-tl from-blue-300 via-blue-300 to-blue-400">
+              {/* <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4 w-full px-2 justify-between">
                   <div className="w-16 h-16 bg-blue-300 rounded-full flex items-center justify-center border-[1.2px] border-blue-500">
                     <div className="w-12 h-12 p-1  rounded-full flex items-center justify-center">
-                      {/* <span className="text-white font-bold text-xl">🏥</span> */}
                       <Image
                         src={"/global_labs_logo.png"}
                         width={300}
@@ -206,7 +205,8 @@ const GenerateBillComponent = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> */}
+              <Image src={"/banner.jpg"} width={500} height={300} alt="banner" className="w-full h-40 object-fill" />
             </div>
 
             <div className="p-4 print:p-3 space-y-4">
