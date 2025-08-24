@@ -342,13 +342,14 @@ const GenerateBillComponent = () => {
                   <p className="text-xs font-semibold text-slate-700">DR AZAM TYAGI</p>
                   <p className="text-xs text-slate-600">M.D PATHOLOGIST 66154</p>
                 </div>
-                <div className="text-center gap-0 ">
-                <span className="text-[15px] font-semibold">Lab Incharge</span>
-                <p className="text-sm  font-semibold text-gray-700">
-                  Imran tyagi 
-                </p>
-                <p className="text-xs text-gray-600 tracking-wider ">DMLT</p>
-              </div>
+                <div className="text-center">
+                  <div className="w-24 h-12 ml-4 border-b border-slate-400 mb-1 flex items-end justify-center">
+                    <Image src="/imran.png" width={100} height={40} alt="Imran Tyagi" />
+                  </div>
+                  <p className="text-xs font-semibold text-slate-700">IMRAN TYAGI</p>
+                  <p className="text-xs text-slate-600">Lab Incharge (D.M.L.T)</p>
+                </div>
+                
                 <div className="text-center">
                   <div className="w-24 h-12 border-b border-slate-400 mb-1 flex items-end justify-center">
                     <Image src="/mtyagi.png" width={100} height={40} alt="M. Tyagi" />
