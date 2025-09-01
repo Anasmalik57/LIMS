@@ -337,10 +337,10 @@ const GenerateBillComponent = () => {
               <div className="flex justify-between items-end">
                 <div className="text-center">
                   <div className="w-24 h-12 ml-4 border-b border-slate-400 mb-1 flex items-end justify-center">
-                    <Image src="/azam.png" width={100} height={40} alt="Dr. Azam Tyagi" />
+                    <Image src="/vikas.png" width={100} height={40} alt="Dr. Vikas Kumar " />
                   </div>
-                  <p className="text-xs font-semibold text-slate-700">DR AZAM TYAGI</p>
-                  <p className="text-xs text-slate-600">M.D PATHOLOGIST 66154</p>
+                  <p className="text-xs font-semibold text-slate-700">DR VIKAS KUMAR</p>
+                  <p className="text-xs text-slate-600">Counseltent MD Pathologist 5564</p>
                 </div>
                 <div className="text-center">
                   <div className="w-24 h-12 ml-4 border-b border-slate-400 mb-1 flex items-end justify-center">

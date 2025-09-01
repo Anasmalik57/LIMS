@@ -734,13 +734,13 @@ const ReportPDF = () => {
           <div className="p-6 border-t border-gray-300">
             <div className="flex justify-between items-end">
               <div className="text-center gap-0 relative">
-                <Image src={"/azam.png"} width={100} height={50} alt="Dr. Azam" className="absolute top-4 left-3" />
+                <Image src={"/vikas.png"} width={100} height={50} alt="Dr. Vikas" className="absolute top-4 left-3" />
                 <div className="w-32 h-16 border-b border-gray-400 mb-2"></div>
-                <p className="text-sm font-semibold text-gray-700">DR AZAM TYAGI</p>
-                <p className="text-xs text-gray-600">M.D PATHOLOGIST 66154</p>
+                <p className="text-sm font-semibold text-gray-700">DR VIKAS KUMAR</p>
+                <p className="text-xs text-gray-600">Counseltent MD Pathologist 5564</p>
               </div>
               <div className="text-center gap-0 relative">
-                <Image src={"/imran.png"} width={100} height={50} alt="Dr. Azam" className="absolute top-4 left-3" />
+                <Image src={"/imran.png"} width={100} height={50} alt="Dr. IMRAN" className="absolute top-4 left-3" />
                 <div className="w-32 h-16 border-b border-gray-400 mb-2"></div>
                 <p className="text-sm font-semibold text-gray-700">IMRAN TYAGI</p>
                 <p className="text-xs text-gray-600">Lab Incharge (D.M.L.T)</p>
