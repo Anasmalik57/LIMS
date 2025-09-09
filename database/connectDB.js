@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(
-      process.env.MONGO_URI || "mongodb+srv://developeranas738:dfebHNv9CWYfw9as@cluster0.mhrmzux.mongodb.net/lims?retryWrites=true&w=majority&appName=Cluster0",
+      process.env.MONGO_URI || "mongodb://localhost:27017/lims",
       {
         useNewUrlParser: true,
       }

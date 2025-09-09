@@ -620,6 +620,34 @@ const PatientSchema = new mongoose.Schema(
         sodium: { type: String, default: "" },
         potassium: { type: String, default: "" },
       },
+
+      // =========== DENGUE IGG & IGM - DII001 ===========
+      dii001: {
+        ns1Antigen: { type: String, default: "" },
+        dengueIgm: { type: String, default: "" },
+        dengueIgG: { type: String, default: "" },
+        description: {
+          type: String,
+          default: "Primary dengue virus infection is characterized by elevations in specific NSI antigen levels O to 9 days after the onset of symptoms. This generally persists upto 15 days.",
+        },
+        description1: {
+          type: String,
+          default: "The analysis of single serum sample should not be used as the sole criterion for diagnosis.",
+        },
+        description2: {
+          type: String,
+          default: "Heterophilic antibodies are a well-recognized cause of interference in immunoassays.",
+        },
+        description3: {
+          type: String,
+          default: "These antibodies to animal IgG may cross-react with reagent antibodies and generate false positive signal and must be excluded before confirmation of diagnosis.",
+        },
+        description: {
+          type: String,
+          default: "The final diagnosis should be based on test results in conjunction with other clinical and laboratory findings.",
+        },
+
+      },
     },
   },
   {

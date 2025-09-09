@@ -352,6 +352,15 @@ const TEST_PARAMETERS = {
     { key: "sodium", parameter: "Sodium", unit: "mmol/L", referenceRange: "135-145", type: "number" },
     { key: "potassium", parameter: "Potassium", unit: "mmol/L", referenceRange: "3.5-5.0", type: "number" },
   ],
+  DII001: [
+    { key: "ns1Antigen", parameter: "NS1 Antigen", unit: "", referenceRange: "Negative/Positive", type: "text" },
+    { key: "dengueIgm", parameter: "Dengue IgM", unit: "", referenceRange: "Negative/Positive", type: "text" },
+    { key: "dengueIgG", parameter: "Dengue IgG", unit: "", referenceRange: "Negative/Positive", type: "text" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "", type: "textarea" },
+    { key: "description1", parameter: "Description 1", unit: "", referenceRange: "", type: "textarea" },
+    { key: "description2", parameter: "Description 2", unit: "", referenceRange: "", type: "textarea" },
+    { key: "description3", parameter: "Description 3", unit: "", referenceRange: "", type: "textarea" },
+  ],
 };
 
 const EditReportComponent = () => {

@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 const TEST_CATEGORIES = {
   HEMATOLOGY: ["CBC001", "AEC001", "BLG001", "BTC001", "HMG001", "ESR001", "MPS001"],
   BIOCHEMISTRY: ["BCM001", "RFT001", "URI001", "SCR001", "LIP001", "SGT001", "SER001", "HBA001", "GTT001", "RBS001", "FBS001", "BRB001", "SML001", "SLP001", "LDH001", "KFT001"],
-  SEROLOGY: ["WID001", "VDR001", "HIV001", "HBS001", "ANT003", "ANT002", "SFB001"],
+  SEROLOGY: ["WID001", "VDR001", "HIV001", "HBS001", "ANT003", "ANT002", "SFB001", "DII001"], // Add DII001 here
   RAPID_TEST: ["TDR001", "PGT001", "CKG001"],
   ANTENATAL: ["ANT001"],
   COAGULATION: ["DDI001", "BTC001", "COA001"],
@@ -353,6 +353,15 @@ const TEST_PARAMETERS = {
     { key: "sodium", parameter: "Sodium", unit: "mEq/L", referenceRange: "135-145" },
     { key: "potassium", parameter: "Potassium", unit: "mmol/L", referenceRange: "3.5-5.0" },
   ],
+  DII001: [
+    { key: "ns1Antigen", parameter: "NS1 Antigen", unit: "Negative/Positive", referenceRange: "Negative/Positive" },
+    { key: "dengueIgm", parameter: "Dengue IgM", unit: "Negative/Positive", referenceRange: "Negative/Positive" },
+    { key: "dengueIgG", parameter: "Dengue IgG", unit: "Negative/Positive", referenceRange: "Negative/Positive" },
+    { key: "description", parameter: "Description", unit: "", referenceRange: "" },
+    { key: "description1", parameter: "Description 1", unit: "", referenceRange: "" },
+    { key: "description2", parameter: "Description 2", unit: "", referenceRange: "" },
+    { key: "description3", parameter: "Description 3", unit: "", referenceRange: "" },
+  ],
 };
 
 const TEST_NAMES = {
@@ -402,6 +411,7 @@ const TEST_NAMES = {
   SLP001: "Serum Lipase",
   SFB001: "Sputum AFB",
   KFT001: "Kidney Function Test (KFT)",
+  DII001: "Dengue IgG & IgM",
 };
 
 const ReportPDF = () => {

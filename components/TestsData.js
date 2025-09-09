@@ -48,7 +48,8 @@ export const testData = [
   { name: "Serum Lipase", code: "SLP001", price: 400 },
   { name: "Sputum AFB", code: "SFB001", price: 100 },
   { name: "Kidney Function Test (KFT)", code: "KFT001", price: 500 },
-
+  
+  { name: "Dengue IGG & IGM ", code: "DII001", price: 500 },
   
 
   { name: "", code: "", price: "" },
