@@ -127,7 +127,7 @@ const TEST_PARAMETERS = {
     { key: "coagThrombinTime", parameter: "Thrombin Time", unit: "", referenceRange: "", type: "text" },
     { key: "plasmaRecalcificationTime", parameter: "Plasma Recalcification Time", unit: "sec", referenceRange: "", type: "number" },
     { key: "factorVIIIAssay", parameter: "Factor VIII Assay", unit: "%", referenceRange: "", type: "number" },
-    { key: "dDimer", parameter: "D-Dimer", unit: "mg/L", unit: "mg/L", referenceRange: "", type: "number" },
+    { key: "dDimer", parameter: "D-Dimer", unit: "mg/L", referenceRange: "", type: "number" },
     { key: "plasmaFibrinogen", parameter: "Plasma Fibrinogen", unit: "mg/dL", referenceRange: "200-400", type: "number" },
     { key: "coagNote", parameter: "Note", unit: "", referenceRange: "", type: "textarea" },
   ],
@@ -223,7 +223,7 @@ const TEST_PARAMETERS = {
   ],
   MXT001: [
     { key: "inDiameter", parameter: "Induration Diameter", unit: "mm", referenceRange: "", type: "number" },
-    { key: "result", parameter: "Result", unit: "", referenceRange: "Positive/Negative", type: "dropdown", options: ["Positive", "Negative"] },
+    { key: "result", parameter: "Result", unit: "", referenceRange: "Positive/Negative", type: "text" },
   ],
   HMG001: [
     { key: "hemoglobin", parameter: "Hemoglobin", unit: "g/dL", referenceRange: "13-18", type: "number" },
@@ -240,13 +240,13 @@ const TEST_PARAMETERS = {
     { key: "esrAvg", parameter: "ESR (Average)", unit: "mm/hr", referenceRange: "0-20", type: "number" },
   ],
   MPS001: [
-    { key: "malariaPArasites", parameter: "Malaria Parasites", unit: "", referenceRange: "Positive/Negative", type: "dropdown", options: ["Positive", "Negative"] },
+    { key: "malariaPArasites", parameter: "Malaria Parasites", unit: "", referenceRange: "Positive/Negative", type: "text" },
     { key: "method", parameter: "Method", unit: "", referenceRange: "", type: "text" },
   ],
   PGT001: [
     { key: "pregnancyTestSample", parameter: "Sample Time", unit: "", referenceRange: "", type: "dropdown", options: ["Morning", "Afternoon", "Evening"] },
     { key: "lmp", parameter: "Last Menstrual Period (LMP)", unit: "", referenceRange: "", type: "text" },
-    { key: "pregnancyTestResult", parameter: "Pregnancy Test Result", unit: "", referenceRange: "Positive/Negative", type: "dropdown", options: ["Positive", "Negative"] },
+    { key: "pregnancyTestResult", parameter: "Pregnancy Test Result", unit: "", referenceRange: "Positive/Negative", type: "text" },
     { key: "pregnancyIndi", parameter: "Indication", unit: "", referenceRange: "", type: "text" },
     { key: "pregnancySenstivity", parameter: "Sensitivity", unit: "", referenceRange: "", type: "text" },
     { key: "method", parameter: "Method", unit: "", referenceRange: "Chromatographic Immunoassay", type: "text" },
@@ -292,7 +292,7 @@ const TEST_PARAMETERS = {
     { key: "fastingBloodSugar", parameter: "Fasting Blood Sugar", unit: "mg/dL", referenceRange: "70-100", type: "number" },
   ],
   CKG001: [
-    { key: "result", parameter: "Result", unit: "", referenceRange: "Positive/Negative", type: "dropdown", options: ["Positive", "Negative"] },
+    { key: "result", parameter: "Result", unit: "", referenceRange: "Positive/Negative", type: "text" },
   ],
   BRB001: [
     { key: "bilirubinTotal", parameter: "Bilirubin Total", unit: "mg/dL", referenceRange: "0.2-1.0", type: "number" },
@@ -532,7 +532,7 @@ const EditReportComponent = () => {
         updatedTestResults.cbc001.hct = hemoglobin ? (hemoglobin * 3).toFixed(2).toString() : "";
         updatedTestResults.cbc001.mcv = hct ? ((hct * 10) / totalRBC).toFixed(2).toString() : "";
         updatedTestResults.cbc001.mch = hemoglobin && totalRBC ? ((hemoglobin / totalRBC) * 10).toFixed(2).toString() : "";
-        updatedTestResults.cbc001.mchc = hemoglobin && hct ? ((hemoglobin / hct)*100).toFixed(2).toString() : "";
+        updatedTestResults.cbc001.mchc = hemoglobin && hct ? ((hemoglobin / hct) * 100).toFixed(2).toString() : "";
       }
 
       // For BCM001, calculate Globulin and A/G Ratio
@@ -641,14 +641,12 @@ const EditReportComponent = () => {
 
     return (
       <div className="mt-4">
-        <h4 className="font-medium text-gray-800 mb-3">
-          {test.testName} Parameters
-        </h4>
+        <h4 className="font-medium text-gray-700 mb-3">{test.testName} Parameters</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {parameters.map((param, paramIndex) => {
             if (param.key === "separator") {
               return (
-                <div key={paramIndex} className="col-span-full font-semibold text-gray-800">
+                <div key={paramIndex} className="col-span-full font-semibold text-gray-700">
                   {param.parameter}
                 </div>
               );
@@ -661,7 +659,27 @@ const EditReportComponent = () => {
                     <span className="text-gray-500"> ({param.unit})</span>
                   )}
                 </label>
-                {param.type === "textarea" ? (
+                {param.referenceRange === "Negative/Positive" ? (
+                  <select
+                    value={testData[param.key] || ""}
+                    onChange={(e) =>
+                      handleTestResultChange(
+                        testCode,
+                        param.key,
+                        e.target.value
+                      )
+                    }
+                    className={`w-full px-3 py-2 border ${
+                      validationErrors[`${testCode}_${param.key}`]
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  >
+                    <option value="">Select</option>
+                    <option value="Negative">Negative</option>
+                    <option value="Positive">Positive</option>
+                  </select>
+                ) : param.type === "textarea" ? (
                   <textarea
                     value={testData[param.key] || ""}
                     onChange={(e) =>
@@ -715,21 +733,25 @@ const EditReportComponent = () => {
                         ? "border-red-500"
                         : "border-gray-300"
                     } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    disabled={testCode === "CBC001" && ["basophils", "hct", "mcv", "mch", "mchc"].includes(param.key) || testCode === "BCM001" && ["globulin", "agRatio"].includes(param.key) || testCode === "KFT001" && ["bun", "bunCreatineRatio"].includes(param.key)}
+                    disabled={testCode === "CBC001" && ["basophils", "hct", "mcv", "mch", "mchc"].includes(param.key) || 
+                             testCode === "BCM001" && ["globulin", "agRatio"].includes(param.key) || 
+                             testCode === "KFT001" && ["bun", "bunCreatineRatio"].includes(param.key)}
                   />
                 )}
-                {param.referenceRange && (
+                {param.referenceRange && param.referenceRange !== "Negative/Positive" && (
                   <p className="text-xs text-gray-500 mt-1">
                     Reference: {param.referenceRange}
                   </p>
                 )}
-                {Number(param.referenceRange.split("-")[1]) < Number(testData[param.key]) && (
+                {param.referenceRange && param.referenceRange.includes("-") && 
+                 Number(param.referenceRange.split("-")[1]) < Number(testData[param.key]) && (
                   <p className="text-xs text-red-500 mt-1 font-bold">
                     <span className="text-[14px]">✋</span>
                     Reference Limit Exceeded! Max Limit is {param.referenceRange.split("-")[1]}
                   </p>
                 )}
-                {Number(param.referenceRange.split("-")[0]) > Number(testData[param.key]) && (
+                {param.referenceRange && param.referenceRange.includes("-") && 
+                 Number(param.referenceRange.split("-")[0]) > Number(testData[param.key]) && (
                   <p className="text-xs text-red-500 mt-1 font-bold">
                     <span className="text-[14px]">🚨</span>
                     Low Units! Min Units are {param.referenceRange.split("-")[0]}
