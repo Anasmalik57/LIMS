@@ -506,7 +506,7 @@ const ReportPDF = () => {
         <h3 className="font-bold text-gray-800 mb-4 text-lg">
           {testName.toUpperCase()}
         </h3>
-        <div className="grid grid-cols-4 gap-4 text-sm">
+        <div className="grid grid-cols-4 gap-12 text-lg ">
           <div className="font-medium text-gray-700">Parameter</div>
           <div className="font-medium text-gray-700">Result</div>
           <div className="font-medium text-gray-700">Unit</div>
@@ -516,7 +516,7 @@ const ReportPDF = () => {
         {parameters.map((param, idx) => {
           if (param.key === "separator") {
             return (
-              <div key={idx} className="grid grid-cols-4 gap-4 text-sm py-2">
+              <div key={idx} className="grid grid-cols-4 gap-4 text-sm py-2 border-b w-fit pr-4 ">
                 <div className="text-gray-800 font-semibold col-span-4">
                   {param.parameter}
                 </div>
@@ -551,7 +551,7 @@ const ReportPDF = () => {
           }
 
           return (
-            <div key={idx} className="grid grid-cols-4 gap-4 text-sm py-1">
+            <div key={idx} className="grid grid-cols-4 gap-16 text-sm py-1">
               <div className="text-gray-700">{param.parameter}</div>
               <div className={`font-medium ${outOfRange ? "text-red-600" : "text-gray-800"}`}>
                 {displayValue}
@@ -639,7 +639,7 @@ const ReportPDF = () => {
   const pathname = window.location.href;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 print:bg-white print:p-0">
+    <div className="min-h-screen bg-gray-100 p-4 print:bg-white print:p-0 text-lg">
       <div className="max-w-4xl mx-auto print:mt-0">
         <div>
           {status === "authenticated" ? (
@@ -677,7 +677,7 @@ const ReportPDF = () => {
           ) : (
             <div className="border-b border-gray-300 p-6 px-0 bg-white h-28"></div>
           )}
-          <div className="p-6 border-b border-gray-300 relative">
+          <div className="p-6 pt-2 border-b border-gray-300 relative">
             <div className="grid grid-cols-2 gap-8">
               <div className="space-y-3">
                 <div className="flex">
@@ -724,7 +724,7 @@ const ReportPDF = () => {
                 </div>
               </div>
             </div>
-            <div className="absolute top-4 right-6 border rounded-xs bg-slate-500">
+            <div className="absolute top-2 right-6 border rounded-xs bg-slate-500">
               <QRCode param={pathname} />
             </div>
           </div>
@@ -735,7 +735,7 @@ const ReportPDF = () => {
             </div>
           </div>
           <div className="p-6">
-            <h2 className="text-xl font-bold text-center text-green-700 mb-6 underline">{getReportHeading()}</h2>
+            <h2 className="text-xl font-bold text-center text-green-700 underline">{getReportHeading()}</h2>
             <div className="space-y-6">{renderAllTestResults()}</div>
             <div className="mt-8 text-center">
               <p className="text-sm text-gray-600 mb-2">*** End of Report ***</p>
